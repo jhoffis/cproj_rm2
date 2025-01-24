@@ -22,6 +22,7 @@ add_executable(OpenGLApp ${SOURCES})
 # Include directories (for GLFW and OpenGL)
 # (Optional if GLFW3_INCLUDE_DIRS and OPENGL_INCLUDE_DIRS are set by the find_package)
 include_directories(${CMAKE_SOURCE_DIR}/include)
+include_directories(${CMAKE_SOURCE_DIR}/src)
 
 # OS-specific configuration
 if(WIN32)

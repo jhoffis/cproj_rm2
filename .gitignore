@@ -6,6 +6,7 @@
 !/libs/glfw_*/include/
 !/libs/glfw_*/include/**
 
+/.cache/
 /build/
 
 # Prerequisites
