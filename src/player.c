@@ -1,8 +1,10 @@
 #include "player.h"
 #include "tester.h"
+#include "allocator.h"
 
 void init_player(void) {
-
+    void *test = xmalloc(123);
+    xfree(test);
 }
 
 TEST(test_add_positiv2) {

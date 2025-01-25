@@ -2,6 +2,7 @@
 int main(void) {return 0;}
 #else
 
+#include "allocator.h"
 #include "player.h"
 #include "nums.h"
 #include <glad/glad.h>
@@ -10,6 +11,8 @@ int main(void) {return 0;}
 
 int main(void) {
 
+    mem_tracker_init();
+    
     init_player();
 
     if (!glfwInit()) {
@@ -41,6 +44,8 @@ int main(void) {
 
     glfwDestroyWindow(window);
     glfwTerminate();
+
+    mem_tracker_cleanup();
     return 0;
 }
 
