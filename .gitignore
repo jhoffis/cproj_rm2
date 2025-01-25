@@ -12,6 +12,8 @@
 !/build/.gdbinit
 !/build/pics/
 !/build/pics/**
+!/build/audio/
+!/build/audio/**
 /test/
 /clang/
 

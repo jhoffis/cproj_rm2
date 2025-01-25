@@ -1,4 +1,5 @@
 #include "allocator.h"
+#include "tester.h"
 // #include <threads.h>
 
 #ifdef MEM_TRACK_DBG 
@@ -56,6 +57,7 @@ static bool realloc_allocation_tracker(size_t size) {
 }
 
 void mem_tracker_init(void) {
+    if (num_max_size > 0) return;
     if (!realloc_allocation_tracker(16)) goto fail;
 
     record_name_size = 256;  // reasonable initial size
@@ -235,7 +237,7 @@ void *_priv_xaligned_alloc(size_t size, size_t alignment, const char *file, int 
     #ifdef _WIN32
         void* ptr = _aligned_malloc(size, alignment);
     #else
-        void* ptr = aligned_alloc(size, alignment);
+        void* ptr = aligned_alloc(alignment, size);
     #endif
     if (!track_allocation(ptr, size, aligned, file, line)) {
         free(ptr);
@@ -305,30 +307,25 @@ void *_priv_xrealloc_aligned(void *old_ptr, size_t size, size_t alignment, const
     }
 
 #ifdef _WIN32
-        void *new_ptr = _aligned_realloc(old_ptr, size, alignment);
-    #else
-        void *new_ptr = aligned_alloc(size, alignment);
-        if (old_ptr == NULL) {
-            return aligned_alloc(alignment, size);
-        }
-        
-        // Copy old data to new aligned allocation
-        void* new_ptr = aligned_alloc(alignment, size);
-        if (!new_ptr) {
-            return NULL;
-        }
-        
-        memcpy(new_ptr, old_ptr, old_size < size ? old_size : size);
-        
-        // Track new allocation before freeing old
-        if (!track_allocation(new_ptr, size, aligned, file, line)) {
-            free(new_ptr);
-            return NULL;
-        }
+    void *new_ptr = _aligned_realloc(old_ptr, size, alignment);
+#else
+    void *new_ptr = realloc(old_ptr, size);
+#endif
+    if (!new_ptr) {
+        // Realloc failed; retain the old pointer
+        return NULL;
+    }
 
-        // Untrack and free old allocation
-        untrack_and_free(old_ptr, aligned, file, line);
-    #endif
+    // Reallocation successful; track new allocation
+    if (!track_allocation(new_ptr, size, standard, file, line)) {
+        free(new_ptr);  // Free newly allocated memory if tracking fails
+        return NULL;
+    }
+
+    // Untrack old allocation only after new allocation is successful
+    if (old_ptr) {
+        untrack_and_free(old_ptr, none, file, line);
+    }
     return new_ptr;
 }
 
@@ -364,4 +361,21 @@ void mem_tracker_cleanup(void) {
     free(alloc_ptrs);
     free(record_name);
 }
+
+TEST(test_allocator) {
+    mem_tracker_init();
+    void *m = xmalloc(1);
+    void *c = xcalloc(1, 1);
+    void *r1 = xrealloc(m, 2);
+    void *r2 = xrealloc(c, 2);
+    void *a = xaligned_alloc(1, 16);
+    void *ra1 = xrealloc_aligned(a, 2, 16);
+    ASSERT(num_allocations == 3, "should be 3 allocated");
+
+    xfree(m);
+    xfree(c);
+    xfree(a);
+    ASSERT(num_allocations == 0, "should be all freed");
+}
+
 #endif

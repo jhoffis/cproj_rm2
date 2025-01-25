@@ -30,15 +30,15 @@ static wav_file* load_wav(const char* filename, u32 start_index, u32 max_alloc_s
     xfree(fixed_name);
     
     if (!file) {
-        perror("Error opening file");
-        return NULL;
+        printf("Error opening wav file \"%s\"\n", filename);
+        exit(1);
     }
 
     wav_header header = {0};
     if (fread(&header, sizeof(wav_header), 1, file) != 1) {
-        perror("Error reading header");
+        printf("Error reading header of wav file \"%s\"\n", filename);
         fclose(file);
-        return NULL;
+        exit(1);
     }
 
     // Validate the header
