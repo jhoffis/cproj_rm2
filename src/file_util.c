@@ -5,11 +5,22 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+#ifdef _WIN32
+#define PATH_SEPARATOR "\\\\"
+#define FIX_PATH(path) #path
+#define TO_STRING(x) #x
+#define STRINGIFY(x) TO_STRING(x)
+#define PATH(x) STRINGIFY(x)
+#else
+#define PATH_SEPARATOR "/"
+#define FIX_PATH(path) path
+#define PATH(x) x
+#endif
 
 char* path_name(const char* prefix, const char *name, const char* suffix) {
-    size_t name_len = strlen(name);
-    if (name_len > 32) return NULL;
-    size_t suffix_len = strlen(suffix);
+    size_t prefix_len = strlen(FIX_PATH(prefix));
+    size_t name_len = strlen(FIX_PATH(name));
+    size_t suffix_len = strlen(FIX_PATH(suffix));
     if (suffix_len < 2) return NULL;
 
     for (int i = 0; i < name_len; i++) {
@@ -27,11 +38,12 @@ char* path_name(const char* prefix, const char *name, const char* suffix) {
         printf("Path-name \"%s\" is bad!\n", name);
         exit(1);
     }
-    char *path = xmalloc(strlen(prefix) + name_len + strlen(suffix) + 1);
+    char *path = xmalloc(prefix_len + name_len + suffix_len + 1);
     if (!path) return NULL;
 
     // Construct the path
-    snprintf(path, strlen(prefix) + name_len + strlen(suffix) + 1, "%s%s%s", prefix, name, suffix);
+    snprintf(path, prefix_len + name_len + suffix_len + 1, "%s%s%s", 
+            FIX_PATH(prefix), FIX_PATH(name), FIX_PATH(suffix));
 
     return path;
 }
