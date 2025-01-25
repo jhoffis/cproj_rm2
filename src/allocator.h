@@ -12,13 +12,13 @@ void mem_tracker_cleanup(void);
 void print_num_mem_allocated(void);
 
 void *_priv_xmalloc(size_t size, const char *file, int line);
-void *_priv_x_aligned_alloc(size_t size, size_t alignment, const char *file, int line);
+void *_priv_xaligned_alloc(size_t size, size_t alignment, const char *file, int line);
 void *_priv_xcalloc(size_t nmemb, size_t size, const char *file, int line);
 void *_priv_xrealloc(void *ptr, size_t size, const char *file, int line);
 #define xmalloc(size) \
     _priv_xmalloc((size), __FILE__, __LINE__)
-#define x_aligned_alloc(size, alignment) \
-    _priv_x_aligned_alloc((size), (alignment), __FILE__, __LINE__)
+#define xaligned_alloc(size, alignment) \
+    _priv_xaligned_alloc((size), (alignment), __FILE__, __LINE__)
 #define xcalloc(nmemb, size) \
     _priv_xcalloc((nmemb), (size), __FILE__, __LINE__)
 #define xrealloc(ptr, size) \
