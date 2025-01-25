@@ -11,6 +11,10 @@ int main(void) {return 0;}
 #include <stdio.h>
 #include "stb_image.h"
 
+static void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+    glViewport(0, 0, width, height);
+}
+
 int main(void) {
     mem_tracker_init();
 
@@ -36,8 +40,10 @@ int main(void) {
     }    
 
     glViewport(0, 0, 800, 600);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);  
 
     while (!glfwWindowShouldClose(window)) {
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         glfwSwapBuffers(window);
         glfwPollEvents();
