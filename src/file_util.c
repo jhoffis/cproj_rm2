@@ -27,13 +27,11 @@ char* path_name(const char* prefix, const char *name, const char* suffix) {
         printf("Path-name \"%s\" is bad!\n", name);
         exit(1);
     }
-    char *path = xmalloc(name_len + suffix_len + 4 + 1); // "D:\\" + suffix + null terminator
-    if (!path) return NULL; // check for allocation failure
+    char *path = xmalloc(strlen(prefix) + name_len + strlen(suffix) + 1);
+    if (!path) return NULL;
 
     // Construct the path
-    strcat(path, prefix);
-    strcat(path, name);
-    strcat(path, suffix);
+    snprintf(path, strlen(prefix) + name_len + strlen(suffix) + 1, "%s%s%s", prefix, name, suffix);
 
     return path;
 }
