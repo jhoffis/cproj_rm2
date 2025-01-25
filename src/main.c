@@ -6,14 +6,13 @@ int main(void) {
 }
 #else
 
-#define STB_IMAGE_IMPLEMENTATION
+#include "file_util.h"
 #include "allocator.h"
 #include "player.h"
 #include "nums.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stdio.h>
-#include "stb_image.h"
 
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
@@ -23,6 +22,7 @@ int main(void) {
     mem_tracker_init();
 
     init_player();
+    image_data img = load_image("sky");
 
     if (!glfwInit()) {
         fprintf(stderr, "Failed to initialize GLFW\\n");
