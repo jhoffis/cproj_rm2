@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 
 # Project name and C standard
-project(OpenGLApp VERSION 1.0 LANGUAGES C)
+project(${GAME_TITLE} VERSION 1.0 LANGUAGES C)
 
 # Enable C23 standard
 set(CMAKE_C_STANDARD 23)
@@ -17,7 +17,7 @@ file(GLOB_RECURSE SOURCES
 )
 
 # Add the executable
-add_executable(OpenGLApp ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES})
 
 # Include directories (for GLFW and OpenGL)
 # (Optional if GLFW3_INCLUDE_DIRS and OPENGL_INCLUDE_DIRS are set by the find_package)
@@ -40,7 +40,7 @@ endif()
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs/glfw_linux/include)
 
 # Link libraries
-target_link_libraries(OpenGLApp PRIVATE
+target_link_libraries(${PROJECT_NAME} PRIVATE
     OpenGL::GL
     glfw
 )

@@ -17,7 +17,7 @@ all: $(BUILD_DIR)
 # Debug build
 debug: $(BUILD_DIR)
 	@echo "Building in Debug mode..."
-	cd $(BUILD_DIR) && cmake -DCMAKE_BUILD_TYPE=Debug -DRUN_TESTS:BOOLEAN=FALSE ..
+	cd $(BUILD_DIR) && cmake -DCMAKE_BUILD_TYPE=Debug -DRUN_TESTS:BOOLEAN=FALSE -DGAME_TITLE:STRING=$(PROJECT_TITLE) ..
 
 # Release build
 release: $(BUILD_DIR)
@@ -28,6 +28,6 @@ test: create_test_dir
 	cd $(TEST_DIR) && cmake -DCMAKE_BUILD_TYPE=Debug -DRUN_TESTS:BOOLEAN=TRUE .. && make && ./$(PROJECT_TITLE)
 
 clean:
-	@echo "Cleaning build directory..."
 	@rm -rf $(BUILD_DIR)
 	@rm -rf $(TEST_DIR)
+	@echo "Cleaned build and test directories!"
