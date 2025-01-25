@@ -102,3 +102,14 @@ image_data load_image(const char *name) {
 
     return img;
 }
+
+FILE *load_model_file(const char *name) {
+    char *fixed_name = path_name("models/", name, ".obj");
+    FILE* file = fopen(fixed_name, "rb");
+    xfree(fixed_name);
+    if (!file) {
+        printf("Could not find model \"%s\"\n", name);
+        exit(1);
+    }
+    return file;
+}

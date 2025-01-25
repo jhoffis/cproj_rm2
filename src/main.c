@@ -9,11 +9,13 @@ int main(void) {
 
 #include "file_util.h"
 #include "allocator.h"
+#include "model_loader.h"
 #include "player.h"
 #include "nums.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stdio.h>
+#include "wav_loader.h"
 
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
@@ -24,6 +26,10 @@ int main(void) {
 
     init_player();
     image_data img = load_image("sky");
+
+    wav_entity* wav = create_wav_entity("test");
+    load_next_wav_buffer(wav);
+    free_wav_entity(wav);
 
     printf("ms: %llu\n", timer_now_nanos());
 

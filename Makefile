@@ -7,9 +7,18 @@ default: all
 
 # Create build directory if it doesn't exist
 $(BUILD_DIR):
+ifeq ($(OS),Windows_NT)
+	@mkdir $(BUILD_DIR) 2>nul || exit 0
+else
 	@mkdir -p $(BUILD_DIR)
+endif
+
 create_test_dir:
+ifeq ($(OS),Windows_NT)
+	@mkdir $(TEST_DIR) 2>nul || exit 0
+else
 	@mkdir -p $(TEST_DIR)
+endif
 
 all: $(BUILD_DIR)
 ifeq ($(OS),Windows_NT)
@@ -24,22 +33,29 @@ db: $(BUILD_DIR)
 # Debug build
 debug: $(BUILD_DIR)
 	@echo "Building in Debug mode..."
-	@cd $(BUILD_DIR) && cmake -DCMAKE_BUILD_TYPE=Debug -DRUN_TESTS:BOOLEAN=FALSE -DGAME_TITLE:STRING=$(PROJECT_TITLE) ..
-debugwin: $(BUILD_DIR)
-	@echo "Building in Debug mode for Windows..."
+ifeq ($(OS),Windows_NT)
 	@cd $(BUILD_DIR) && cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug -DRUN_TESTS:BOOLEAN=FALSE -DGAME_TITLE:STRING=$(PROJECT_TITLE) ..
+else
+	@cd $(BUILD_DIR) && cmake -DCMAKE_BUILD_TYPE=Debug -DRUN_TESTS:BOOLEAN=FALSE -DGAME_TITLE:STRING=$(PROJECT_TITLE) ..
+endif
 
-# setupwin:
-# 	pacman -Ss glew
-# 	pacman -S mingw-w64-x86_64-glew
 
 # Release build
 release: $(BUILD_DIR)
 	@echo "Building in Release mode..."
+ifeq ($(OS),Windows_NT)
+	@cd $(BUILD_DIR) && cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DRUN_TESTS:BOOLEAN=FALSE -DGAME_TITLE:STRING=$(PROJECT_TITLE) ..
+else
 	@cd $(BUILD_DIR) && cmake -DCMAKE_BUILD_TYPE=Release -DRUN_TESTS:BOOLEAN=FALSE -DGAME_TITLE:STRING=$(PROJECT_TITLE) ..
+endif
+
 
 test: create_test_dir
+ifeq ($(OS),Windows_NT)
+	@cd $(TEST_DIR) && cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug -DRUN_TESTS:BOOLEAN=TRUE -DGAME_TITLE:STRING=$(PROJECT_TITLE) .. && make -s && $(PROJECT_TITLE).exe
+else
 	@cd $(TEST_DIR) && cmake -DCMAKE_BUILD_TYPE=Debug -DRUN_TESTS:BOOLEAN=TRUE -DGAME_TITLE:STRING=$(PROJECT_TITLE) .. && make -s && ./$(PROJECT_TITLE)
+endif
 
 clean:
 ifeq ($(OS),Windows_NT)
