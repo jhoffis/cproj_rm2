@@ -22,10 +22,10 @@ debug: $(BUILD_DIR)
 # Release build
 release: $(BUILD_DIR)
 	@echo "Building in Release mode..."
-	cd $(BUILD_DIR) && cmake -DCMAKE_BUILD_TYPE=Release -DRUN_TESTS:BOOLEAN=FALSE ..
+	cd $(BUILD_DIR) && cmake -DCMAKE_BUILD_TYPE=Release -DRUN_TESTS:BOOLEAN=FALSE -DGAME_TITLE:STRING=$(PROJECT_TITLE) ..
 
 test: create_test_dir
-	cd $(TEST_DIR) && cmake -DCMAKE_BUILD_TYPE=Debug -DRUN_TESTS:BOOLEAN=TRUE .. && make && ./$(PROJECT_TITLE)
+	cd $(TEST_DIR) && cmake -DCMAKE_BUILD_TYPE=Debug -DRUN_TESTS:BOOLEAN=TRUE -DGAME_TITLE:STRING=$(PROJECT_TITLE) .. && make && ./$(PROJECT_TITLE)
 
 clean:
 	@rm -rf $(BUILD_DIR)
