@@ -6,11 +6,24 @@
 #include "stb_image.h"
 
 #ifdef _WIN32
-#define PATH_SEPARATOR "\\\\"
-#define FIX_PATH(path) #path
-#define TO_STRING(x) #x
-#define STRINGIFY(x) TO_STRING(x)
-#define PATH(x) STRINGIFY(x)
+#include <windows.h>
+#define PATH_SEPARATOR "\\"
+#define FIX_PATH(path) path
+#define PATH(x) x
+
+static char exe_path[MAX_PATH] = {0};
+
+static const char* get_exe_path() {
+    if (!exe_path[0]) {
+        GetModuleFileNameA(NULL, exe_path, MAX_PATH);
+        // Remove executable name to get the directory
+        char* last_slash = strrchr(exe_path, '\\');
+        if (last_slash) {
+            *(last_slash + 1) = '\0';
+        }
+    }
+    return exe_path;
+}
 #else
 #define PATH_SEPARATOR "/"
 #define FIX_PATH(path) path
@@ -18,6 +31,14 @@
 #endif
 
 char* path_name(const char* prefix, const char *name, const char* suffix) {
+    #ifdef _WIN32
+    const char* base_path = get_exe_path();
+    size_t base_len = strlen(base_path);
+    #else
+    const char* base_path = "";
+    size_t base_len = 0;
+    #endif
+    
     size_t prefix_len = strlen(FIX_PATH(prefix));
     size_t name_len = strlen(FIX_PATH(name));
     size_t suffix_len = strlen(FIX_PATH(suffix));
@@ -38,12 +59,12 @@ char* path_name(const char* prefix, const char *name, const char* suffix) {
         printf("Path-name \"%s\" is bad!\n", name);
         exit(1);
     }
-    char *path = xmalloc(prefix_len + name_len + suffix_len + 1);
+    char *path = xmalloc(base_len + prefix_len + name_len + suffix_len + 1);
     if (!path) return NULL;
 
     // Construct the path
-    snprintf(path, prefix_len + name_len + suffix_len + 1, "%s%s%s", 
-            FIX_PATH(prefix), FIX_PATH(name), FIX_PATH(suffix));
+    snprintf(path, base_len + prefix_len + name_len + suffix_len + 1, "%s%s%s%s", 
+            base_path, FIX_PATH(prefix), FIX_PATH(name), FIX_PATH(suffix));
 
     return path;
 }
