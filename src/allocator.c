@@ -6,6 +6,9 @@
 #include "nums.h"
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef _WIN32
+#include <malloc.h>
+#endif
 
 typedef enum {
     none, standard, aligned,
@@ -172,17 +175,22 @@ static void untrack_and_free(void* ptr, free_method method, const char *file, in
         exit(1);
     }
 
-    if (method != none && method != alloc_method[i]) {
-        printf("Attempted to free memory using the wrong method!\nFile: %s, Line: %d\n", file, line);
-        exit(1);
+    if (method != none) {
+        method = alloc_method[i];
     }
 
     switch (method) {
         case none:
             break;
         case standard:
-        case aligned:
             free(ptr);
+            break;
+        case aligned:
+            #ifdef _WIN32
+                _aligned_free(ptr);
+            #else
+                free(ptr);
+            #endif
             break;
     }
 
@@ -214,6 +222,22 @@ void *_priv_xmalloc(size_t size, const char *file, int line) {
     }
     void* ptr = malloc(size);
     if (!track_allocation(ptr, size, standard, file, line)) {
+        free(ptr);
+        return NULL;
+    }
+    return ptr;
+}
+
+void *_priv_xaligned_alloc(size_t size, size_t alignment, const char *file, int line) {
+    if (size + num_real_mem >= MAX_MEM_64) {
+        debug_print_all_allocated(size, file, line);
+    }
+    #ifdef _WIN32
+        void* ptr = _aligned_malloc(size, alignment);
+    #else
+        void* ptr = aligned_alloc(size, alignment);
+    #endif
+    if (!track_allocation(ptr, size, aligned, file, line)) {
         free(ptr);
         return NULL;
     }
@@ -266,6 +290,47 @@ void *_priv_xrealloc(void *old_ptr, size_t size, const char *file, int line) {
     return new_ptr;
 }
 
+void *_priv_xrealloc_aligned(void *old_ptr, size_t size, size_t alignment, const char *file, int line) {
+    // Find old size for tracking
+    size_t old_size = 0;
+    for (int i = 0; i < num_allocations; i++) {
+        if (alloc_ptrs[i] == old_ptr) {
+            old_size = alloc_sizes[i];
+            break;
+        }
+    }
+
+    if (size - old_size + num_real_mem >= MAX_MEM_64) {
+        debug_print_all_allocated(size - old_size, file, line);
+    }
+
+#ifdef _WIN32
+        void *new_ptr = _aligned_realloc(old_ptr, size, alignment);
+    #else
+        void *new_ptr = aligned_alloc(size, alignment);
+        if (old_ptr == NULL) {
+            return aligned_alloc(alignment, size);
+        }
+        
+        // Copy old data to new aligned allocation
+        void* new_ptr = aligned_alloc(alignment, size);
+        if (!new_ptr) {
+            return NULL;
+        }
+        
+        memcpy(new_ptr, old_ptr, old_size < size ? old_size : size);
+        
+        // Track new allocation before freeing old
+        if (!track_allocation(new_ptr, size, aligned, file, line)) {
+            free(new_ptr);
+            return NULL;
+        }
+
+        // Untrack and free old allocation
+        untrack_and_free(old_ptr, aligned, file, line);
+    #endif
+    return new_ptr;
+}
 
 /*
  * =====================================

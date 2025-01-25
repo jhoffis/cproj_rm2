@@ -13,6 +13,7 @@
 !/build/pics/
 !/build/pics/**
 /test/
+/clang/
 
 # Prerequisites
 *.d

@@ -2,8 +2,7 @@
 
 #include <string.h>
 #include "allocator.h"
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include "stb_image_impl.h"
 
 #ifdef _WIN32
 #include <windows.h>
