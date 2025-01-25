@@ -12,10 +12,10 @@ create_test_dir:
 	@mkdir -p $(TEST_DIR)
 
 all: $(BUILD_DIR)
-	cd $(BUILD_DIR) && make && ./$(PROJECT_TITLE)
+	cd $(BUILD_DIR) && make --no-print-directory && ./$(PROJECT_TITLE)
 
 db: $(BUILD_DIR)
-	cd $(BUILD_DIR) && make && gdb --tui -q -ex "run" --args ./$(PROJECT_TITLE)
+	cd $(BUILD_DIR) && make --no-print-directory && gdb --tui -q -ex "run" --args ./$(PROJECT_TITLE)
 
 # Debug build
 debug: $(BUILD_DIR)
