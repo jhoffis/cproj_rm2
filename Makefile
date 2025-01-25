@@ -14,6 +14,9 @@ create_test_dir:
 all: $(BUILD_DIR)
 	cd $(BUILD_DIR) && make && ./$(PROJECT_TITLE)
 
+db: $(BUILD_DIR)
+	cd $(BUILD_DIR) && make && gdb --tui -q -ex "run" --args ./$(PROJECT_TITLE)
+
 # Debug build
 debug: $(BUILD_DIR)
 	@echo "Building in Debug mode..."
