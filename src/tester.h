@@ -5,14 +5,14 @@
 
 #ifdef TEST_MODE
 // Macro for asserting conditions
-#define ASSERT(test, message)                                             \
-    do {                                                                 \
-        if (!(test)) {                                                   \
-            fprintf(stderr, "[FAILED] %s at line %d in %s: %s\n", __func__, __LINE__, __FILE__, message);  \
-            exit(1);                                                     \
-        } else {                                                         \
-            fprintf(stdout, "[PASSED] %s at line %d in %s: %s\n", __func__, __LINE__, __FILE__, message);  \
-        }                                                                \
+#define ASSERT(test, message) \
+    do { \
+        if (!(test)) { \
+            fprintf(stderr, "[FAILED] %s at line %d in %s: %s\n", __func__, __LINE__, __FILE__, message); \
+            exit(1); \
+        } else { \
+            fprintf(stdout, "[PASSED] %s at line %d in %s: %s\n", __func__, __LINE__, __FILE__, message); \
+        } \
     } while (0)
 
 // Macro for defining test cases

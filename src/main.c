@@ -1,5 +1,9 @@
 #ifdef TEST_MODE
-int main(void) {return 0;}
+#include <stdio.h>
+int main(void) {
+    printf("Passed all tests!\n");
+    return 0;
+}
 #else
 
 #define STB_IMAGE_IMPLEMENTATION
