@@ -1,8 +1,17 @@
+#ifdef TEST_MODE
+int main(void) {return 0;}
+#else
+
+#include "player.h"
+#include "nums.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 
 int main(void) {
+
+    init_player();
+
     if (!glfwInit()) {
         fprintf(stderr, "Failed to initialize GLFW\\n");
         return -1;
@@ -17,6 +26,13 @@ int main(void) {
 
     glfwMakeContextCurrent(window);
 
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        printf("Failed to initialize GLAD");
+        return -1;
+    }    
+
+    glViewport(0, 0, 800, 600);
+
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT);
         glfwSwapBuffers(window);
@@ -28,3 +44,5 @@ int main(void) {
     return 0;
 }
 
+
+#endif // TEST_MODE

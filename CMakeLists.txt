@@ -33,6 +33,9 @@ else()
     include_directories(${CMAKE_SOURCE_DIR}/libs/glfw_linux/include)
 endif()
 
+if (RUN_TESTS)
+    add_compile_definitions(TEST_MODE=1)
+endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs/glfw_linux/include)
 
