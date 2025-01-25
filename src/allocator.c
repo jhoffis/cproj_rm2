@@ -1,5 +1,5 @@
 #include "allocator.h"
-#include <threads.h>
+// #include <threads.h>
 
 #ifdef MEM_TRACK_DBG 
 
@@ -220,18 +220,6 @@ void *_priv_xmalloc(size_t size, const char *file, int line) {
     return ptr;
 }
 
-void *_priv_xaligned_alloc(size_t size, size_t alignment, const char *file, int line) {
-    if (size + num_real_mem >= MAX_MEM_64) {
-        debug_print_all_allocated(size, file, line);
-    }
-    void* ptr = aligned_alloc(size, alignment);
-    if (!track_allocation(ptr, size, aligned, file, line)) {
-        free(ptr);
-        return NULL;
-    }
-    return ptr;
-}
-
 void *_priv_xcalloc(size_t nmemb, size_t size, const char *file, int line) {
     if (nmemb*size + num_real_mem >= MAX_MEM_64) {
         debug_print_all_allocated(nmemb*size, file, line);
@@ -288,10 +276,6 @@ void _priv_xfree(void* ptr, const char *file, int line) {
     untrack_and_free(ptr, standard, file, line);
 }
 
-void _priv_xaligned_free(void* memblock, const char *file, int line) {
-    untrack_and_free(memblock, aligned, file, line);
-}
-
 void mem_tracker_cleanup(void) {
     if (num_allocations > 0) {
         printf("Not all memory is freed!\n");
@@ -300,7 +284,7 @@ void mem_tracker_cleanup(void) {
         }
 
         // add sleep and then delete so we can test faster!
-        thrd_sleep(&(struct timespec){.tv_sec=1}, NULL);
+        // thrd_sleep(&(struct timespec){.tv_sec=1}, NULL);
         for (int i = 0; i < num_allocations; i++) {
             untrack_and_free(alloc_ptrs[i], alloc_method[i], "cleanup", 0);
         }

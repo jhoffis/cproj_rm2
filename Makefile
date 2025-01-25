@@ -12,7 +12,11 @@ create_test_dir:
 	@mkdir -p $(TEST_DIR)
 
 all: $(BUILD_DIR)
+ifeq ($(OS),Windows_NT)
+	@cd $(BUILD_DIR) && make --no-print-directory && $(PROJECT_TITLE).exe
+else
 	@cd $(BUILD_DIR) && make --no-print-directory && ./$(PROJECT_TITLE)
+endif
 
 db: $(BUILD_DIR)
 	@cd $(BUILD_DIR) && make --no-print-directory && gdb --tui -q -ex "run" --args ./$(PROJECT_TITLE)
@@ -21,6 +25,13 @@ db: $(BUILD_DIR)
 debug: $(BUILD_DIR)
 	@echo "Building in Debug mode..."
 	@cd $(BUILD_DIR) && cmake -DCMAKE_BUILD_TYPE=Debug -DRUN_TESTS:BOOLEAN=FALSE -DGAME_TITLE:STRING=$(PROJECT_TITLE) ..
+debugwin: $(BUILD_DIR)
+	@echo "Building in Debug mode for Windows..."
+	@cd $(BUILD_DIR) && cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug -DRUN_TESTS:BOOLEAN=FALSE -DGAME_TITLE:STRING=$(PROJECT_TITLE) ..
+
+# setupwin:
+# 	pacman -Ss glew
+# 	pacman -S mingw-w64-x86_64-glew
 
 # Release build
 release: $(BUILD_DIR)

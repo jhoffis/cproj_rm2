@@ -1,3 +1,13 @@
+if (WIN32)
+    # Set compiler before project() declaration
+    set(CMAKE_C_COMPILER "C:/msys64/mingw64/bin/clang.exe" CACHE STRING "" FORCE)
+    set(CMAKE_CXX_COMPILER "C:/msys64/mingw64/bin/clang++.exe" CACHE STRING "" FORCE)
+
+    # You might also need to set the compiler launcher
+    set(CMAKE_C_COMPILER_LAUNCHER "" CACHE STRING "" FORCE)
+    set(CMAKE_CXX_COMPILER_LAUNCHER "" CACHE STRING "" FORCE)
+endif()
+
 cmake_minimum_required(VERSION 3.21)
 
 # Project name and C standard
@@ -8,7 +18,12 @@ set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
 # Find OpenGL
-find_package(OpenGL REQUIRED)
+if (WIN32)
+    find_package(OpenGL REQUIRED COMPONENTS OpenGL)
+    include_directories( ${OPENGL_INCLUDE_DIRS} )
+else()
+    find_package(OpenGL REQUIRED)
+endif()
 
 # Automatically find all source and header files in the src directory
 file(GLOB_RECURSE SOURCES
@@ -26,7 +41,8 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
 
 # OS-specific configuration
 if(WIN32)
-    message(STATUS "Configuring for Windows")
+    # message(STATUS "Configuring for Windows")
+    add_subdirectory(${CMAKE_SOURCE_DIR}/libs/glfw_win)
     include_directories(${CMAKE_SOURCE_DIR}/libs/glfw_win/include)
 else()
     message(STATUS "Configuring for Linux or other platforms")
@@ -36,8 +52,6 @@ endif()
 if (RUN_TESTS)
     add_compile_definitions(TEST_MODE=1)
 endif()
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs/glfw_linux/include)
 
 # Link libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE

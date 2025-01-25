@@ -51,7 +51,7 @@ static wav_file* load_wav(const char* filename, u32 start_index, u32 max_alloc_s
         alloc_size = header.subchunk2_size - start_index;
     }
 
-    void* audio_data = xaligned_alloc(alloc_size, 16);
+    void* audio_data = xmalloc(alloc_size);
     if (!audio_data) {
         perror("Memory allocation failed");
         fclose(file);
@@ -61,7 +61,7 @@ static wav_file* load_wav(const char* filename, u32 start_index, u32 max_alloc_s
     // Move the file pointer to the correct start position within the data chunk
     if (fseek(file, start_index, SEEK_CUR) != 0) {
         perror("Error seeking in file");
-        xaligned_free(audio_data);
+        xfree(audio_data);
         fclose(file);
         return NULL; 
     }
@@ -69,7 +69,7 @@ static wav_file* load_wav(const char* filename, u32 start_index, u32 max_alloc_s
     // Read the audio data
     if (fread(audio_data, 1, alloc_size, file) != alloc_size) {
         perror("Error reading audio data");
-        xaligned_free(audio_data);
+        xfree(audio_data);
         fclose(file);
         return NULL; 
     }
@@ -78,7 +78,7 @@ static wav_file* load_wav(const char* filename, u32 start_index, u32 max_alloc_s
     wav_file* wav = xmalloc(sizeof(wav_file));
     if (!wav) {
         perror("Memory allocation for wav_file failed");
-        xaligned_free(audio_data);
+        xfree(audio_data);
         return NULL;
     }
     *wav = (wav_file){header, filename, audio_data, alloc_size};
@@ -169,7 +169,7 @@ bool load_next_wav_buffer(wav_entity *entity) {
 }
 
 static void free_wav_file(wav_file *file) {
-    xaligned_free(file->loaded_data);
+    xfree(file->loaded_data);
     xfree(file);
 }
 
