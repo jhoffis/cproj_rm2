@@ -14,7 +14,7 @@ u64 timer_now_millis(void) {
     LARGE_INTEGER frequency, counter;
     QueryPerformanceFrequency(&frequency);
     QueryPerformanceCounter(&counter);
-    double milliseconds = (double)counter.QuadPart / (double)frequency.QuadPart * 1000.0;
+    f64 milliseconds = (f64)counter.QuadPart / (f64)frequency.QuadPart * 1000.0;
     return (u64)milliseconds;
 #else
     struct timespec res;
@@ -28,7 +28,7 @@ u64 timer_now_nanos(void) {
     LARGE_INTEGER frequency, counter;
     QueryPerformanceFrequency(&frequency);
     QueryPerformanceCounter(&counter);
-    double nanoseconds = (double)counter.QuadPart / (double)frequency.QuadPart * 1'000'000'000.0;
+    f64 nanoseconds = (f64)counter.QuadPart / (f64)frequency.QuadPart * 1'000'000'000.0;
     return (u64)nanoseconds;
 #else
     struct timespec res;
