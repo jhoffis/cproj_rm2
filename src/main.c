@@ -1,3 +1,4 @@
+#include "timer_util.h"
 #ifdef TEST_MODE
 #include <stdio.h>
 int main(void) {
@@ -23,6 +24,8 @@ int main(void) {
 
     init_player();
     image_data img = load_image("sky");
+
+    printf("ms: %llu\n", timer_now_nanos());
 
     if (!glfwInit()) {
         fprintf(stderr, "Failed to initialize GLFW\\n");
