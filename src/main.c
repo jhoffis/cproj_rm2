@@ -2,17 +2,18 @@
 int main(void) {return 0;}
 #else
 
+#define STB_IMAGE_IMPLEMENTATION
 #include "allocator.h"
 #include "player.h"
 #include "nums.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stdio.h>
+#include "stb_image.h"
 
 int main(void) {
-
     mem_tracker_init();
-    
+
     init_player();
 
     if (!glfwInit()) {

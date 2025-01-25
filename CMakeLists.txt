@@ -43,5 +43,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs/glfw_linux/include)
 target_link_libraries(${PROJECT_NAME} PRIVATE
     OpenGL::GL
     glfw
+    m
 )
 
