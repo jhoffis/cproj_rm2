@@ -8,12 +8,16 @@
 
 /.vscode/
 /.cache/
-/build/
+
+/build/*
 !/build/.gdbinit
 !/build/pics/
 !/build/pics/**
 !/build/audio/
 !/build/audio/**
+!/build/models/
+!/build/models/**
+
 /test/
 /clang/
 

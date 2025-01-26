@@ -1,4 +1,6 @@
+#include "renderer.h"
 #include "timer_util.h"
+#include "window.h"
 #ifdef TEST_MODE
 #include <stdio.h>
 int main(void) {
@@ -12,14 +14,10 @@ int main(void) {
 #include "model_loader.h"
 #include "player.h"
 #include "nums.h"
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 #include <stdio.h>
 #include "wav_loader.h"
 
-static void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-    glViewport(0, 0, width, height);
-}
+
 
 int main(void) {
     mem_tracker_init();
@@ -33,38 +31,16 @@ int main(void) {
 
     printf("ms: %llu\n", timer_now_nanos());
 
-    if (!glfwInit()) {
-        fprintf(stderr, "Failed to initialize GLFW\\n");
-        return -1;
+    window_setup();
+    gfx_init_graphics();
+
+    while (!window_should_close()) {
+        gfx_clear_color(0.2f, 0.3f, 0.3f, 1.0f);
+        gfx_swap();
+        window_poll_events();
     }
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "OpenGL Window", NULL, NULL);
-    if (!window) {
-        fprintf(stderr, "Failed to create GLFW window\\n");
-        glfwTerminate();
-        return -1;
-    }
-
-    glfwMakeContextCurrent(window);
-
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        printf("Failed to initialize GLAD");
-        return -1;
-    }    
-
-    glViewport(0, 0, 800, 600);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);  
-
-    while (!glfwWindowShouldClose(window)) {
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        glfwSwapBuffers(window);
-        glfwPollEvents();
-    }
-
-    glfwDestroyWindow(window);
-    glfwTerminate();
-
+    window_cleanup();
     mem_tracker_cleanup();
     return 0;
 }
