@@ -1,0 +1,10 @@
+TODO:
+- ha at shaders er recompila ved klikk av f5? Så slipper jeg kompleksiteten med watching.
+
+CURRENT:
+
+DONE:
+
+
+BACKLOG:
+

@@ -5,7 +5,6 @@
 #include <stdlib.h>
 
 void gfx_init_graphics(void) {
-
     // glfwGetProcAddress is specifically for opengl
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         printf("Failed to initialize GLAD");
@@ -23,3 +22,5 @@ void gfx_clear_color(f32 r, f32 g, f32 b, f32 a) {
 void gfx_swap(void) {
     glfwSwapBuffers(window);
 }
+
+

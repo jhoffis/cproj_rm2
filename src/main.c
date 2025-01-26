@@ -1,14 +1,9 @@
+#ifndef TEST_MODE
+
 #include "renderer.h"
+#include "shader.h"
 #include "timer_util.h"
 #include "window.h"
-#ifdef TEST_MODE
-#include <stdio.h>
-int main(void) {
-    printf("Passed all tests!\n");
-    return 0;
-}
-#else
-
 #include "file_util.h"
 #include "allocator.h"
 #include "model_loader.h"
@@ -16,8 +11,6 @@ int main(void) {
 #include "nums.h"
 #include <stdio.h>
 #include "wav_loader.h"
-
-
 
 int main(void) {
     mem_tracker_init();
@@ -31,7 +24,8 @@ int main(void) {
 
     printf("ms: %llu\n", timer_now_nanos());
 
-    window_setup();
+    shaders_init();
+    window_init();
     gfx_init_graphics();
 
     while (!window_should_close()) {
@@ -40,10 +34,17 @@ int main(void) {
         window_poll_events();
     }
 
+    shaders_cleanup();
     window_cleanup();
     mem_tracker_cleanup();
     return 0;
 }
 
 
+#else
+#include <stdio.h>
+int main(void) {
+    printf("Passed all tests!\n");
+    return 0;
+}
 #endif // TEST_MODE

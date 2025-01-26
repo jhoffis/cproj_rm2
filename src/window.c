@@ -9,7 +9,7 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-void window_setup(void) {
+void window_init(void) {
 
     if (!glfwInit()) {
         fprintf(stderr, "Failed to initialize GLFW\\n");

@@ -68,6 +68,48 @@ char* path_name(const char* prefix, const char *name, const char* suffix) {
     return path;
 }
 
+static char *load_file_as_str(FILE *file) {
+    // Move to the end of the file to determine its size
+    if (fseek(file, 0L, SEEK_END) != 0) {
+        perror("Error seeking to end of file");
+        return NULL;
+    }
+
+    // Get the size of the file
+    long fileSize = ftell(file);
+    if (fileSize == -1) {
+        perror("Error getting file size");
+        return NULL;
+    }
+
+    // Allocate memory for the buffer
+    char *buffer = xmalloc(fileSize + 1);  // +1 for null terminator
+    if (buffer == NULL) {
+        perror("Memory allocation failed");
+        return NULL;
+    }
+
+    // Move back to the start of the file
+    if (fseek(file, 0L, SEEK_SET) != 0) {
+        perror("Error seeking to start of file");
+        free(buffer);
+        return NULL;
+    }
+
+    // Read the file into the buffer
+    size_t bytesRead = fread(buffer, 1, fileSize, file);
+    if (bytesRead != fileSize) {
+        perror("Error reading file");
+        free(buffer);
+        return NULL;
+    }
+
+    // Null-terminate the string
+    buffer[fileSize] = '\0';
+
+    return buffer;
+}
+
 image_data load_image(const char *name) {
     image_data img = {0};
     char *fixed_name = path_name("pics/", name, ".png");
@@ -105,7 +147,7 @@ image_data load_image(const char *name) {
 
 FILE *load_model_file(const char *name) {
     char *fixed_name = path_name("models/", name, ".obj");
-    FILE* file = fopen(fixed_name, "rb");
+    FILE *file = fopen(fixed_name, "rb");
     xfree(fixed_name);
     if (!file) {
         printf("Could not find model \"%s\"\n", name);
@@ -113,3 +155,19 @@ FILE *load_model_file(const char *name) {
     }
     return file;
 }
+
+char *load_shader(const char *name) {
+    char *fixed_name = path_name("shaders/", name, ".glsl");
+    FILE *file = fopen(fixed_name, "r");
+    xfree(fixed_name);
+    if (!file) {
+        printf("Could not find shader \"%s\"\n", name);
+        exit(1);
+    }
+    return load_file_as_str(file);
+}
+
+
+
+
+
