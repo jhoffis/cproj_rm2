@@ -17,6 +17,10 @@
 !/build/audio/**
 !/build/models/
 !/build/models/**
+!/build/mods/
+!/build/mods/**
+!/build/shaders/
+!/build/shaders/**
 
 /test/
 /clang/
