@@ -24,17 +24,28 @@ int main(void) {
 
     printf("ms: %llu\n", timer_now_nanos());
 
-    shaders_init();
     window_init();
     gfx_init_graphics();
+    gfx_init_shaders();
+    
+    float vertices[] = {
+        -0.5f, -0.5f, 0.0f,
+        0.5f, -0.5f, 0.0f,
+        0.0f,  0.5f, 0.0f
+    };  
+    gfx_bind_vertices(shader_main, vertices, 9);
 
     while (!window_should_close()) {
         gfx_clear_color(0.2f, 0.3f, 0.3f, 1.0f);
-        gfx_swap();
         window_poll_events();
+
+        gfx_set_shader(shader_main);
+        gfx_draw();
+
+        gfx_swap();
     }
 
-    shaders_cleanup();
+    gfx_cleanup_shaders();
     window_cleanup();
     mem_tracker_cleanup();
     return 0;

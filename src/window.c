@@ -15,6 +15,9 @@ void window_init(void) {
         fprintf(stderr, "Failed to initialize GLFW\\n");
         exit(1);
     }
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     window = glfwCreateWindow(800, 600, "OpenGL Window", NULL, NULL);
     if (!window) {

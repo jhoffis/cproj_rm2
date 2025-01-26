@@ -156,8 +156,19 @@ FILE *load_model_file(const char *name) {
     return file;
 }
 
-char *load_shader(const char *name) {
-    char *fixed_name = path_name("shaders/", name, ".glsl");
+char *load_vertex_shader(const char *name) {
+    char *fixed_name = path_name("shaders/", name, "_v.glsl");
+    FILE *file = fopen(fixed_name, "r");
+    xfree(fixed_name);
+    if (!file) {
+        printf("Could not find shader \"%s\"\n", name);
+        exit(1);
+    }
+    return load_file_as_str(file);
+}
+
+char *load_fragment_shader(const char *name) {
+    char *fixed_name = path_name("shaders/", name, "_f.glsl");
     FILE *file = fopen(fixed_name, "r");
     xfree(fixed_name);
     if (!file) {
