@@ -85,6 +85,7 @@ static void compile_shader(shader_types type) {
     // Buffer objects
     glGenBuffers(1, &shader.vertex_buffer);
     glGenVertexArrays(1, &shader.vertex_attr_buffer);
+    glGenBuffers(1, &shader.index_buffer);
 
     shaders[type] = shader;
 
@@ -106,21 +107,29 @@ void gfx_set_shader(shader_types type) {
     curr = type;
     glUseProgram(shaders[type].program);
     glBindVertexArray(shaders[type].vertex_attr_buffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, shaders[type].index_buffer);
 }
 
-void gfx_bind_vertices(shader_types type, f32 *vertices, u32 amount) {
+void gfx_bind_vertices(shader_types type, 
+                       f32 *vertices, 
+                       u32 vertices_amount,
+                       u32 *indices,
+                       u32 indices_amount) {
 
     glBindVertexArray(shaders[type].vertex_attr_buffer);
 
     glBindBuffer(GL_ARRAY_BUFFER, shaders[type].vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, amount * sizeof(f32), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertices_amount * sizeof(f32), vertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, shaders[type].index_buffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_amount * sizeof(f32), indices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(f32), (void*)0);
     glEnableVertexAttribArray(0);  
 }
 
 void gfx_draw(void) {
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
 
