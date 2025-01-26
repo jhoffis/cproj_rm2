@@ -17,8 +17,7 @@ typedef struct {
     u32 index_buffer; // ebo
     u32 vertex_attr_buffer; // vao
 
-    u32 uniform_locations[MAX_UNIFORMS];    // Uniform locations
-    u32 attribute_locations[MAX_ATTRIBUTES]; // Attribute locations
+    u32 indices_amount;
 } shader_data;
 
 shader_data shaders[shader_len];
@@ -115,6 +114,7 @@ void gfx_bind_vertices(shader_types type,
                        u32 vertices_amount,
                        u32 *indices,
                        u32 indices_amount) {
+    shaders[type].indices_amount = indices_amount;
 
     glBindVertexArray(shaders[type].vertex_attr_buffer);
 
@@ -124,16 +124,24 @@ void gfx_bind_vertices(shader_types type,
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, shaders[type].index_buffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_amount * sizeof(f32), indices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 6 * sizeof(f32), (void*)0);
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 6 * sizeof(f32), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(f32), (void*)0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(f32), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(0);  
     glEnableVertexAttribArray(1);  
 }
 
-void gfx_uniform4f(u32 location, f32_v4 vec4) {
+void gfx_uniform_4f(u32 location, f32_v4 vec4) {
     glUniform4f(location, vec4.x, vec4.y, vec4.z, vec4.w);
 }
 
+void gfx_uniform_i8(u32 location, i8 num) {
+    glUniform1i(location, num);
+}
+
+void gfx_uniform_f32(u32 location, f32 num) {
+    glUniform1f(location, num);
+}
+
 void gfx_draw(void) {
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, shaders[curr].indices_amount, GL_UNSIGNED_INT, 0);
 }
