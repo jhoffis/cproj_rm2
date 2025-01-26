@@ -15,4 +15,5 @@ void gfx_bind_vertices(shader_types type,
                        u32 vertices_amount,
                        u32 *indices,
                        u32 indices_amount);
+void gfx_uniform4f(u32 location, f32_v4 vec4);
 void gfx_draw(void);
