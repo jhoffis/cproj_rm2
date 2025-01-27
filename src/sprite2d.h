@@ -2,7 +2,8 @@
 #include "nums.h"
 
 typedef enum {
-    anchor_bottom_left
+    anchor_bottom_left, anchor_bottom_right,
+    anchor_top_left, anchor_top_right,
 } sprite2D_anchor;
 
 void sprite2D_init(void);
