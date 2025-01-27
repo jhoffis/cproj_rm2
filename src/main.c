@@ -60,11 +60,12 @@ int main(void) {
 
         gfx_set_shader(shader_sprite2D);
 
-        gfx_uniform_4f(0, (f32_v4) {1, 0, 0.5, 1});
-        gfx_uniform_f32(1, 0);
+        gfx_uniform_f32_v4(0, (f32_v4) {1, 0, 0.5, 1});
+        gfx_uniform_f32_v3(1, (f32_v3) {.1, 0, 0.5});
+        gfx_uniform_f32(2, window_aspect_ratio());
         gfx_activate_texture(0, img.texture);
         gfx_draw();
-        gfx_uniform_f32(1, 0.2f);
+        gfx_uniform_f32_v3(1, (f32_v3) {.2, 0, 0.5});
         gfx_activate_texture(0, img2.texture);
         gfx_draw();
 

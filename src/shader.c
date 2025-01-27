@@ -178,16 +178,20 @@ void gfx_activate_texture(u32 texture_pipe, u32 texture) {
     glBindTexture(GL_TEXTURE_2D, texture); // TODO support more textures
 }
 
-void gfx_uniform_4f(u32 location, f32_v4 vec4) {
+void gfx_uniform_f32_v4(u32 location, f32_v4 vec4) {
     glUniform4f(location, vec4.x, vec4.y, vec4.z, vec4.w);
 }
 
-void gfx_uniform_i8(u32 location, i8 num) {
-    glUniform1i(location, num);
+void gfx_uniform_f32_v3(u32 location, f32_v3 vec4) {
+    glUniform3f(location, vec4.x, vec4.y, vec4.z);
 }
 
 void gfx_uniform_f32(u32 location, f32 num) {
     glUniform1f(location, num);
+}
+
+void gfx_uniform_i8(u32 location, i8 num) {
+    glUniform1i(location, num);
 }
 
 void gfx_draw(void) {

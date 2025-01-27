@@ -4,8 +4,11 @@
 #include <stdlib.h>
 
 GLFWwindow *window;
+static u32 width, height;
 
-static void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+static void framebuffer_size_callback(GLFWwindow* window, int w, int h) {
+    width = w;
+    height = h;
     glViewport(0, 0, width, height);
 }
 
@@ -19,7 +22,10 @@ void window_init(void) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    window = glfwCreateWindow(800, 600, "OpenGL Window", NULL, NULL);
+    width = 800;
+    height = 600;
+
+    window = glfwCreateWindow(width, height, "OpenGL Window", NULL, NULL);
     if (!window) {
         fprintf(stderr, "Failed to create GLFW window\\n");
         glfwTerminate();
@@ -44,4 +50,6 @@ void window_poll_events(void) {
     glfwPollEvents();
 }
 
-
+f32 window_aspect_ratio(void) {
+    return (f32) width / (f32) height;
+}
