@@ -7,6 +7,7 @@ typedef struct {
     u16 h;
     u16 pitch;
     i32 comp;
+    u32 texture;
     u8 *image;
 } image_data;
 

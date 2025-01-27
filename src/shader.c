@@ -16,7 +16,6 @@ typedef struct {
     u32 vertex_buffer; // vbo
     u32 index_buffer; // ebo
     u32 vertex_attr_buffer; // vao
-    u32 texture;
     u32 texture_coord_buffer;
 
     u32 indices_amount;
@@ -31,8 +30,8 @@ static void compile_shader(shader_types type) {
 
     shader_data shader = {0};
     switch (type) {
-        case shader_main:
-            shader.name = "main";
+        case shader_sprite2D:
+            shader.name = "sprite2D";
             break;
         default:
             printf("Error could not initialize shader type %d", type);
@@ -87,7 +86,6 @@ static void compile_shader(shader_types type) {
     glGenBuffers(1, &shader.vertex_buffer);
     glGenVertexArrays(1, &shader.vertex_attr_buffer);
     glGenBuffers(1, &shader.index_buffer);
-    glGenTextures(1, &shader.texture);
     glGenBuffers(1, &shader.texture_coord_buffer);
 
     shaders[type] = shader;
@@ -136,41 +134,48 @@ void gfx_bind_vertices(shader_types type,
     glBindVertexArray(0);
 }
 
-void gfx_bind_texture(shader_types type,
-                      f32 *texture_coordinates,
-                      u32 amount,
-                      image_data *img) {
-
+void gfx_bind_texture(shader_types type, f32* texture_coordinates, u32 amount) {
     glBindVertexArray(shaders[type].vertex_attr_buffer);
 
     glBindBuffer(GL_ARRAY_BUFFER, shaders[type].texture_coord_buffer);
     glBufferData(GL_ARRAY_BUFFER, amount * sizeof(f32), texture_coordinates, GL_STATIC_DRAW);
 
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(2);  
+    glEnableVertexAttribArray(2);
 
-    glBindTexture(GL_TEXTURE_2D, shaders[type].texture);
+    // Unbind for safety
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+}
+
+void gfx_finalize_image(image_data* img) {
+    glGenTextures(1, &img->texture);
+    glBindTexture(GL_TEXTURE_2D, img->texture);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT); 
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 
-
-    float borderColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
-    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);  
+    const float borderColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img->w, img->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, img->image);
     glGenerateMipmap(GL_TEXTURE_2D);
-    // now we can free img?
 
+    free(img->image);
+
+    // Unbind texture for safety
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    // Unbind the vertex array (if applicable in your context)
     glBindVertexArray(0);
 }
 
-void gfx_activate_texture(u32 texture_pipe) {
+void gfx_activate_texture(u32 texture_pipe, u32 texture) {
     glActiveTexture(GL_TEXTURE0 + texture_pipe);
-    glBindTexture(GL_TEXTURE_2D, shaders[curr].texture); // TODO support more textures
+    glBindTexture(GL_TEXTURE_2D, texture); // TODO support more textures
 }
 
 void gfx_uniform_4f(u32 location, f32_v4 vec4) {
