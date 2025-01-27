@@ -24,6 +24,7 @@ void gfx_finalize_image(image_data *img);
 void gfx_activate_texture(u32 texture_pipe, u32 texture);
 void gfx_uniform_f32_v4(u32 location, f32_v4 vec4);
 void gfx_uniform_f32_v3(u32 location, f32_v3 vec4);
+void gfx_uniform_f32_v2(u32 location, f32_v2 vec4);
 void gfx_uniform_f32(u32 location, f32 num);
 void gfx_uniform_i8(u32 location, i8 num);
 void gfx_draw(void);

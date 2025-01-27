@@ -209,6 +209,10 @@ void gfx_uniform_f32_v3(u32 location, f32_v3 vec4) {
     glUniform3f(location, vec4.x, vec4.y, vec4.z);
 }
 
+void gfx_uniform_f32_v2(u32 location, f32_v2 vec4) {
+    glUniform2f(location, vec4.x, vec4.y);
+}
+
 void gfx_uniform_f32(u32 location, f32 num) {
     glUniform1f(location, num);
 }

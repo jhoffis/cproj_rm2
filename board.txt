@@ -7,6 +7,7 @@ TODO:
 - Ha at på release så kommer det opp grafisk boks i stedet for printf. Lag en macro?
 - Bruk assert mer!
 - Lag til mods støtte ved å kalle på en header i mods/ mappen og skriv en readme som forklarer den. Render, tick, input etc.
+- Lag til støtte for forskjellige anchor points til 2d sprites.
 
 CURRENT:
 - Fiks til skikkelig Sprite2d

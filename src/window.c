@@ -19,11 +19,13 @@ f64 mouse_ypos = 0;
 
 static window_key_cb external_kcb;
 static window_mouse_cb external_mcb;
+static window_resize_cb external_wrcb;
 
 static void framebuffer_size_callback(GLFWwindow* window, int w, int h) {
     window_width = w;
     window_height = h;
     glViewport(0, 0, window_width, window_height);
+    external_wrcb(w, h);
 }
 
 static void key_cb(GLFWwindow *window, i32 key, i32 scancode, i32 action, i32 mods) {
@@ -48,9 +50,10 @@ static void mouse_pos_cb(GLFWwindow *window, f64 xpos, f64 ypos) {
 }
 
 
-void window_init(window_key_cb kcb, window_mouse_cb mcb) {
+void window_init(window_key_cb kcb, window_mouse_cb mcb, window_resize_cb wrcb) {
     external_kcb = kcb;
     external_mcb = mcb;
+    external_wrcb = wrcb;
 
     if (!glfwInit()) {
         fprintf(stderr, "Failed to initialize GLFW\\n");
@@ -92,5 +95,5 @@ void window_poll_events(void) {
 }
 
 f32 window_aspect_ratio(void) {
-    return (f32) window_width / (f32) window_height;
+    return (f32) window_height / (f32) window_width;
 }

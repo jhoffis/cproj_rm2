@@ -1,3 +1,4 @@
+#include "sprite2d.h"
 #ifndef TEST_MODE
 
 #include "renderer.h"
@@ -25,12 +26,14 @@ static void mouse_cb(f64 xpos, f64 ypos, i32 button, i32 action, i32 mods) {
     // printf("asdfff\n");
 }
 
+static void resize_cb(u32 width, u32 height) {
+
+}
+
 int main(void) {
     mem_tracker_init();
 
     init_player();
-    image_data img = load_image("sky");
-    image_data img2 = load_image("yinyang");
 
     wav_entity* wav = create_wav_entity("test");
     load_next_wav_buffer(wav);
@@ -38,50 +41,18 @@ int main(void) {
 
     printf("ms: %llu\n", timer_now_nanos());
 
-    window_init(key_cb, mouse_cb);
+    window_init(key_cb, mouse_cb, resize_cb);
     gfx_init_graphics();
     gfx_init_shaders();
 
-
-    float vertices[] = {
-        // positions         // colors
-         0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
-        -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-         0.5f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f,    // top 
-        -0.5f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f,    // top 
-    };    
-
-    unsigned int indices[] = {  // note that we start from 0!
-        0, 1, 3,
-        0, 3, 2,
-    };  
-    gfx_bind_vertices(shader_sprite2D, vertices, 24, indices, 6);
-
-    float texCoords[] = {
-        0.0f, 1.0f,  // lower-left corner  
-        1.0f, 1.0f,  // lower-right corner
-        0.0f, 0.0f,   // top-center corner
-        1.0f, 0.0f   // top-center corner
-    };
-    gfx_bind_texture(shader_sprite2D, texCoords, 8);
-    gfx_finalize_image(&img);
-    gfx_finalize_image(&img2);
+    sprite2D_create("sky");
+    sprite2D_create("yinyang");
 
     while (!window_should_close()) {
         gfx_clear_color(0.2f, 0.3f, 0.3f, 1.0f);
         window_poll_events();
 
-        gfx_set_shader(shader_sprite2D);
-
-        gfx_uniform_f32_v4(0, (f32_v4) {1, 0, 0.5, 1});
-        gfx_uniform_f32_v3(1, (f32_v3) {.1, 0, 0.5});
-        gfx_uniform_f32(2, window_aspect_ratio());
-        gfx_activate_texture(0, img.texture);
-        gfx_draw();
-        gfx_uniform_f32_v3(1, (f32_v3) {.2, 0, 0.5});
-        gfx_activate_texture(0, img2.texture);
-        gfx_draw();
-
+        sprite2D_draw();
         gfx_swap();
     }
 
