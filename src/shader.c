@@ -164,7 +164,7 @@ void gfx_finalize_image(image_data* img) {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img->w, img->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, img->image);
     glGenerateMipmap(GL_TEXTURE_2D);
 
-    free(img->image);
+    xfree(img->image);
 
     // Unbind texture for safety
     glBindTexture(GL_TEXTURE_2D, 0);

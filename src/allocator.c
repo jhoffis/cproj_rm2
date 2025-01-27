@@ -218,6 +218,14 @@ static void untrack_and_free(void* ptr, free_method method, const char *file, in
  * =====================================
  */
 
+void _priv_xregister_standard(void *ptr, size_t size, const char *file, int line) {
+    track_allocation(ptr, size, standard, file, line);
+}
+
+void _priv_xregister_aligned(void *ptr, size_t size, const char *file, int line) {
+    track_allocation(ptr, size, aligned, file, line);
+}
+
 void *_priv_xmalloc(size_t size, const char *file, int line) {
     if (size + num_real_mem >= MAX_MEM_64) {
         debug_print_all_allocated(size, file, line);

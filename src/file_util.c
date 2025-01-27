@@ -127,7 +127,7 @@ image_data load_image(const char *name) {
         exit(1);
     }
     img.pitch = 4*img.w; // 4 bytes
-
+    xregister_aligned(img.image, img.pitch * img.h);
     // void *textureAddr = xMmAllocateContiguousMemoryEx(img.pitch * img.h, 0, PAGE_READWRITE | PAGE_WRITECOMBINE);
     // swizzle_rect(img.image, img.w, img.h, textureAddr, img.pitch, 4);
     //

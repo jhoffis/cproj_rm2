@@ -11,12 +11,18 @@ void mem_tracker_init(void);
 void mem_tracker_cleanup(void);
 void print_num_mem_allocated(void);
 
+void _priv_xregister_standard(void *ptr, size_t size, const char *file, int line);
+void _priv_xregister_aligned(void *ptr, size_t size, const char *file, int line);
 void *_priv_xmalloc(size_t size, const char *file, int line);
 void *_priv_xaligned_alloc(size_t size, size_t alignment, const char *file, int line);
 void *_priv_xcalloc(size_t nmemb, size_t size, const char *file, int line);
 void *_priv_xrealloc(void *ptr, size_t size, const char *file, int line);
 void *_priv_xrealloc_aligned(void *ptr, size_t size, size_t alignment, const char *file, int line);
 
+#define xregister_standard(ptr, size) \
+    _priv_xregister_standard((ptr), (size), __FILE__, __LINE__)
+#define xregister_aligned(ptr, size) \
+    _priv_xregister_aligned((ptr), (size), __FILE__, __LINE__)
 #define xmalloc(size) \
     _priv_xmalloc((size), __FILE__, __LINE__)
 #define xaligned_alloc(size, alignment) \
