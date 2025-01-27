@@ -13,10 +13,10 @@
 #include "wav_loader.h"
 
 static void key_cb(i32 key, i32 scancode, i32 action, i32 mods) {
-    printf("asdf\n");
     if (action == GLFW_RELEASE) {
         if (key == GLFW_KEY_F5) {
-            gfx_load_shaders();
+            printf("Hot-reloading shaders...\n");
+            gfx_reload_shaders();
         }
     }
 }
@@ -40,7 +40,7 @@ int main(void) {
 
     window_init(key_cb, mouse_cb);
     gfx_init_graphics();
-    gfx_load_shaders();
+    gfx_init_shaders();
 
 
     float vertices[] = {
@@ -52,8 +52,8 @@ int main(void) {
     };    
 
     unsigned int indices[] = {  // note that we start from 0!
-        0, 1, 3,   // first triangle
-        0, 3, 2,   // first triangle
+        0, 1, 3,
+        0, 3, 2,
     };  
     gfx_bind_vertices(shader_sprite2D, vertices, 24, indices, 6);
 

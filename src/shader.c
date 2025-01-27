@@ -18,7 +18,12 @@ typedef struct {
     u32 vertex_attr_buffer; // vao
     u32 texture_coord_buffer;
 
+    f32 *vertices;
+    u32 vertices_amount;
+    u32 *indices;
     u32 indices_amount;
+    f32 *texture_coordinates;
+    u32 texture_coordinates_amount;
 } shader_data;
 
 shader_data shaders[shader_len];
@@ -28,7 +33,7 @@ static void compile_shader(shader_types type) {
     int  success;
     char error_info[512];
 
-    shader_data shader = {0};
+    shader_data shader = shaders[type];
     switch (type) {
         case shader_sprite2D:
             shader.name = "sprite2D";
@@ -95,9 +100,22 @@ fail:
     xfree((void*)fragment_file);
 }
 
-void gfx_load_shaders(void) {
+void gfx_init_shaders(void) {
+    for (auto i = 0; i < shader_len; i++) {
+        shaders[i] = (shader_data){0};
+        compile_shader(i);
+    }
+}
+
+void gfx_reload_shaders(void) {
     for (auto i = 0; i < shader_len; i++) {
         compile_shader(i);
+        if (shaders[i].vertices_amount != 0) {
+            gfx_bind_vertices(i, shaders[i].vertices, shaders[i].vertices_amount, shaders[i].indices, shaders[i].indices_amount);
+        }
+        if (shaders[i].texture_coordinates_amount != 0) {
+            gfx_bind_texture(i, shaders[i].texture_coordinates, shaders[i].texture_coordinates_amount);
+        }
     }
 }
 
@@ -116,6 +134,9 @@ void gfx_bind_vertices(shader_types type,
                        u32 vertices_amount,
                        u32 *indices,
                        u32 indices_amount) {
+    shaders[type].vertices = vertices;
+    shaders[type].vertices_amount = vertices_amount;
+    shaders[type].indices = indices;
     shaders[type].indices_amount = indices_amount;
 
     glBindVertexArray(shaders[type].vertex_attr_buffer);
@@ -134,7 +155,9 @@ void gfx_bind_vertices(shader_types type,
     glBindVertexArray(0);
 }
 
-void gfx_bind_texture(shader_types type, f32* texture_coordinates, u32 amount) {
+void gfx_bind_texture(shader_types type, f32 *texture_coordinates, u32 amount) {
+    shaders[type].texture_coordinates = texture_coordinates;
+    shaders[type].texture_coordinates_amount = amount;
     glBindVertexArray(shaders[type].vertex_attr_buffer);
 
     glBindBuffer(GL_ARRAY_BUFFER, shaders[type].texture_coord_buffer);

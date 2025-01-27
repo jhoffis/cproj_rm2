@@ -8,7 +8,8 @@ typedef enum {
     shader_len 
 } shader_types;
 
-void gfx_load_shaders(void);
+void gfx_init_shaders(void);
+void gfx_reload_shaders(void);
 void gfx_cleanup_shaders(void);
 void gfx_set_shader(shader_types type);
 void gfx_bind_vertices(shader_types type, 
