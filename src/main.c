@@ -34,6 +34,7 @@ int main(void) {
     mem_tracker_init();
 
     init_player();
+    sprite2D_init();
 
     wav_entity* wav = create_wav_entity("test");
     load_next_wav_buffer(wav);
@@ -45,8 +46,10 @@ int main(void) {
     gfx_init_graphics();
     gfx_init_shaders();
 
-    sprite2D_create("sky");
-    sprite2D_create("yinyang");
+    auto sky = sprite2D_create("sky", 0, anchor_bottom_left);
+    auto yinyang = sprite2D_create("yinyang", 0, anchor_bottom_left);
+
+    sprite2D_pos(sky, (f32_v2){0.7, 0.3});
 
     while (!window_should_close()) {
         gfx_clear_color(0.2f, 0.3f, 0.3f, 1.0f);

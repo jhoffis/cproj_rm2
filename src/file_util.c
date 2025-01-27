@@ -111,6 +111,10 @@ static char *load_file_as_str(FILE *file) {
 }
 
 image_data load_image(const char *name) {
+    // for (auto i = 0; i < imgs_actual_size; i++) {
+    //     if (imgs[i].h
+    // }
+
     image_data img = {0};
     char *fixed_name = path_name("pics/", name, ".png");
     FILE* file = fopen(fixed_name, "rb"); // requires a persistent char* appearently

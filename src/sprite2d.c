@@ -1,12 +1,31 @@
 #include "sprite2d.h"
+#include "allocator.h"
 #include "shader.h"
+#include "window.h"
 
+static image_data *imgs;
+static f32_v2 *positions;
+static bool *visibles;
+static u32 max_size = 8;
+static u32 actual_size = 0;
 
+void sprite2D_init(void) {
+    positions = xcalloc(max_size, sizeof(f32_v2));
+    visibles = xcalloc(max_size, sizeof(bool));
+    imgs = xcalloc(max_size, sizeof(image_data));
+}
 
-u32 sprite2D_create(const char *name, u32 scene_id) {
-    u32 id = 0;
+void sprite2D_update_window_aspect(f32 aspect) {
 
-    image_data img = load_image(name);
+}
+
+u32 sprite2D_create(const char *name, u32 scene_id, sprite2D_anchor anchor) {
+    u32 id = actual_size;
+    actual_size++;
+    positions[id] = (f32_v2) {0,0};
+    visibles[id] = true;
+    imgs[id] = load_image(name);
+
     float vertices[] = {
         // positions         // colors
          1.0f, -0.0f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
@@ -28,29 +47,27 @@ u32 sprite2D_create(const char *name, u32 scene_id) {
         1.0f, 0.0f   // top-center corner
     };
     gfx_bind_texture(shader_sprite2D, texCoords, 8);
-    gfx_finalize_image(&img);
+    gfx_finalize_image(&imgs[id]);
     return id;
 }
 
 void sprite2D_visible(u32 id, bool visible) {
-
+    visibles[id] = visibles;
 }
 
 void sprite2D_pos(u32 id, f32_v2 pos) {
-
+    positions[id] = pos;
 }
 
 void sprite2D_draw() {
     gfx_set_shader(shader_sprite2D);
-
+    
     gfx_uniform_f32_v4(0, (f32_v4) {1, 0, 0.5, 1});
-    gfx_uniform_f32_v2(1, (f32_v2) {.1, 0.2});
-    gfx_uniform_f32(2, window_aspect_ratio());
-    gfx_uniform_f32(3, (f32) img.w / (f32) img.h);
-    gfx_activate_texture(0, img.texture);
-    gfx_draw();
-    gfx_uniform_f32_v2(1, (f32_v2) {.5, -.1});
-    gfx_uniform_f32(3, (f32) img2.w / (f32) img2.h);
-    gfx_activate_texture(0, img2.texture);
-    gfx_draw();
+    for (auto i = 0; i < actual_size; i++) {
+        gfx_uniform_f32_v2(1, positions[i]);
+        gfx_uniform_f32(2, window_aspect_ratio());
+        gfx_uniform_f32(3, (f32) imgs[i].w / (f32) imgs[i].h);
+        gfx_activate_texture(0, imgs[i].texture);
+        gfx_draw();
+    }
 }
