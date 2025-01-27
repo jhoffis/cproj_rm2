@@ -12,6 +12,19 @@
 #include <stdio.h>
 #include "wav_loader.h"
 
+static void key_cb(i32 key, i32 scancode, i32 action, i32 mods) {
+    printf("asdf\n");
+    if (action == GLFW_RELEASE) {
+        if (key == GLFW_KEY_F5) {
+            gfx_load_shaders();
+        }
+    }
+}
+
+static void mouse_cb(f64 xpos, f64 ypos, i32 button, i32 action, i32 mods) {
+    // printf("asdfff\n");
+}
+
 int main(void) {
     mem_tracker_init();
 
@@ -25,9 +38,9 @@ int main(void) {
 
     printf("ms: %llu\n", timer_now_nanos());
 
-    window_init();
+    window_init(key_cb, mouse_cb);
     gfx_init_graphics();
-    gfx_init_shaders();
+    gfx_load_shaders();
 
 
     float vertices[] = {

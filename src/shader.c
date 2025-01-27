@@ -95,7 +95,7 @@ fail:
     xfree((void*)fragment_file);
 }
 
-void gfx_init_shaders(void) {
+void gfx_load_shaders(void) {
     for (auto i = 0; i < shader_len; i++) {
         compile_shader(i);
     }

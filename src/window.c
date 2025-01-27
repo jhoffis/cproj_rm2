@@ -4,15 +4,53 @@
 #include <stdlib.h>
 
 GLFWwindow *window;
-static u32 width, height;
+u32 window_width, window_height;
+bool key_down = false;
+i32 key_key = 0;
+i32 key_scancode = 0;
+i32 key_action = 0;
+i32 key_mods = 0;
+
+i32 mouse_button = 0;
+i32 mouse_action = 0;
+i32 mouse_mods = 0;
+f64 mouse_xpos = 0;
+f64 mouse_ypos = 0;
+
+static window_key_cb external_kcb;
+static window_mouse_cb external_mcb;
 
 static void framebuffer_size_callback(GLFWwindow* window, int w, int h) {
-    width = w;
-    height = h;
-    glViewport(0, 0, width, height);
+    window_width = w;
+    window_height = h;
+    glViewport(0, 0, window_width, window_height);
 }
 
-void window_init(void) {
+static void key_cb(GLFWwindow *window, i32 key, i32 scancode, i32 action, i32 mods) {
+    key_key = key;
+    key_scancode = scancode;
+    key_action = action;
+    key_mods = mods;
+    external_kcb(key, scancode, action, mods);
+}
+
+static void mouse_btn_cb(GLFWwindow *window, i32 button, i32 action, i32 mods) {
+    mouse_button = button;
+    mouse_action = action;
+    mouse_mods = mods;
+    external_mcb(mouse_xpos, mouse_ypos, button, action, mods);
+}
+
+static void mouse_pos_cb(GLFWwindow *window, f64 xpos, f64 ypos) {
+    mouse_xpos = xpos;
+    mouse_ypos = ypos;
+    external_mcb(xpos, ypos, mouse_button, mouse_action, mouse_mods);
+}
+
+
+void window_init(window_key_cb kcb, window_mouse_cb mcb) {
+    external_kcb = kcb;
+    external_mcb = mcb;
 
     if (!glfwInit()) {
         fprintf(stderr, "Failed to initialize GLFW\\n");
@@ -22,10 +60,10 @@ void window_init(void) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    width = 800;
-    height = 600;
+    window_width = 800;
+    window_height = 600;
 
-    window = glfwCreateWindow(width, height, "OpenGL Window", NULL, NULL);
+    window = glfwCreateWindow(window_width, window_height, "OpenGL Window", NULL, NULL);
     if (!window) {
         fprintf(stderr, "Failed to create GLFW window\\n");
         glfwTerminate();
@@ -35,6 +73,9 @@ void window_init(void) {
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);  
 
+    glfwSetKeyCallback(window, key_cb);
+    glfwSetMouseButtonCallback(window, mouse_btn_cb);
+    glfwSetCursorPosCallback(window, mouse_pos_cb);
 }
 
 void window_cleanup(void) {
@@ -51,5 +92,5 @@ void window_poll_events(void) {
 }
 
 f32 window_aspect_ratio(void) {
-    return (f32) width / (f32) height;
+    return (f32) window_width / (f32) window_height;
 }
