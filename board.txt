@@ -1,10 +1,18 @@
 TODO:
-- ha at shaders er recompila ved klikk av f5? Så slipper jeg kompleksiteten med watching.
+- Run mem check after each test
+- Ha mem tracker init til starten av test main
+- Legg til knapp ved å si add_button(func_ref, sceneid);
+- Kan flytte knapper ved å holde space og dra i debug mode.
+- Ha grid som bestemmer størrelse og plassering av knapper og andre ui elementer
+- Ha at på release så kommer det opp grafisk boks i stedet for printf. Lag en macro?
+- Bruk assert mer!
+- Lag til mods støtte ved å kalle på en header i mods/ mappen og skriv en readme som forklarer den. Render, tick, input etc.
 
 CURRENT:
+- Fiks til skikkelig Sprite2d
 
 DONE:
-
+- ha at shaders er recompila ved klikk av f5? Så slipper jeg kompleksiteten med watching.
 
 BACKLOG:
-
+- Send 3d modeller, bilder etc over internett slik at folk kan vise frem sine mods? Og for støtte av flere dlcer!
