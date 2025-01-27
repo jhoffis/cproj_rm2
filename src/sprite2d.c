@@ -3,9 +3,12 @@
 #include "shader.h"
 #include "window.h"
 
-static image_data *imgs;
+static f32_v2 camera = {0};
+
 static f32_v2 *positions;
 static bool *visibles;
+static image_data *imgs;
+static sprite2D_anchor *anchors;
 static u32 max_size = 8;
 static u32 actual_size = 0;
 
@@ -13,6 +16,14 @@ void sprite2D_init(void) {
     positions = xcalloc(max_size, sizeof(f32_v2));
     visibles = xcalloc(max_size, sizeof(bool));
     imgs = xcalloc(max_size, sizeof(image_data));
+    anchors = xcalloc(max_size, sizeof(sprite2D_anchor));
+}
+
+void sprite2D_cleanup(void) {
+    xfree(anchors);
+    xfree(imgs);
+    xfree(visibles);
+    xfree(positions);
 }
 
 void sprite2D_update_window_aspect(f32 aspect) {
@@ -25,6 +36,7 @@ u32 sprite2D_create(const char *name, u32 scene_id, sprite2D_anchor anchor) {
     positions[id] = (f32_v2) {0,0};
     visibles[id] = true;
     imgs[id] = load_image(name);
+    anchors[id] = anchor;
 
     float vertices[] = {
         // positions         // colors
@@ -59,14 +71,23 @@ void sprite2D_pos(u32 id, f32_v2 pos) {
     positions[id] = pos;
 }
 
+void sprite2D_camera_pos(f32_v2 pos) {
+    camera = pos;
+}
+
 void sprite2D_draw() {
     gfx_set_shader(shader_sprite2D);
     
     gfx_uniform_f32_v4(0, (f32_v4) {1, 0, 0.5, 1});
+    f32_v2 pos = {0};
     for (auto i = 0; i < actual_size; i++) {
-        gfx_uniform_f32_v2(1, positions[i]);
+        if (!visibles[i]) continue;
+        pos.x = positions[i].x - camera.x;
+        pos.y = positions[i].y - camera.y;
+        gfx_uniform_f32_v2(1, pos);
         gfx_uniform_f32(2, window_aspect_ratio());
         gfx_uniform_f32(3, (f32) imgs[i].w / (f32) imgs[i].h);
+        gfx_uniform_i8(4, anchors[i]);
         gfx_activate_texture(0, imgs[i].texture);
         gfx_draw();
     }

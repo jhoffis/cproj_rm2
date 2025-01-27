@@ -9,6 +9,7 @@ out vec2 TexCoord;
 layout(location = 1) uniform vec2 pos;
 layout(location = 2) uniform float aspect;
 layout(location = 3) uniform float img_ratio;
+layout(location = 4) uniform int anchor;
 
 void main() {
     gl_Position = vec4(aPos.x, aPos.y, 0, 1.0);

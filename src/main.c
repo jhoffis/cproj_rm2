@@ -50,6 +50,7 @@ int main(void) {
     auto yinyang = sprite2D_create("yinyang", 0, anchor_bottom_left);
 
     sprite2D_pos(sky, (f32_v2){0.7, 0.3});
+    sprite2D_camera_pos((f32_v2){0.7, 0.3});
 
     while (!window_should_close()) {
         gfx_clear_color(0.2f, 0.3f, 0.3f, 1.0f);
@@ -59,6 +60,7 @@ int main(void) {
         gfx_swap();
     }
 
+    sprite2D_cleanup();
     gfx_cleanup_shaders();
     window_cleanup();
     mem_tracker_cleanup();
