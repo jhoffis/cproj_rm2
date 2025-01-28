@@ -7,7 +7,6 @@
 #include "window.h"
 #include "file_util.h"
 #include "allocator.h"
-#include "model_loader.h"
 #include "player.h"
 #include "nums.h"
 #include <stdio.h>
@@ -51,6 +50,8 @@ int main(void) {
 
     sprite2D_pos(sky, (f32_v2){0.7, 0.3});
     sprite2D_camera_pos((f32_v2){0.7, 0.3});
+
+    load_model_file("decentra");
 
     while (!window_should_close()) {
         gfx_clear_color(0.2f, 0.3f, 0.3f, 1.0f);
