@@ -191,22 +191,71 @@ static void tobj_file_reader_cb(void *ctx, const char *filename, int is_mtl, con
 }
 
 
-void load_model_file(const char *name) {
+mesh3d* load_model_file(const char *name) {
     tinyobj_attrib_t attrib;
     tinyobj_shape_t* shapes = NULL;
     size_t num_shapes;
     tinyobj_material_t* materials = NULL;
     size_t num_materials;
 
-    {
-        u32 flags = TINYOBJ_FLAG_TRIANGULATE;
-        i32 ret = tinyobj_parse_obj(&attrib, &shapes, &num_shapes, &materials,
-                    &num_materials, name, tobj_file_reader_cb, NULL, flags);
-        if (ret != TINYOBJ_SUCCESS) {
-            printf("Failed to triangulate OBJ file: %s\n", name);
-            return;
+    mesh3d* mesh = xmalloc(sizeof(mesh3d));
+    *mesh = (mesh3d){0};
+
+    u32 flags = TINYOBJ_FLAG_TRIANGULATE;
+    i32 ret = tinyobj_parse_obj(&attrib, &shapes, &num_shapes, &materials,
+                &num_materials, name, tobj_file_reader_cb, NULL, flags);
+    if (ret != TINYOBJ_SUCCESS) {
+        printf("Failed to load OBJ file: %s\n", name);
+        xfree(mesh);
+        return NULL;
+    }
+
+    // Process vertices
+    mesh->num_vertices = attrib.num_vertices;
+    mesh->vertices = xmalloc(sizeof(f32_v3) * mesh->num_vertices);
+    for (u32 i = 0; i < mesh->num_vertices; i++) {
+        mesh->vertices[i] = (f32_v3){
+            attrib.vertices[3*i],
+            attrib.vertices[3*i+1],
+            attrib.vertices[3*i+2]
+        };
+    }
+
+    // Process normals
+    if (attrib.num_normals > 0) {
+        mesh->normals = xmalloc(sizeof(f32_v3) * attrib.num_normals);
+        for (u32 i = 0; i < attrib.num_normals; i++) {
+            mesh->normals[i] = (f32_v3){
+                attrib.normals[3*i],
+                attrib.normals[3*i+1],
+                attrib.normals[3*i+2]
+            };
         }
     }
+
+    // Process texture coordinates
+    if (attrib.num_texcoords > 0) {
+        mesh->uvs = xmalloc(sizeof(f32_v2) * attrib.num_texcoords);
+        for (u32 i = 0; i < attrib.num_texcoords; i++) {
+            mesh->uvs[i] = (f32_v2){
+                attrib.texcoords[2*i],
+                attrib.texcoords[2*i+1]
+            };
+        }
+    }
+
+    // Process indices
+    mesh->num_indices = attrib.num_faces;
+    mesh->indices = xmalloc(sizeof(u32) * mesh->num_indices);
+    for (u32 i = 0; i < mesh->num_indices; i++) {
+        mesh->indices[i] = attrib.faces[i].v_idx;
+    }
+
+    tinyobj_attrib_free(&attrib);
+    tinyobj_shapes_free(shapes, num_shapes);
+    tinyobj_materials_free(materials, num_materials);
+
+    return mesh;
 }
 
 char *load_vertex_shader(const char *name) {

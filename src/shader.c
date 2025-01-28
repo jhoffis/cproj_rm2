@@ -38,8 +38,11 @@ static void compile_shader(shader_types type) {
         case shader_sprite2D:
             shader.name = "sprite2D";
             break;
+        case shader_mesh3d:
+            shader.name = "mesh3d";
+            break;
         default:
-            printf("Error could not initialize shader type %d", type);
+            printf("Error: Unknown shader type %d\n", type);
             exit(1);
     }
 
@@ -223,4 +226,46 @@ void gfx_uniform_i8(u32 location, i8 num) {
 
 void gfx_draw(void) {
     glDrawElements(GL_TRIANGLES, shaders[curr].indices_amount, GL_UNSIGNED_INT, 0);
+}
+
+void gfx_bind_mesh3d(shader_types type, mesh3d* mesh) {
+    glBindVertexArray(shaders[type].vertex_attr_buffer);
+
+    // Bind vertex data
+    glBindBuffer(GL_ARRAY_BUFFER, shaders[type].vertex_buffer);
+    glBufferData(GL_ARRAY_BUFFER, 
+                 mesh->num_vertices * sizeof(f32_v3),
+                 mesh->vertices, GL_STATIC_DRAW);
+
+    // Set vertex attributes
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(f32_v3), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    // Bind normals if available
+    if (mesh->normals) {
+        glBindBuffer(GL_ARRAY_BUFFER, shaders[type].texture_coord_buffer);
+        glBufferData(GL_ARRAY_BUFFER, 
+                    mesh->num_vertices * sizeof(f32_v3),
+                    mesh->normals, GL_STATIC_DRAW);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(f32_v3), (void*)0);
+        glEnableVertexAttribArray(1);
+    }
+
+    // Bind texture coordinates if available
+    if (mesh->uvs) {
+        glBindBuffer(GL_ARRAY_BUFFER, shaders[type].texture_coord_buffer);
+        glBufferData(GL_ARRAY_BUFFER, 
+                    mesh->num_vertices * sizeof(f32_v2),
+                    mesh->uvs, GL_STATIC_DRAW);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(f32_v2), (void*)0);
+        glEnableVertexAttribArray(2);
+    }
+
+    // Bind indices
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, shaders[type].index_buffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                 mesh->num_indices * sizeof(u32),
+                 mesh->indices, GL_STATIC_DRAW);
+
+    glBindVertexArray(0);
 }
