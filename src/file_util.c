@@ -5,13 +5,10 @@
 #include "stb_image_impl.h"
 #define TINYOBJ_LOADER_C_IMPLEMENTATION
 #include "tinyobj_loader_c.h"
+#include <errno.h>
 
 #ifdef _WIN32
 #include <windows.h>
-#define PATH_SEPARATOR "\\"
-#define FIX_PATH(path) path
-#define PATH(x) x
-
 static char exe_path[MAX_PATH] = {0};
 
 static const char* get_exe_path() {
@@ -25,11 +22,32 @@ static const char* get_exe_path() {
     }
     return exe_path;
 }
-#else
-#define PATH_SEPARATOR "/"
-#define FIX_PATH(path) path
-#define PATH(x) x
 #endif
+
+FILE* platform_fopen(const char* filename, const char* mode) {
+    FILE* file = NULL;
+    #ifdef _WIN32
+        errno_t err = fopen_s(&file, filename, mode);
+        if (err != 0) return NULL;
+    #else
+        file = fopen(filename, mode);
+    #endif
+    return file;
+}
+
+int platform_sscanf(const char* str, const char* format, ...) {
+    va_list args;
+    va_start(args, format);
+    int result;
+    #ifdef _WIN32
+        result = vsscanf_s(str, format, args);
+    #else
+        result = vsscanf(str, format, args);
+    #endif
+    va_end(args);
+    return result;
+}
+
 
 char* path_name(const char* prefix, const char *name, const char* suffix) {
     #ifdef _WIN32
@@ -40,10 +58,9 @@ char* path_name(const char* prefix, const char *name, const char* suffix) {
     size_t base_len = 0;
     #endif
     
-    size_t prefix_len = strlen(FIX_PATH(prefix));
-    size_t name_len = strlen(FIX_PATH(name));
-    size_t suffix_len = strlen(FIX_PATH(suffix));
-    if (suffix_len < 2) return NULL;
+    size_t prefix_len = strlen(prefix);
+    size_t name_len = strlen(name);
+    size_t suffix_len = strlen(suffix);
 
     for (int i = 0; i < name_len; i++) {
         if ((name[i] >= 'A' && name[i] <= 'Z') ||
@@ -65,7 +82,16 @@ char* path_name(const char* prefix, const char *name, const char* suffix) {
 
     // Construct the path
     snprintf(path, base_len + prefix_len + name_len + suffix_len + 1, "%s%s%s%s", 
-            base_path, FIX_PATH(prefix), FIX_PATH(name), FIX_PATH(suffix));
+            base_path, prefix, name, suffix);
+
+    #ifdef _WIN32
+    // Replace forward slashes with backslashes on Windows
+    for (size_t i = 0; i < base_len + prefix_len + name_len + suffix_len; i++) {
+        if (path[i] == '/') {
+            path[i] = '\\';
+        }
+    }
+    #endif
 
     return path;
 }
@@ -101,7 +127,7 @@ static char *load_file_as_str(FILE *file, size_t *out_size) {
     // Read the file into the buffer
     size_t bytesRead = fread(buffer, 1, file_size, file);
     if (bytesRead != file_size) {
-        perror("Error reading file");
+        perror("Error reading file for loading string");
         free(buffer);
         return NULL;
     }
@@ -121,7 +147,7 @@ image_data load_image(const char *name) {
 
     image_data img = {0};
     char *fixed_name = path_name("pics/", name, ".png");
-    FILE* file = fopen(fixed_name, "rb"); // requires a persistent char* appearently
+    FILE* file = platform_fopen(fixed_name, "rb");
     xfree(fixed_name);
     if (!file) {
         printf("Could not find image \"%s\"\n", name);
@@ -148,9 +174,13 @@ image_data load_image(const char *name) {
 
 static void tobj_file_reader_cb(void *ctx, const char *filename, int is_mtl, const char *obj_filename, char **buf, size_t *len) {
     (void)ctx;
-
-    char *fixed_name = path_name("models/", filename, ".obj");
-    FILE *file = fopen(fixed_name, "rb");
+    char *fixed_name;
+    if (obj_filename != filename) {
+        fixed_name = path_name("models/", filename, "");
+    } else {
+        fixed_name = path_name("models/", obj_filename, ".obj");
+    }
+    FILE *file = platform_fopen(fixed_name, "rb");
     xfree(fixed_name);
     if (!file) {
         printf("Could not find model \"%s\"\n", filename);
@@ -169,20 +199,19 @@ void load_model_file(const char *name) {
     size_t num_materials;
 
     {
-        unsigned int flags = TINYOBJ_FLAG_TRIANGULATE;
-        int ret =
-            tinyobj_parse_obj(&attrib, &shapes, &num_shapes, &materials,
+        u32 flags = TINYOBJ_FLAG_TRIANGULATE;
+        i32 ret = tinyobj_parse_obj(&attrib, &shapes, &num_shapes, &materials,
                     &num_materials, name, tobj_file_reader_cb, NULL, flags);
         if (ret != TINYOBJ_SUCCESS) {
+            printf("Failed to triangulate OBJ file: %s\n", name);
             return;
         }
-        printf("tinyobj %b\n", ret);
     }
 }
 
 char *load_vertex_shader(const char *name) {
     char *fixed_name = path_name("shaders/", name, "_v.glsl");
-    FILE *file = fopen(fixed_name, "r");
+    FILE *file = platform_fopen(fixed_name, "rb");
     xfree(fixed_name);
     if (!file) {
         printf("Could not find shader \"%s\"\n", name);
@@ -193,7 +222,7 @@ char *load_vertex_shader(const char *name) {
 
 char *load_fragment_shader(const char *name) {
     char *fixed_name = path_name("shaders/", name, "_f.glsl");
-    FILE *file = fopen(fixed_name, "r");
+    FILE *file = platform_fopen(fixed_name, "rb");
     xfree(fixed_name);
     if (!file) {
         printf("Could not find shader \"%s\"\n", name);
@@ -201,8 +230,4 @@ char *load_fragment_shader(const char *name) {
     }
     return load_file_as_str(file, NULL);
 }
-
-
-
-
 

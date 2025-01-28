@@ -43,8 +43,8 @@ static void compile_shader(shader_types type) {
             exit(1);
     }
 
-    const char *vertex_file = load_vertex_shader(shader.name);
-    const char *fragment_file = load_fragment_shader(shader.name);
+    char *vertex_file = load_vertex_shader(shader.name);
+    char *fragment_file = load_fragment_shader(shader.name);
 
     // Vertex shader
     u32 vertex_shader = glCreateShader(GL_VERTEX_SHADER);

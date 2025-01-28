@@ -26,7 +26,7 @@ static wav_file* load_wav(const char* filename, u32 start_index, u32 max_alloc_s
     char *fixed_name = path_name("audio/", filename, ".wav");
     if (!fixed_name) return NULL;
 
-    FILE* file = fopen(fixed_name, "rb");
+    FILE* file = platform_fopen(fixed_name, "rb");
     xfree(fixed_name);
     
     if (!file) {
@@ -100,7 +100,7 @@ wav_entity *create_wav_entity(const char *filename) {
     }
 
     entity->header = wav->header;
-    entity->filename = strdup(filename);
+    entity->filename = _strdup(filename);
     entity->cursor = xmalloc(sizeof(u32));
     *entity->cursor = 0;
 

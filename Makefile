@@ -68,18 +68,20 @@ ifeq ($(OS),Windows_NT)
 	@if exist "$(BUILD_DIR)\mods" (xcopy /E /I /Y "$(BUILD_DIR)\mods" "mods_temp\" > nul)
 	@if exist "$(BUILD_DIR)\shaders" (xcopy /E /I /Y "$(BUILD_DIR)\shaders" "shaders_temp\" > nul)
 	@if exist "$(BUILD_DIR)\.gdbinit" (copy "$(BUILD_DIR)\.gdbinit" ".gdbinit_temp" > nul)
+	@if exist "$(BUILD_DIR)\$(PROJECT_TITLE).exe" (copy "$(BUILD_DIR)\$(PROJECT_TITLE).exe" "proj_temp.exe" > nul)
 	@rd /s /q "$(BUILD_DIR)" 2>nul || exit 0
 	@rd /s /q "$(TEST_DIR)" 2>nul || exit 0
 	@$(MAKE) $(BUILD_DIR)
 	@$(MAKE) create_test_dir
-	@if exist "test_pics_temp" (xcopy /E /I /Y "test_pics_temp" "$(TEST_DIR)\pics\" > nul & rd /s /q "test_pics_temp")
-	@if exist "test_gdbinit_temp" (copy "test_gdbinit_temp" "$(TEST_DIR)\.gdbinit" > nul & del "test_gdbinit_temp")
-	@if exist "pics_temp" (xcopy /E /I /Y "pics_temp" "$(BUILD_DIR)\pics\" > nul & rd /s /q "pics_temp")
-	@if exist "audio_temp" (xcopy /E /I /Y "audio_temp" "$(BUILD_DIR)\audio\" > nul & rd /s /q "audio_temp")
-	@if exist "models_temp" (xcopy /E /I /Y "models_temp" "$(BUILD_DIR)\models\" > nul & rd /s /q "models_temp")
-	@if exist "mods_temp" (xcopy /E /I /Y "mods_temp" "$(BUILD_DIR)\mods\" > nul & rd /s /q "mods_temp")
-	@if exist "shaders_temp" (xcopy /E /I /Y "shaders_temp" "$(BUILD_DIR)\shaders\" > nul & rd /s /q "shaders_temp")
-	@if exist ".gdbinit_temp" (copy ".gdbinit_temp" "$(BUILD_DIR)\.gdbinit" > nul & del ".gdbinit_temp")
+	@if exist "test_pics_temp" (move /Y "test_pics_temp" "$(TEST_DIR)\pics" > nul)
+	@if exist "test_gdbinit_temp" (move /Y "test_gdbinit_temp" "$(TEST_DIR)\.gdbinit" > nul)
+	@if exist "pics_temp" (move /Y "pics_temp" "$(BUILD_DIR)\pics" > nul)
+	@if exist "audio_temp" (move /Y "audio_temp" "$(BUILD_DIR)\audio" > nul)
+	@if exist "models_temp" (move /Y "models_temp" "$(BUILD_DIR)\models" > nul)
+	@if exist "mods_temp" (move /Y "mods_temp" "$(BUILD_DIR)\mods" > nul)
+	@if exist "shaders_temp" (move /Y "shaders_temp" "$(BUILD_DIR)\shaders" > nul)
+	@if exist ".gdbinit_temp" (move /Y ".gdbinit_temp" "$(BUILD_DIR)\.gdbinit" > nul)
+	@if exist "proj_temp.exe" (move /Y "proj_temp.exe" "$(BUILD_DIR)\$(PROJECT_TITLE).exe" > nul)
 else
 	@if [ -d "$(TEST_DIR)/pics" ]; then cp -r "$(TEST_DIR)/pics" ./test_pics_temp; fi
 	@if [ -f "$(TEST_DIR)/.gdbinit" ]; then cp "$(TEST_DIR)/.gdbinit" ./test_gdbinit_temp; fi

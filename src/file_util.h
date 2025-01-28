@@ -11,6 +11,8 @@ typedef struct {
     u8 *image;
 } image_data;
 
+FILE* platform_fopen(const char* filename, const char* mode);
+int platform_sscanf(const char* str, const char* format, ...);
 char* path_name(const char* prefix, const char *name, const char* suffix);
 image_data load_image(const char *name);
 void load_model_file(const char *name);

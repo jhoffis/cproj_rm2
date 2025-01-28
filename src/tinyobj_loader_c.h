@@ -26,6 +26,7 @@
 
 /* @todo { Remove stddef dependency. size_t? } */
 #include <stddef.h>
+#include "str_util.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -178,7 +179,7 @@ extern void tinyobj_materials_free(tinyobj_material_t *materials,
 #define TINYOBJ_REALLOC_SIZED(p,oldsz,newsz) TINYOBJ_REALLOC(p,newsz)
 #endif
 
-#define TINYOBJ_MAX_FACES_PER_F_LINE (16)
+#define TINYOBJ_MAX_FACES_PER_F_LINE (64)
 #define TINYOBJ_MAX_FILEPATH (8192)
 
 #define IS_SPACE(x) (((x) == ' ') || ((x) == '\t'))
@@ -1366,7 +1367,7 @@ static char *generate_mtl_filename(const char *obj_filename,
 
   /* Overwrite the obj basename with the mtllib name, filling the string */
   p = &mtl_filename[mtl_filename_length - mtllib_name_length];
-  strcpy(p, mtllib_name);
+  platform_strcpy(p, mtl_filename_length - (p - mtl_filename), mtllib_name);
   return mtl_filename;
 }
 
