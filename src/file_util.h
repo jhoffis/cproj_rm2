@@ -13,8 +13,9 @@ typedef struct {
 
 FILE* platform_fopen(const char* filename, const char* mode);
 int platform_sscanf(const char* str, const char* format, ...);
-char* path_name(const char* prefix, const char *name, const char* suffix);
+int platform_sscanf(const char* str, const char* format, ...);
+char *platform_strdup(const char *s);
+char *load_file_as_str(FILE *file, size_t *out_size);
 image_data load_image(const char *name);
-void load_model_file(const char *name);
 char *load_vertex_shader(const char *name);
 char *load_fragment_shader(const char *name);

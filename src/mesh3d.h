@@ -10,3 +10,5 @@ typedef struct {
     u32 num_indices;
 } mesh3d;
 
+mesh3d *load_model(const char *name);
+void bind_model(mesh3d *mesh);

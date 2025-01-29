@@ -18,11 +18,11 @@ typedef struct {
     u32 vertex_attr_buffer; // vao
     u32 texture_coord_buffer;
 
-    f32 *vertices;
+    f32_v3 *vertices;
     u32 vertices_amount;
     u32 *indices;
     u32 indices_amount;
-    f32 *texture_coordinates;
+    f32_v2 *texture_coordinates;
     u32 texture_coordinates_amount;
 } shader_data;
 
@@ -39,15 +39,15 @@ static void compile_shader(shader_types type) {
             shader.name = "sprite2D";
             break;
         case shader_mesh3d:
-            shader.name = "mesh3d";
+            shader.name = "mesh3D";
             break;
         default:
             printf("Error: Unknown shader type %d\n", type);
             exit(1);
     }
 
-    char *vertex_file = load_vertex_shader(shader.name);
-    char *fragment_file = load_fragment_shader(shader.name);
+    const char *vertex_file = load_vertex_shader(shader.name);
+    const char *fragment_file = load_fragment_shader(shader.name);
 
     // Vertex shader
     u32 vertex_shader = glCreateShader(GL_VERTEX_SHADER);
@@ -133,7 +133,7 @@ void gfx_set_shader(shader_types type) {
 }
 
 void gfx_bind_vertices(shader_types type, 
-                       f32 *vertices, 
+                       f32_v3 *vertices, 
                        u32 vertices_amount,
                        u32 *indices,
                        u32 indices_amount) {
@@ -145,29 +145,27 @@ void gfx_bind_vertices(shader_types type,
     glBindVertexArray(shaders[type].vertex_attr_buffer);
 
     glBindBuffer(GL_ARRAY_BUFFER, shaders[type].vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, vertices_amount * sizeof(f32), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertices_amount * sizeof(f32_v3), vertices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, shaders[type].index_buffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_amount * sizeof(f32), indices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(f32), (void*)0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(f32), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(f32_v3), (void*)0);
     glEnableVertexAttribArray(0);  
-    glEnableVertexAttribArray(1);  
 
     glBindVertexArray(0);
 }
 
-void gfx_bind_texture(shader_types type, f32 *texture_coordinates, u32 amount) {
+void gfx_bind_texture(shader_types type, f32_v2 *texture_coordinates, u32 amount) {
     shaders[type].texture_coordinates = texture_coordinates;
     shaders[type].texture_coordinates_amount = amount;
     glBindVertexArray(shaders[type].vertex_attr_buffer);
 
     glBindBuffer(GL_ARRAY_BUFFER, shaders[type].texture_coord_buffer);
-    glBufferData(GL_ARRAY_BUFFER, amount * sizeof(f32), texture_coordinates, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, amount * sizeof(f32_v2), texture_coordinates, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(f32_v2), (void*)0);
+    glEnableVertexAttribArray(1);
 
     // Unbind for safety
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -226,46 +224,4 @@ void gfx_uniform_i8(u32 location, i8 num) {
 
 void gfx_draw(void) {
     glDrawElements(GL_TRIANGLES, shaders[curr].indices_amount, GL_UNSIGNED_INT, 0);
-}
-
-void gfx_bind_mesh3d(shader_types type, mesh3d* mesh) {
-    glBindVertexArray(shaders[type].vertex_attr_buffer);
-
-    // Bind vertex data
-    glBindBuffer(GL_ARRAY_BUFFER, shaders[type].vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, 
-                 mesh->num_vertices * sizeof(f32_v3),
-                 mesh->vertices, GL_STATIC_DRAW);
-
-    // Set vertex attributes
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(f32_v3), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    // Bind normals if available
-    if (mesh->normals) {
-        glBindBuffer(GL_ARRAY_BUFFER, shaders[type].texture_coord_buffer);
-        glBufferData(GL_ARRAY_BUFFER, 
-                    mesh->num_vertices * sizeof(f32_v3),
-                    mesh->normals, GL_STATIC_DRAW);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(f32_v3), (void*)0);
-        glEnableVertexAttribArray(1);
-    }
-
-    // Bind texture coordinates if available
-    if (mesh->uvs) {
-        glBindBuffer(GL_ARRAY_BUFFER, shaders[type].texture_coord_buffer);
-        glBufferData(GL_ARRAY_BUFFER, 
-                    mesh->num_vertices * sizeof(f32_v2),
-                    mesh->uvs, GL_STATIC_DRAW);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(f32_v2), (void*)0);
-        glEnableVertexAttribArray(2);
-    }
-
-    // Bind indices
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, shaders[type].index_buffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 mesh->num_indices * sizeof(u32),
-                 mesh->indices, GL_STATIC_DRAW);
-
-    glBindVertexArray(0);
 }

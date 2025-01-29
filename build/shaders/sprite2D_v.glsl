@@ -1,7 +1,6 @@
 #version 460 core
 layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aColor;
-layout (location = 2) in vec2 aTexCoord;
+layout (location = 1) in vec2 aTexCoord;
 
 out vec3 ourColor2;
 out vec2 TexCoord;
@@ -18,6 +17,6 @@ void main() {
     gl_Position.x += 2*pos.x - 1; // So that origo is at the bottom left and that it goes from 0 -> 1
     gl_Position.y += 2*pos.y - 1;
 
-    ourColor2 = aColor;
+    ourColor2 = vec3(1);
     TexCoord = aTexCoord;
 }

@@ -30,8 +30,6 @@ static void resize_cb(u32 width, u32 height) {
 
 }
 
-static mesh3d* model_mesh = NULL;
-
 int main(void) {
     mem_tracker_init();
 
@@ -55,15 +53,18 @@ int main(void) {
     sprite2D_camera_pos((f32_v2){0.7, 0.3});
 
     // Load model
-    model_mesh = load_model_file("decentra");
+    auto model_mesh = load_model("decentra");
     if (!model_mesh) {
         printf("Failed to load model\n");
         exit(1);
     }
 
+    image_data img = load_image("sky");
+    gfx_finalize_image(&img);
+
     // Set up 3D mesh shader
     gfx_set_shader(shader_mesh3d);
-    gfx_bind_mesh3d(shader_mesh3d, model_mesh);
+    bind_model(model_mesh);
 
     while (!window_should_close()) {
         gfx_clear_color(0.2f, 0.3f, 0.3f, 1.0f);
@@ -71,7 +72,8 @@ int main(void) {
 
         // Draw 3D model
         gfx_set_shader(shader_mesh3d);
-        glDrawElements(GL_TRIANGLES, model_mesh->num_indices, GL_UNSIGNED_INT, 0);
+        gfx_activate_texture(0, img.texture); 
+        gfx_draw();
 
         sprite2D_draw();
         gfx_swap();

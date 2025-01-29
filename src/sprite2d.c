@@ -38,27 +38,26 @@ u32 sprite2D_create(const char *name, u32 scene_id, sprite2D_anchor anchor) {
     imgs[id] = load_image(name);
     anchors[id] = anchor;
 
-    float vertices[] = {
-        // positions         // colors
-         1.0f, -0.0f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
-        -0.0f, -0.0f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-         1.0f,  1.0f, 0.0f,  0.0f, 0.0f, 1.0f,    // top 
-        -0.0f,  1.0f, 0.0f,  0.0f, 0.0f, 1.0f,    // top 
+    f32_v3 vertices[] = {
+       { 1.0f, -0.0f, 0.0f},
+       {-0.0f, -0.0f, 0.0f},
+       { 1.0f,  1.0f, 0.0f},
+       {-0.0f,  1.0f, 0.0f},
     };    
 
-    unsigned int indices[] = {  // note that we start from 0!
+    u32 indices[] = {  // note that we start from 0!
         0, 1, 3,
         0, 3, 2,
     };  
-    gfx_bind_vertices(shader_sprite2D, vertices, 24, indices, 6);
+    gfx_bind_vertices(shader_sprite2D, vertices, 4, indices, 6);
 
-    float texCoords[] = {
-        0.0f, 1.0f,  // lower-left corner  
-        1.0f, 1.0f,  // lower-right corner
-        0.0f, 0.0f,   // top-center corner
-        1.0f, 0.0f   // top-center corner
+    f32_v2 texCoords[] = {
+        {0.0f, 1.0f},
+        {1.0f, 1.0f},
+        {0.0f, 0.0f},
+        {1.0f, 0.0f} 
     };
-    gfx_bind_texture(shader_sprite2D, texCoords, 8);
+    gfx_bind_texture(shader_sprite2D, texCoords, 4);
     gfx_finalize_image(&imgs[id]);
     return id;
 }

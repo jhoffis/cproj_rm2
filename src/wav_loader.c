@@ -4,6 +4,7 @@
 #include <string.h>
 #include "allocator.h"
 #include "file_util.h"
+#include "str_util.h"
 
 typedef struct {
     wav_header header;
@@ -100,7 +101,7 @@ wav_entity *create_wav_entity(const char *filename) {
     }
 
     entity->header = wav->header;
-    entity->filename = _strdup(filename);
+    entity->filename = platform_strdup(filename);
     entity->cursor = xmalloc(sizeof(u32));
     *entity->cursor = 0;
 

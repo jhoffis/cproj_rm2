@@ -8,3 +8,4 @@ typedef int errno_t;
 #endif
 
 errno_t platform_strcpy(char* dest, size_t destsz, const char* src);
+char* path_name(const char* prefix, const char *name, const char* suffix);
