@@ -202,6 +202,10 @@ void gfx_activate_texture(u32 texture_pipe, u32 texture) {
     glBindTexture(GL_TEXTURE_2D, texture); // TODO support more textures
 }
 
+void gfx_uniform_f32_mat4x4(u32 location, f32_m4x4 mat) {
+    glUniformMatrix4fv(location, 1, GL_FALSE, mat);
+}
+
 void gfx_uniform_f32_v4(u32 location, f32_v4 vec4) {
     glUniform4f(location, vec4.x, vec4.y, vec4.z, vec4.w);
 }
