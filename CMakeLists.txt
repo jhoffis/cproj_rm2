@@ -37,13 +37,13 @@ else()
 endif()
 
 # Automatically find all source and header files in the src directory
-file(GLOB_RECURSE SOURCES
-    src/*.c
-    src/*.h
-)
+# file(GLOB_RECURSE SOURCES
+#     src/*.c
+#     src/*.h
+# )
 
 # Add the executable
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME} main.c)
 
 # Include directories (for GLFW and OpenGL)
 # (Optional if GLFW3_INCLUDE_DIRS and OPENGL_INCLUDE_DIRS are set by the find_package)

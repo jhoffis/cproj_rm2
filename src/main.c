@@ -30,7 +30,12 @@ static void resize_cb(u32 width, u32 height) {
 
 }
 
+#ifdef DEBUG
+void *module_main(void *state) {
+#else
 int main(void) {
+    void *state;
+#endif
     mem_tracker_init();
 
     init_player();
@@ -99,9 +104,12 @@ int main(void) {
     gfx_cleanup_shaders();
     window_cleanup();
     mem_tracker_cleanup();
+#ifdef DEBUG
+    return state;
+#else
     return 0;
+#endif
 }
-
 
 #else
 #include <stdio.h>
