@@ -1,6 +1,10 @@
 
 // This is where dlopen() and friends came from on UNIX OSes.
+#ifdef _WIN32
+#include <windows.h>
+#else
 #include <dlfcn.h>
+#endif
 #include <stdlib.h>
 #include <string.h>
 

@@ -9,20 +9,8 @@ if (WIN32)
 endif()
 
 cmake_minimum_required(VERSION 3.21)
-
-# Enable debug symbols and set debug flags
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    if (WIN32)
-        add_compile_options(-g -gcodeview)
-        set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} -fuse-ld=lld -Wl,/debug,/pdb:${PROJECT_NAME}.pdb")
-    else()
-        set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g3 -gdwarf-4")
-    endif()
-    add_compile_definitions(DEBUG=1)
-endif()
-
 # Project name and C standard
-project(${GAME_TITLE} VERSION 1.0 LANGUAGES C)
+project(${GAME_TITLE} VERSION 1.0 LANGUAGES C) # ${GAME_TITLE} is defined in Makefile
 
 # Enable C23 standard
 set(CMAKE_C_STANDARD 23)
@@ -36,14 +24,29 @@ else()
     find_package(OpenGL REQUIRED)
 endif()
 
-# Automatically find all source and header files in the src directory
-# file(GLOB_RECURSE SOURCES
-#     src/*.c
-#     src/*.h
-# )
+# Enable debug symbols and set debug flags
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    if (WIN32)
+        add_compile_options(-g -gcodeview)
+        set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} -fuse-ld=lld -Wl,/debug,/pdb:${PROJECT_NAME}.pdb")
+    else()
+        set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g3 -gdwarf-4")
+    endif()
+    add_compile_definitions(DEBUG=1)
 
-# Add the executable
-add_executable(${PROJECT_NAME} main.c)
+    # Add the executable
+    add_executable(${PROJECT_NAME} main.c)
+else()
+    # Automatically find all source and header files in the src directory
+    file(GLOB_RECURSE SOURCES
+        src/*.c
+        src/*.h
+    )
+
+    # Add the executable
+    add_executable(${PROJECT_NAME} ${SOURCES})
+endif()
+
 
 # Include directories (for GLFW and OpenGL)
 # (Optional if GLFW3_INCLUDE_DIRS and OPENGL_INCLUDE_DIRS are set by the find_package)
