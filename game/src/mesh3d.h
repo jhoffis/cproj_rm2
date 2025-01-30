@@ -11,4 +11,5 @@ typedef struct {
 } mesh3d;
 
 mesh3d *load_model(const char *name);
+void destroy_model(mesh3d *mesh);
 void bind_model(mesh3d *mesh);

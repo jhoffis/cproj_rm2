@@ -46,8 +46,8 @@ u32 sprite2D_create(const char *name, u32 scene_id, sprite2D_anchor anchor) {
     };    
 
     u32 indices[] = {  // note that we start from 0!
-        0, 1, 3,
-        0, 3, 2,
+        0, 3, 1,
+        0, 2, 3,
     };  
     gfx_bind_vertices(shader_sprite2D, vertices, 4, indices, 6);
 

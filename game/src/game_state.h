@@ -6,6 +6,7 @@ typedef struct {
     bool free_cam;
     f32_v4 cam_rot;
     f32_v4 cam_pos;
+    u32 render_method;
 } game_state_t;
 
 extern game_state_t game_state;

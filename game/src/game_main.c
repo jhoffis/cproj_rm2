@@ -44,6 +44,12 @@ static void key_cb(i32 key, i32 scancode, i32 action, i32 mods) {
             mouse_reset = true;
             game_state.free_cam = !game_state.free_cam;
             window_set_cursor_visible(!game_state.free_cam);
+        } else if (key == GLFW_KEY_X) {
+            if (game_state.render_method != GFX_TRIANGLES) {
+                game_state.render_method = GFX_TRIANGLES;
+            } else {
+                game_state.render_method = GFX_WIRE;
+            }
         }
 #endif
         switch (key) {
@@ -62,7 +68,7 @@ static void key_cb(i32 key, i32 scancode, i32 action, i32 mods) {
             case GLFW_KEY_SPACE:
                 move_up -= movement_speed;
                 break;
-            case GLFW_KEY_LEFT_SHIFT:
+            case GLFW_KEY_B:
                 move_down += movement_speed;
                 break;
         }
@@ -83,7 +89,7 @@ static void key_cb(i32 key, i32 scancode, i32 action, i32 mods) {
             case GLFW_KEY_SPACE:
                 move_up += movement_speed;
                 break;
-            case GLFW_KEY_LEFT_SHIFT:
+            case GLFW_KEY_B:
                 move_down -= movement_speed;
                 break;
         }
@@ -101,7 +107,7 @@ static void mouse_cb(f64 xpos, f64 ypos, i32 button, i32 action, i32 mods) {
     if (mouse_reset) {
         mouse_reset = false;
     } else {
-        dx = (float) (new_mouse_pos.x - last_mouse_pos.x) * mouse_sensitivity;
+        dx = (float) (new_mouse_pos.x - last_mouse_pos.x) * mouse_sensitivity * window_aspect_ratio();
         dy = (float) (new_mouse_pos.y - last_mouse_pos.y) * mouse_sensitivity;
     }
 
@@ -142,7 +148,7 @@ int main(void) {
     printf("ms: %llu\n", timer_now_nanos());
 
     window_init(key_cb, mouse_cb, resize_cb);
-    window_set_cursor_visible(false);
+    window_set_cursor_visible(!game_state.free_cam);
     gfx_init_graphics();
     gfx_init_shaders();
 
@@ -202,16 +208,12 @@ int main(void) {
         gfx_uniform_f32_mat4x4(1, mvp);
         gfx_draw();
 
-        sprite2D_draw();
+        // sprite2D_draw();
         gfx_swap();
     }
 
     // Cleanup
-    xfree(model_mesh->vertices);
-    xfree(model_mesh->normals);
-    xfree(model_mesh->uvs);
-    xfree(model_mesh->indices);
-    xfree(model_mesh);
+    destroy_model(model_mesh);
     
     sprite2D_cleanup();
     gfx_cleanup_shaders();

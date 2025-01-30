@@ -1,12 +1,13 @@
 #include "window.h"
 #include "GLFW/glfw3.h"
+#include "renderer.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 GLFWwindow *window;
 u32 window_width, window_height;
 bool key_down = false;
-i32 key_key = 0;
+i32 key_code = 0;
 i32 key_scancode = 0;
 i32 key_action = 0;
 i32 key_mods = 0;
@@ -24,12 +25,12 @@ static window_resize_cb external_wrcb;
 static void framebuffer_size_callback(GLFWwindow* window, int w, int h) {
     window_width = w;
     window_height = h;
-    glViewport(0, 0, window_width, window_height);
+    gfx_update_viewport();
     external_wrcb(w, h);
 }
 
 static void key_cb(GLFWwindow *window, i32 key, i32 scancode, i32 action, i32 mods) {
-    key_key = key;
+    key_code = key;
     key_scancode = scancode;
     key_action = action;
     key_mods = mods;

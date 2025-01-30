@@ -7,6 +7,18 @@ typedef void (*window_mouse_cb)(f64 xpos, f64 ypos, i32 button, i32 action, i32 
 typedef void (*window_resize_cb)(u32 width, u32 height);
 
 extern GLFWwindow *window;
+extern u32 window_width, window_height;
+extern bool key_down;
+extern i32 key_code;
+extern i32 key_scancode;
+extern i32 key_action;
+extern i32 key_mods;
+
+extern i32 mouse_button;
+extern i32 mouse_action;
+extern i32 mouse_mods;
+extern f64 mouse_xpos;
+extern f64 mouse_ypos;
 
 void window_init(window_key_cb kcb, window_mouse_cb mcb, window_resize_cb wrcb);
 void window_cleanup(void);

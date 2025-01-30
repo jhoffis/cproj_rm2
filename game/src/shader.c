@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <glad/glad.h> // hide opengl behind in here. In case we want to switch to vulkan later.
+#include "game_state.h"
 
 #define MAX_UNIFORMS 64
 #define MAX_ATTRIBUTES 16
@@ -227,5 +228,5 @@ void gfx_uniform_i8(u32 location, i8 num) {
 }
 
 void gfx_draw(void) {
-    glDrawElements(GL_TRIANGLES, shaders[curr].indices_amount, GL_UNSIGNED_INT, 0);
+    glDrawElements(game_state.render_method, shaders[curr].indices_amount, GL_UNSIGNED_INT, 0);
 }
