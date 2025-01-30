@@ -5,6 +5,8 @@
 #include "tester.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "str_util.h"
+
 #ifdef _WIN32
 #include <malloc.h>
 #endif
@@ -150,7 +152,7 @@ static bool track_allocation(void* ptr, size_t size, free_method method, const c
             }
         }
 
-        strncpy_s(record_name, record_name_size, name, record_name_size - 1);
+        plt_strncpy_s(record_name, record_name_size, name, record_name_size - 1);
         record_name[record_name_size - 1] = '\0';
     }
 

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-errno_t platform_strcpy(char* dest, size_t destsz, const char* src) {
+errno_t plt_strcpy(char* dest, size_t destsz, const char* src) {
     #ifdef _WIN32
         return strcpy_s(dest, destsz, src);
     #else
@@ -17,6 +17,18 @@ errno_t platform_strcpy(char* dest, size_t destsz, const char* src) {
         strcpy(dest, src);
         return -1;
     #endif
+}
+
+errno_t plt_strncpy_s(char* dest, size_t destsz, const char* src, const size_t n) {
+#ifdef _WIN32
+    return strncpy_s(dest, destsz, src, n);
+#else
+    if (strlen(dest) != destsz) {
+        return EPERM;
+    }
+    strncpy(dest, src, n);
+    return 0;
+#endif
 }
 
 #ifdef _WIN32

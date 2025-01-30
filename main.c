@@ -80,7 +80,7 @@ int main(void){
         // Modified Linux build commands to mirror Windows structure
         char build_cmd[512];
         snprintf(build_cmd, sizeof(build_cmd), 
-            "cd %s && cmake -DCMAKE_BUILD_TYPE=Debug -DRUN_TESTS:BOOL=FALSE -DGAME_TITLE:STRING=%s ../.. && make",
+            "cd %s && cmake -DCMAKE_BUILD_TYPE=Debug -DRUN_TESTS:BOOL=FALSE -DGAME_TITLE:STRING=%s ../.. && make --no-print-directory",
             build_dir, module_name);
         
         if (system(build_cmd) != 0) {
@@ -89,7 +89,7 @@ int main(void){
         }
 
         char lib_path[512];
-        snprintf(lib_path, sizeof(lib_path), "./%s/%s.so", build_dir, module_name);
+        snprintf(lib_path, sizeof(lib_path), "./%s/lib%s.so", build_dir, module_name);
         
         void* module = dlopen(lib_path, RTLD_NOW);
         if (!module) {

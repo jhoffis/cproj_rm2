@@ -55,7 +55,6 @@ endif()
 include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
-# OS-specific configuration
 if(WIN32)
     # message(STATUS "Configuring for Windows")
     add_subdirectory(${CMAKE_SOURCE_DIR}/libs/glfw_win)

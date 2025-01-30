@@ -5,7 +5,7 @@
 #include "stb_image_impl.h"
 #include "str_util.h"
 
-FILE* platform_fopen(const char* filename, const char* mode) {
+FILE* plt_fopen(const char* filename, const char* mode) {
     FILE* file = NULL;
 #ifdef _WIN32
     errno_t err = fopen_s(&file, filename, mode);
@@ -16,7 +16,7 @@ FILE* platform_fopen(const char* filename, const char* mode) {
     return file;
 }
 
-int platform_sscanf(const char* str, const char* format, ...) {
+int plt_sscanf(const char* str, const char* format, ...) {
     va_list args;
     va_start(args, format);
     int result;
@@ -29,7 +29,7 @@ int platform_sscanf(const char* str, const char* format, ...) {
     return result;
 }
 
-char *platform_strdup(const char *s) {
+char *plt_strdup(const char *s) {
 #ifdef _WIN32
     return _strdup(s);
 #else
@@ -88,7 +88,7 @@ image_data load_image(const char *name) {
 
     image_data img = {0};
     char *fixed_name = path_name("../pics/", name, ".png");
-    FILE* file = platform_fopen(fixed_name, "rb");
+    FILE* file = plt_fopen(fixed_name, "rb");
     xfree(fixed_name);
     if (!file) {
         printf("Could not find image \"%s\"\n", name);
@@ -115,7 +115,7 @@ image_data load_image(const char *name) {
 
 char *load_vertex_shader(const char *name) {
     char *fixed_name = path_name("../shaders/", name, "_v.glsl");
-    FILE *file = platform_fopen(fixed_name, "rb");
+    FILE *file = plt_fopen(fixed_name, "rb");
     xfree(fixed_name);
     if (!file) {
         printf("Could not find shader \"%s\"\n", name);
@@ -126,7 +126,7 @@ char *load_vertex_shader(const char *name) {
 
 char *load_fragment_shader(const char *name) {
     char *fixed_name = path_name("../shaders/", name, "_f.glsl");
-    FILE *file = platform_fopen(fixed_name, "rb");
+    FILE *file = plt_fopen(fixed_name, "rb");
     xfree(fixed_name);
     if (!file) {
         printf("Could not find shader \"%s\"\n", name);
