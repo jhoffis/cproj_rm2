@@ -1,3 +1,0 @@
-/home/hovedrigg/dev/cproj_rm2/game/release/CMakeFiles/OpenGLApp.dir
-/home/hovedrigg/dev/cproj_rm2/game/release/CMakeFiles/edit_cache.dir
-/home/hovedrigg/dev/cproj_rm2/game/release/CMakeFiles/rebuild_cache.dir

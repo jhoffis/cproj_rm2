@@ -9,6 +9,7 @@
 /.vscode/
 /.cache/
 
+/release/
 /build/*
 !/build/.gdbinit
 !/build/pics/
