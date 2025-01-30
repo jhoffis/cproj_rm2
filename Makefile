@@ -1,5 +1,11 @@
-TEST_DIR = test
-BUILD_DIR = build
+
+ifeq ($(OS),Windows_NT)
+    TEST_DIR = game\test
+    BUILD_DIR = game\build
+else
+    TEST_DIR = game/test
+    BUILD_DIR = game/build
+endif
 PROJECT_TITLE = OpenGLApp
 
 # Targets
@@ -34,9 +40,9 @@ db: $(BUILD_DIR)
 debug: $(BUILD_DIR)
 	@echo "Building in Debug mode..."
 ifeq ($(OS),Windows_NT)
-	@cd $(BUILD_DIR) && cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug -DRUN_TESTS:BOOLEAN=FALSE -DGAME_TITLE:STRING=$(PROJECT_TITLE) ..
+	@cd $(BUILD_DIR) && cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug -DRUN_TESTS:BOOLEAN=FALSE -DGAME_TITLE:STRING=$(PROJECT_TITLE) ../..
 else
-	@cd $(BUILD_DIR) && cmake -DCMAKE_BUILD_TYPE=Debug -DRUN_TESTS:BOOLEAN=FALSE -DGAME_TITLE:STRING=$(PROJECT_TITLE) ..
+	@cd $(BUILD_DIR) && cmake -DCMAKE_BUILD_TYPE=Debug -DRUN_TESTS:BOOLEAN=FALSE -DGAME_TITLE:STRING=$(PROJECT_TITLE) ../..
 endif
 
 

@@ -13,12 +13,28 @@
 #include "wav_loader.h"
 #include "mesh3d.h"
 
+#ifdef _WIN32
+#define MODULE_API __declspec(dllexport)
+#else
+#define MODULE_API
+#endif
+
+#ifdef DEBUG
+static bool exit_hotreload = false;
+#endif
+
 static void key_cb(i32 key, i32 scancode, i32 action, i32 mods) {
     if (action == GLFW_RELEASE) {
+#ifdef DEBUG
         if (key == GLFW_KEY_F5) {
             printf("Hot-reloading shaders...\n");
             gfx_reload_shaders();
+        } else if (key == GLFW_KEY_F6) {
+            printf("Hot-reloading program...\n");
+            exit_hotreload = true;
+            window_close();
         }
+#endif
     }
 }
 
@@ -31,7 +47,7 @@ static void resize_cb(u32 width, u32 height) {
 }
 
 #ifdef DEBUG
-void *module_main(void *state) {
+MODULE_API void *module_main(void *state) {
 #else
 int main(void) {
     void *state;
@@ -105,7 +121,8 @@ int main(void) {
     window_cleanup();
     mem_tracker_cleanup();
 #ifdef DEBUG
-    return state;
+    if (exit_hotreload) return state;
+    exit(0);
 #else
     return 0;
 #endif

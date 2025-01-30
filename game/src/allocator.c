@@ -368,6 +368,18 @@ void mem_tracker_cleanup(void) {
     free(alloc_names);
     free(alloc_ptrs);
     free(record_name);
+
+    num_max_size = 0;
+    num_allocations = 0;
+    num_real_mem = 0;
+    num_dbg_tracking_mem = 0;
+    num_record_real_mem = 0;
+    record_name = NULL;
+    record_name_size = 0;
+    alloc_ptrs = NULL;
+    alloc_names = NULL;
+    alloc_sizes = NULL;
+    alloc_method = NULL;
 }
 
 TEST(test_allocator) {

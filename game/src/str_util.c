@@ -36,6 +36,10 @@ static const char* get_exe_path() {
 #endif
 
 
+/*
+ *   Allocates using allocator.h
+ *   Remember to xfree() the returned pointer
+ */
 char* path_name(const char* prefix, const char *name, const char* suffix) {
     #ifdef _WIN32
     const char* base_path = get_exe_path();
@@ -58,7 +62,9 @@ char* path_name(const char* prefix, const char *name, const char* suffix) {
             name[i] == '.' ||  
             name[i] == '\0' || 
             name[i] == ' '  || 
-            name[i] == '_') {
+            name[i] == '_' ||
+            name[i] == '/' ||
+            name[i] == '\\') {
             continue;
         }
         printf("Path-name \"%s\" is bad!\n", name);

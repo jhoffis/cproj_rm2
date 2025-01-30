@@ -81,6 +81,10 @@ void window_init(window_key_cb kcb, window_mouse_cb mcb, window_resize_cb wrcb) 
     glfwSetCursorPosCallback(window, mouse_pos_cb);
 }
 
+void window_close(void) {
+    glfwSetWindowShouldClose(window, true);
+}
+
 void window_cleanup(void) {
     glfwDestroyWindow(window);
     glfwTerminate();

@@ -8,23 +8,19 @@ if (WIN32)
     set(CMAKE_CXX_COMPILER_LAUNCHER "" CACHE STRING "" FORCE)
 endif()
 
-cmake_minimum_required(VERSION 3.21)
-# Project name and C standard
-project(${GAME_TITLE} VERSION 1.0 LANGUAGES C) # ${GAME_TITLE} is defined in Makefile
-
-# Enable C23 standard
-set(CMAKE_C_STANDARD 23)
-set(CMAKE_C_STANDARD_REQUIRED ON)
-
-# Find OpenGL
-if (WIN32)
-    find_package(OpenGL REQUIRED COMPONENTS OpenGL)
-    include_directories( ${OPENGL_INCLUDE_DIRS} )
-else()
-    find_package(OpenGL REQUIRED)
+# Add this near the top to handle Linux shared libraries
+if(UNIX AND NOT APPLE)
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+    set(CMAKE_SHARED_LIBRARY_PREFIX "")
+    set(CMAKE_SHARED_LIBRARY_SUFFIX ".so")
 endif()
 
-# Enable debug symbols and set debug flags
+cmake_minimum_required(VERSION 3.21)
+project(${GAME_TITLE} VERSION 1.0 LANGUAGES C)
+set(CMAKE_C_STANDARD 23)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+ 
+
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     if (WIN32)
         add_compile_options(-g -gcodeview)
@@ -33,51 +29,15 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g3 -gdwarf-4")
     endif()
     add_compile_definitions(DEBUG=1)
-
-    # Add the executable
-    add_executable(${PROJECT_NAME} main.c)
 else()
-    # Automatically find all source and header files in the src directory
-    file(GLOB_RECURSE SOURCES
-        src/*.c
-        src/*.h
-    )
-
-    # Add the executable
-    add_executable(${PROJECT_NAME} ${SOURCES})
+    message(FATAL_ERROR "Build type must be Debug. Release builds are not supported.")
 endif()
 
-
-# Include directories (for GLFW and OpenGL)
-# (Optional if GLFW3_INCLUDE_DIRS and OPENGL_INCLUDE_DIRS are set by the find_package)
-include_directories(${CMAKE_SOURCE_DIR}/include)
-include_directories(${CMAKE_SOURCE_DIR}/src)
-
-# OS-specific configuration
-if(WIN32)
-    # message(STATUS "Configuring for Windows")
-    add_subdirectory(${CMAKE_SOURCE_DIR}/libs/glfw_win)
-    include_directories(${CMAKE_SOURCE_DIR}/libs/glfw_win/include)
-    add_compile_definitions(_CRT_ALIGNED_MALLOC=1)
-else()
-    message(STATUS "Configuring for Linux or other platforms")
-    include_directories(${CMAKE_SOURCE_DIR}/libs/glfw_linux/include)
-endif()
-
-if (RUN_TESTS)
-    add_compile_definitions(TEST_MODE=1)
-endif()
-
-# Link libraries
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    OpenGL::GL
-    glfw
-    $<$<NOT:$<PLATFORM_ID:Windows>>:m>
-)
-
-# For the executable target, explicitly set include directories
-target_include_directories(${PROJECT_NAME} PRIVATE 
-    ${CMAKE_SOURCE_DIR}/include
-    ${CMAKE_SOURCE_DIR}/src
-)
-
+ # The rest is compiled as a static library at runtime.
+add_executable(${PROJECT_NAME} 
+                main.c
+                game/src/str_util.c
+                game/src/str_util.h
+                game/src/allocator.c
+                game/src/allocator.h
+                )

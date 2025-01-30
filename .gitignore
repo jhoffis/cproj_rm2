@@ -1,28 +1,7 @@
-# Ignore everything in the glfw folder
-/libs/glfw_*/**
-
-# Allow include folders in glfw
-!/libs/glfw_*/
-!/libs/glfw_*/include/
-!/libs/glfw_*/include/**
 
 /.vscode/
 /.cache/
 
-/build/*
-!/build/.gdbinit
-!/build/pics/
-!/build/pics/**
-!/build/audio/
-!/build/audio/**
-!/build/models/
-!/build/models/**
-!/build/mods/
-!/build/mods/**
-!/build/shaders/
-!/build/shaders/**
-
-/test/
 /clang/
 
 # Prerequisites
