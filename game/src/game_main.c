@@ -1,6 +1,6 @@
-#include "sprite2d.h"
 #ifndef TEST_MODE
-
+#include "game_state.h"
+#include "sprite2d.h"
 #include "renderer.h"
 #include "shader.h"
 #include "timer_util.h"
@@ -50,10 +50,16 @@ static void resize_cb(u32 width, u32 height) {
 MODULE_API void *module_main(void *state) {
 #elif defined(_WIN32)
 int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+    void *state = NULL;
 #else
 int main(void) {
-    void *state;
+    void *state = NULL;
 #endif
+    if (state != NULL) {
+        memcpy(&game_state, state, sizeof(game_state_t));
+    }
+    game_state.test++;
+    printf("gamestate test %d\n", game_state.test);
     mem_tracker_init();
 
     init_player();
@@ -130,7 +136,14 @@ int main(void) {
     window_cleanup();
     mem_tracker_cleanup();
 #ifdef DEBUG
-    if (exit_hotreload) return state;
+    if (exit_hotreload) {
+        if (state != NULL) {
+            free(state);
+        }
+        state = malloc(sizeof(game_state_t));
+        memcpy(state, &game_state, sizeof(game_state_t));
+        return state;
+    }
     exit(0);
 #else
     return 0;
