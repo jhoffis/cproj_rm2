@@ -14,4 +14,6 @@ void window_close(void);
 bool window_should_close(void);
 void window_poll_events(void);
 f32 window_aspect_ratio(void);
+bool window_is_cursor_visible(void);
+void window_set_cursor_visible(bool visible);
 

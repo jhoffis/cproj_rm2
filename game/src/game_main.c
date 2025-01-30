@@ -23,6 +23,13 @@
 static bool exit_hotreload = false;
 #endif
 
+
+static bool mouse_reset = true;
+static f32 movement_speed = 0.1f, mouse_sensitivity = 0.0025f;
+static f32_v2 new_mouse_pos;
+static f32_v2 last_mouse_pos;
+static f32 move_forward, move_back, move_left, move_right, move_up, move_down;
+
 static void key_cb(i32 key, i32 scancode, i32 action, i32 mods) {
     if (action == GLFW_RELEASE) {
 #ifdef DEBUG
@@ -33,13 +40,76 @@ static void key_cb(i32 key, i32 scancode, i32 action, i32 mods) {
             printf("Hot-reloading program...\n");
             exit_hotreload = true;
             window_close();
+        } else if (key == GLFW_KEY_F) {
+            mouse_reset = true;
+            game_state.free_cam = !game_state.free_cam;
+            window_set_cursor_visible(!game_state.free_cam);
         }
 #endif
+        switch (key) {
+            case GLFW_KEY_W:
+                move_forward += movement_speed;
+                break;
+            case GLFW_KEY_S:
+                move_back -= movement_speed;
+                break;
+            case GLFW_KEY_A:
+                move_left += movement_speed;
+                break;
+            case GLFW_KEY_D:
+                move_right -= movement_speed;
+                break;
+            case GLFW_KEY_SPACE:
+                move_up -= movement_speed;
+                break;
+            case GLFW_KEY_LEFT_SHIFT:
+                move_down += movement_speed;
+                break;
+        }
+    } else if (action == GLFW_PRESS) { 
+        switch (key) {
+            case GLFW_KEY_W:
+                move_forward -= movement_speed;
+                break;
+            case GLFW_KEY_S:
+                move_back += movement_speed;
+                break;
+            case GLFW_KEY_A:
+                move_left -= movement_speed;
+                break;
+            case GLFW_KEY_D:
+                move_right += movement_speed;
+                break;
+            case GLFW_KEY_SPACE:
+                move_up += movement_speed;
+                break;
+            case GLFW_KEY_LEFT_SHIFT:
+                move_down -= movement_speed;
+                break;
+        }
     }
 }
 
 static void mouse_cb(f64 xpos, f64 ypos, i32 button, i32 action, i32 mods) {
     // printf("asdfff\n");
+    if (!game_state.free_cam) return;
+    
+    new_mouse_pos.x = xpos;
+    new_mouse_pos.y = ypos;
+
+    f32 dx = 0, dy = 0;
+    if (mouse_reset) {
+        mouse_reset = false;
+    } else {
+        dx = (float) (new_mouse_pos.x - last_mouse_pos.x) * mouse_sensitivity;
+        dy = (float) (new_mouse_pos.y - last_mouse_pos.y) * mouse_sensitivity;
+    }
+
+    last_mouse_pos.x = new_mouse_pos.x;
+    last_mouse_pos.y = new_mouse_pos.y;
+
+    game_state.cam_rot.x -= dy;
+    game_state.cam_rot.y = fmodf(game_state.cam_rot.y - dx, 360.f);
 }
 
 static void resize_cb(u32 width, u32 height) {
@@ -72,6 +142,7 @@ int main(void) {
     printf("ms: %llu\n", timer_now_nanos());
 
     window_init(key_cb, mouse_cb, resize_cb);
+    window_set_cursor_visible(false);
     gfx_init_graphics();
     gfx_init_shaders();
 
@@ -88,23 +159,34 @@ int main(void) {
         exit(1);
     }
 
-    image_data img = load_image("sky");
+    image_data img = load_image("DecentraPaint");
     gfx_finalize_image(&img);
 
     // Set up 3D mesh shader
     gfx_set_shader(shader_mesh3d);
     bind_model(model_mesh);
 
-    f32 pos = 100;
+    f32 pos = 0;
 
     while (!window_should_close()) {
+
+        f32 x = sin(game_state.cam_rot.y);
+        f32 z = cos(game_state.cam_rot.y);
+        f32 moveX = move_left + move_right;
+        f32 moveY = move_up + move_down;
+        f32 moveZ = move_forward + move_back;
+        // Forward and backwards + side to side
+        game_state.cam_pos.x += (x * moveZ) + (z * moveX);
+        game_state.cam_pos.z += (z * moveZ) - (x * moveX); 
+        game_state.cam_pos.y += moveY; 
+
         f32_m4x4 mvp = {0};
         mat4x4_unit(mvp);
         mat4x4_translate(mvp, mvp, (f32_v4) {pos,0.5,-15.0,0}); 
-        pos -= 0.1;
+        // pos -= 0.1;
 
         f32_m4x4 view = {0};
-        create_world_view(view, (f32_v4) {0,0,0,0}, (f32_v4) {0,0,0,0});
+        create_world_view(view, game_state.cam_pos, game_state.cam_rot);
 
         f32_m4x4 persp = {0};
         mat4x4_perspective(persp, 70, window_aspect_ratio(), 1, 10000);

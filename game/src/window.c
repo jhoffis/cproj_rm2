@@ -101,3 +101,11 @@ void window_poll_events(void) {
 f32 window_aspect_ratio(void) {
     return (f32) window_height / (f32) window_width;
 }
+
+bool window_is_cursor_visible(void) {
+    return glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL;
+}
+
+void window_set_cursor_visible(bool visible) {
+    glfwSetInputMode(window, GLFW_CURSOR, visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
+}
