@@ -2,6 +2,7 @@
 #include "allocator.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 errno_t platform_strcpy(char* dest, size_t destsz, const char* src) {
     #ifdef _WIN32

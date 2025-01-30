@@ -9,9 +9,9 @@ static void tobj_file_reader_cb(void *ctx, const char *filename, int is_mtl, con
     (void)ctx;
     char *fixed_name;
     if (obj_filename != filename) {
-        fixed_name = path_name("models/", filename, "");
+        fixed_name = path_name("../models/", filename, "");
     } else {
-        fixed_name = path_name("models/", obj_filename, ".obj");
+        fixed_name = path_name("../models/", obj_filename, ".obj");
     }
     FILE *file = platform_fopen(fixed_name, "rb");
     xfree(fixed_name);

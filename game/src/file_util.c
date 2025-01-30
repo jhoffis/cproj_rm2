@@ -87,7 +87,7 @@ image_data load_image(const char *name) {
     // }
 
     image_data img = {0};
-    char *fixed_name = path_name("pics/", name, ".png");
+    char *fixed_name = path_name("../pics/", name, ".png");
     FILE* file = platform_fopen(fixed_name, "rb");
     xfree(fixed_name);
     if (!file) {
@@ -114,7 +114,7 @@ image_data load_image(const char *name) {
 }
 
 char *load_vertex_shader(const char *name) {
-    char *fixed_name = path_name("shaders/", name, "_v.glsl");
+    char *fixed_name = path_name("../shaders/", name, "_v.glsl");
     FILE *file = platform_fopen(fixed_name, "rb");
     xfree(fixed_name);
     if (!file) {
@@ -125,7 +125,7 @@ char *load_vertex_shader(const char *name) {
 }
 
 char *load_fragment_shader(const char *name) {
-    char *fixed_name = path_name("shaders/", name, "_f.glsl");
+    char *fixed_name = path_name("../shaders/", name, "_f.glsl");
     FILE *file = platform_fopen(fixed_name, "rb");
     xfree(fixed_name);
     if (!file) {

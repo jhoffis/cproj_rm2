@@ -1,10 +1,8 @@
 #include "allocator.h"
-#include "tester.h"
 // #include <threads.h>
 
 #ifdef MEM_TRACK_DBG 
-
-#include "nums.h"
+#include "tester.h"
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef _WIN32
@@ -152,8 +150,7 @@ static bool track_allocation(void* ptr, size_t size, free_method method, const c
             }
         }
 
-        // Copy new record name
-        strncpy(record_name, name, record_name_size - 1);
+        strncpy_s(record_name, record_name_size, name, record_name_size - 1);
         record_name[record_name_size - 1] = '\0';
     }
 
@@ -177,8 +174,9 @@ static void untrack_and_free(void* ptr, free_method method, const char *file, in
         exit(1);
     }
 
-    if (method != none) {
-        method = alloc_method[i];
+    if (method != none && method != alloc_method[i] ) {
+        printf("Attempted to free memory with the wrong method!\nFile: %s, Line: %d\n", file, line);
+        exit(1);
     }
 
     switch (method) {
@@ -344,6 +342,10 @@ void *_priv_xrealloc_aligned(void *old_ptr, size_t size, size_t alignment, const
  */
 void _priv_xfree(void* ptr, const char *file, int line) {
     untrack_and_free(ptr, standard, file, line);
+}
+
+void _priv_xaligned_free(void* ptr, const char *file, int line) {
+    untrack_and_free(ptr, aligned, file, line);
 }
 
 void mem_tracker_cleanup(void) {

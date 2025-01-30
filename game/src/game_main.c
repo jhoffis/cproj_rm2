@@ -48,6 +48,8 @@ static void resize_cb(u32 width, u32 height) {
 
 #ifdef DEBUG
 MODULE_API void *module_main(void *state) {
+#elif defined(_WIN32)
+int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 #else
 int main(void) {
     void *state;

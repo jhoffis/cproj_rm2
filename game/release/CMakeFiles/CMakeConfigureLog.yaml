@@ -1,0 +1,307 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineSystem.cmake:205 (message)"
+      - "CMakeLists.txt:12 (project)"
+    message: |
+      The system is: Windows - 10.0.19045 - AMD64
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:12 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+      Compiler: C:/cproj_rm2/clang/bin/clang.exe 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.exe"
+      
+      The C compiler identification is Clang, found in:
+        C:/cproj_rm2/game/release/CMakeFiles/3.31.2/CompilerIdC/a.exe
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:1288 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:250 (CMAKE_DETERMINE_MSVC_SHOWINCLUDES_PREFIX)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:12 (project)"
+    message: |
+      Detecting C compiler /showIncludes prefix:
+        
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:1288 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:250 (CMAKE_DETERMINE_MSVC_SHOWINCLUDES_PREFIX)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:12 (project)"
+    message: |
+      Detecting C compiler /showIncludes prefix:
+        
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:12 (project)"
+    checks:
+      - "Detecting C compiler ABI info"
+    directories:
+      source: "C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-9io9rz"
+      binary: "C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-9io9rz"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-O0 -g -Xclang -gcodeview"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "CMAKE_C_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-9io9rz'
+        
+        Run Build Command(s): "C:/Program Files/CMake/bin/cmake.exe" -E env VERBOSE=1 C:/MinGW/bin/mingw32-make.exe -f Makefile cmTC_ead3d/fast
+        mingw32-make.exe[1]: Entering directory 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-9io9rz'
+        C:/MinGW/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_ead3d.dir\\build.make CMakeFiles/cmTC_ead3d.dir/build
+        mingw32-make.exe[2]: Entering directory 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-9io9rz'
+        Building C object CMakeFiles/cmTC_ead3d.dir/CMakeCCompilerABI.c.obj
+        C:\\cproj_rm2\\clang\\bin\\clang.exe   -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -MD -MT CMakeFiles/cmTC_ead3d.dir/CMakeCCompilerABI.c.obj -MF CMakeFiles\\cmTC_ead3d.dir\\CMakeCCompilerABI.c.obj.d -o CMakeFiles\\cmTC_ead3d.dir\\CMakeCCompilerABI.c.obj -c "C:\\Program Files\\CMake\\share\\cmake-3.31\\Modules\\CMakeCCompilerABI.c"
+        Linking C executable cmTC_ead3d.exe
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_ead3d.dir\\link.txt --verbose=1
+        C:\\cproj_rm2\\clang\\bin\\clang.exe -nostartfiles -nostdlib -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd  -v -Xlinker /subsystem:console -fuse-ld=lld-link @CMakeFiles\\cmTC_ead3d.dir\\objects1.rsp -o cmTC_ead3d.exe -Xlinker /MANIFEST:EMBED -Xlinker /implib:cmTC_ead3d.lib -Xlinker /pdb:C:\\cproj_rm2\\game\\release\\CMakeFiles\\CMakeScratch\\TryCompile-9io9rz\\cmTC_ead3d.pdb -Xlinker /version:0.0 
+        clang version 19.1.7
+        Target: x86_64-pc-windows-msvc
+        Thread model: posix
+        InstalledDir: C:\\cproj_rm2\\clang\\bin
+         "C:\\\\cproj_rm2\\\\clang\\\\bin\\\\lld-link" -out:cmTC_ead3d.exe "-libpath:C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\VC\\\\Tools\\\\MSVC\\\\14.41.34120\\\\lib\\\\x64" "-libpath:C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\VC\\\\Tools\\\\MSVC\\\\14.41.34120\\\\atlmfc\\\\lib\\\\x64" "-libpath:C:\\\\Program Files (x86)\\\\Windows Kits\\\\10\\\\Lib\\\\10.0.22621.0\\\\ucrt\\\\x64" "-libpath:C:\\\\Program Files (x86)\\\\Windows Kits\\\\10\\\\Lib\\\\10.0.22621.0\\\\um\\\\x64" "-libpath:C:\\\\cproj_rm2\\\\clang\\\\lib\\\\clang\\\\19\\\\lib\\\\windows" -nologo -debug /subsystem:console CMakeFiles/cmTC_ead3d.dir/CMakeCCompilerABI.c.obj /MANIFEST:EMBED /implib:cmTC_ead3d.lib "/pdb:C:\\\\cproj_rm2\\\\game\\\\release\\\\CMakeFiles\\\\CMakeScratch\\\\TryCompile-9io9rz\\\\cmTC_ead3d.pdb" /version:0.0
+        mingw32-make.exe[2]: Leaving directory 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-9io9rz'
+        mingw32-make.exe[1]: Leaving directory 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-9io9rz'
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:12 (project)"
+    message: |
+      Parsed C implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|link\\.exe|lld-link(\\.exe)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?|link\\.exe|lld-link(\\.exe)?))("|,| |$)]
+        linker tool for 'C': C:/cproj_rm2/clang/bin/lld-link
+        implicit libs: []
+        implicit objs: []
+        implicit dirs: []
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:12 (project)"
+    message: |
+      Running the C compiler's linker: "C:/cproj_rm2/clang/bin/lld-link" "-v"
+      lld-link: warning: ignoring unknown argument '-v'
+      lld-link: error: no input files
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:12 (project)"
+    message: |
+      Running the C compiler's linker: "C:/cproj_rm2/clang/bin/lld-link" "-V"
+      lld-link: warning: ignoring unknown argument '-V'
+      lld-link: error: no input files
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:12 (project)"
+    message: |
+      Running the C compiler's linker: "C:/cproj_rm2/clang/bin/lld-link" "--version"
+      LLD 19.1.7
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckCSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/FindThreads.cmake:97 (CHECK_C_SOURCE_COMPILES)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/FindThreads.cmake:163 (_threads_check_libc)"
+      - "libs/glfw_win/CMakeLists.txt:60 (find_package)"
+    checks:
+      - "Performing Test CMAKE_HAVE_LIBC_PTHREAD"
+    directories:
+      source: "C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-7jc7rh"
+      binary: "C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-7jc7rh"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-O0 -g -Xclang -gcodeview"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/cproj_rm2/game/libs/glfw_win/CMake/modules"
+    buildResult:
+      variable: "CMAKE_HAVE_LIBC_PTHREAD"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-7jc7rh'
+        
+        Run Build Command(s): "C:/Program Files/CMake/bin/cmake.exe" -E env VERBOSE=1 C:/MinGW/bin/mingw32-make.exe -f Makefile cmTC_ed8f0/fast
+        mingw32-make.exe[1]: Entering directory 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-7jc7rh'
+        C:/MinGW/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_ed8f0.dir\\build.make CMakeFiles/cmTC_ed8f0.dir/build
+        mingw32-make.exe[2]: Entering directory 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-7jc7rh'
+        Building C object CMakeFiles/cmTC_ed8f0.dir/src.c.obj
+        C:\\cproj_rm2\\clang\\bin\\clang.exe -DCMAKE_HAVE_LIBC_PTHREAD  -O0 -g -Xclang -gcodeview -std=gnu23 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -MD -MT CMakeFiles/cmTC_ed8f0.dir/src.c.obj -MF CMakeFiles\\cmTC_ed8f0.dir\\src.c.obj.d -o CMakeFiles\\cmTC_ed8f0.dir\\src.c.obj -c C:\\cproj_rm2\\game\\release\\CMakeFiles\\CMakeScratch\\TryCompile-7jc7rh\\src.c
+        C:\\cproj_rm2\\game\\release\\CMakeFiles\\CMakeScratch\\TryCompile-7jc7rh\\src.c:1:10: fatal error: 'pthread.h' file not found
+            1 | #include <pthread.h>
+              |          ^~~~~~~~~~~
+        1 error generated.
+        CMakeFiles\\cmTC_ed8f0.dir\\build.make:80: recipe for target 'CMakeFiles/cmTC_ed8f0.dir/src.c.obj' failed
+        mingw32-make.exe[2]: *** [CMakeFiles/cmTC_ed8f0.dir/src.c.obj] Error 1
+        mingw32-make.exe[2]: Leaving directory 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-7jc7rh'
+        Makefile:132: recipe for target 'cmTC_ed8f0/fast' failed
+        mingw32-make.exe[1]: *** [cmTC_ed8f0/fast] Error 2
+        mingw32-make.exe[1]: Leaving directory 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-7jc7rh'
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckLibraryExists.cmake:78 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/FindThreads.cmake:112 (CHECK_LIBRARY_EXISTS)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/FindThreads.cmake:175 (_threads_check_lib)"
+      - "libs/glfw_win/CMakeLists.txt:60 (find_package)"
+    checks:
+      - "Looking for pthread_create in pthreads"
+    directories:
+      source: "C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-vbmbto"
+      binary: "C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-vbmbto"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-O0 -g -Xclang -gcodeview"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/cproj_rm2/game/libs/glfw_win/CMake/modules"
+    buildResult:
+      variable: "CMAKE_HAVE_PTHREADS_CREATE"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-vbmbto'
+        
+        Run Build Command(s): "C:/Program Files/CMake/bin/cmake.exe" -E env VERBOSE=1 C:/MinGW/bin/mingw32-make.exe -f Makefile cmTC_c8a54/fast
+        mingw32-make.exe[1]: Entering directory 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-vbmbto'
+        C:/MinGW/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_c8a54.dir\\build.make CMakeFiles/cmTC_c8a54.dir/build
+        mingw32-make.exe[2]: Entering directory 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-vbmbto'
+        Building C object CMakeFiles/cmTC_c8a54.dir/CheckFunctionExists.c.obj
+        C:\\cproj_rm2\\clang\\bin\\clang.exe   -DCHECK_FUNCTION_EXISTS=pthread_create -O0 -g -Xclang -gcodeview -std=gnu23 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -MD -MT CMakeFiles/cmTC_c8a54.dir/CheckFunctionExists.c.obj -MF CMakeFiles\\cmTC_c8a54.dir\\CheckFunctionExists.c.obj.d -o CMakeFiles\\cmTC_c8a54.dir\\CheckFunctionExists.c.obj -c C:\\cproj_rm2\\game\\release\\CMakeFiles\\CMakeScratch\\TryCompile-vbmbto\\CheckFunctionExists.c
+        Linking C executable cmTC_c8a54.exe
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_c8a54.dir\\link.txt --verbose=1
+        C:\\cproj_rm2\\clang\\bin\\clang.exe -nostartfiles -nostdlib  -DCHECK_FUNCTION_EXISTS=pthread_create -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -Xlinker /subsystem:console -fuse-ld=lld-link @CMakeFiles\\cmTC_c8a54.dir\\objects1.rsp -o cmTC_c8a54.exe -Xlinker /MANIFEST:EMBED -Xlinker /implib:cmTC_c8a54.lib -Xlinker /pdb:C:\\cproj_rm2\\game\\release\\CMakeFiles\\CMakeScratch\\TryCompile-vbmbto\\cmTC_c8a54.pdb -Xlinker /version:0.0  @CMakeFiles\\cmTC_c8a54.dir\\linkLibs.rsp
+        lld-link: error: could not open 'pthreads.lib': no such file or directory
+        clang: error: linker command failed with exit code 1 (use -v to see invocation)
+        CMakeFiles\\cmTC_c8a54.dir\\build.make:103: recipe for target 'cmTC_c8a54.exe' failed
+        mingw32-make.exe[2]: *** [cmTC_c8a54.exe] Error 1
+        mingw32-make.exe[2]: Leaving directory 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-vbmbto'
+        Makefile:132: recipe for target 'cmTC_c8a54/fast' failed
+        mingw32-make.exe[1]: *** [cmTC_c8a54/fast] Error 2
+        mingw32-make.exe[1]: Leaving directory 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-vbmbto'
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckLibraryExists.cmake:78 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/FindThreads.cmake:112 (CHECK_LIBRARY_EXISTS)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/FindThreads.cmake:176 (_threads_check_lib)"
+      - "libs/glfw_win/CMakeLists.txt:60 (find_package)"
+    checks:
+      - "Looking for pthread_create in pthread"
+    directories:
+      source: "C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-on3tnb"
+      binary: "C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-on3tnb"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-O0 -g -Xclang -gcodeview"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/cproj_rm2/game/libs/glfw_win/CMake/modules"
+    buildResult:
+      variable: "CMAKE_HAVE_PTHREAD_CREATE"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-on3tnb'
+        
+        Run Build Command(s): "C:/Program Files/CMake/bin/cmake.exe" -E env VERBOSE=1 C:/MinGW/bin/mingw32-make.exe -f Makefile cmTC_0fb5a/fast
+        mingw32-make.exe[1]: Entering directory 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-on3tnb'
+        C:/MinGW/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_0fb5a.dir\\build.make CMakeFiles/cmTC_0fb5a.dir/build
+        mingw32-make.exe[2]: Entering directory 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-on3tnb'
+        Building C object CMakeFiles/cmTC_0fb5a.dir/CheckFunctionExists.c.obj
+        C:\\cproj_rm2\\clang\\bin\\clang.exe   -DCHECK_FUNCTION_EXISTS=pthread_create -O0 -g -Xclang -gcodeview -std=gnu23 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -MD -MT CMakeFiles/cmTC_0fb5a.dir/CheckFunctionExists.c.obj -MF CMakeFiles\\cmTC_0fb5a.dir\\CheckFunctionExists.c.obj.d -o CMakeFiles\\cmTC_0fb5a.dir\\CheckFunctionExists.c.obj -c C:\\cproj_rm2\\game\\release\\CMakeFiles\\CMakeScratch\\TryCompile-on3tnb\\CheckFunctionExists.c
+        Linking C executable cmTC_0fb5a.exe
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_0fb5a.dir\\link.txt --verbose=1
+        C:\\cproj_rm2\\clang\\bin\\clang.exe -nostartfiles -nostdlib  -DCHECK_FUNCTION_EXISTS=pthread_create -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -Xlinker /subsystem:console -fuse-ld=lld-link @CMakeFiles\\cmTC_0fb5a.dir\\objects1.rsp -o cmTC_0fb5a.exe -Xlinker /MANIFEST:EMBED -Xlinker /implib:cmTC_0fb5a.lib -Xlinker /pdb:C:\\cproj_rm2\\game\\release\\CMakeFiles\\CMakeScratch\\TryCompile-on3tnb\\cmTC_0fb5a.pdb -Xlinker /version:0.0  @CMakeFiles\\cmTC_0fb5a.dir\\linkLibs.rsp
+        lld-link: error: could not open 'pthread.lib': no such file or directory
+        clang: error: linker command failed with exit code 1 (use -v to see invocation)
+        CMakeFiles\\cmTC_0fb5a.dir\\build.make:103: recipe for target 'cmTC_0fb5a.exe' failed
+        mingw32-make.exe[2]: *** [cmTC_0fb5a.exe] Error 1
+        mingw32-make.exe[2]: Leaving directory 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-on3tnb'
+        Makefile:132: recipe for target 'cmTC_0fb5a/fast' failed
+        mingw32-make.exe[1]: *** [cmTC_0fb5a/fast] Error 2
+        mingw32-make.exe[1]: Leaving directory 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-on3tnb'
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/FindThreads.cmake:136 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/FindThreads.cmake:179 (_threads_check_flag_pthread)"
+      - "libs/glfw_win/CMakeLists.txt:60 (find_package)"
+    checks:
+      - "Check if compiler accepts -pthread"
+    directories:
+      source: "C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-5d0ueh"
+      binary: "C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-5d0ueh"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-O0 -g -Xclang -gcodeview"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/cproj_rm2/game/libs/glfw_win/CMake/modules"
+    buildResult:
+      variable: "THREADS_HAVE_PTHREAD_ARG"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-5d0ueh'
+        
+        Run Build Command(s): "C:/Program Files/CMake/bin/cmake.exe" -E env VERBOSE=1 C:/MinGW/bin/mingw32-make.exe -f Makefile cmTC_aca7e/fast
+        mingw32-make.exe[1]: Entering directory 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-5d0ueh'
+        C:/MinGW/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_aca7e.dir\\build.make CMakeFiles/cmTC_aca7e.dir/build
+        mingw32-make.exe[2]: Entering directory 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-5d0ueh'
+        Building C object CMakeFiles/cmTC_aca7e.dir/CheckForPthreads.c.obj
+        C:\\cproj_rm2\\clang\\bin\\clang.exe   -O0 -g -Xclang -gcodeview -std=gnu23 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -MD -MT CMakeFiles/cmTC_aca7e.dir/CheckForPthreads.c.obj -MF CMakeFiles\\cmTC_aca7e.dir\\CheckForPthreads.c.obj.d -o CMakeFiles\\cmTC_aca7e.dir\\CheckForPthreads.c.obj -c C:\\cproj_rm2\\game\\release\\CMakeFiles\\CMakeScratch\\TryCompile-5d0ueh\\CheckForPthreads.c
+        C:\\cproj_rm2\\game\\release\\CMakeFiles\\CMakeScratch\\TryCompile-5d0ueh\\CheckForPthreads.c:1:10: fatal error: 'pthread.h' file not found
+            1 | #include <pthread.h>
+              |          ^~~~~~~~~~~
+        1 error generated.
+        CMakeFiles\\cmTC_aca7e.dir\\build.make:80: recipe for target 'CMakeFiles/cmTC_aca7e.dir/CheckForPthreads.c.obj' failed
+        mingw32-make.exe[2]: *** [CMakeFiles/cmTC_aca7e.dir/CheckForPthreads.c.obj] Error 1
+        mingw32-make.exe[2]: Leaving directory 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-5d0ueh'
+        Makefile:132: recipe for target 'cmTC_aca7e/fast' failed
+        mingw32-make.exe[1]: *** [cmTC_aca7e/fast] Error 2
+        mingw32-make.exe[1]: Leaving directory 'C:/cproj_rm2/game/release/CMakeFiles/CMakeScratch/TryCompile-5d0ueh'
+        
+      exitCode: 2
+...

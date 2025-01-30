@@ -42,7 +42,11 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         add_library(${PROJECT_NAME} SHARED ${SOURCES})
     endif()
 else()
-    add_executable(${PROJECT_NAME} ${SOURCES})
+    if(WIN32)
+        add_executable(${PROJECT_NAME} WIN32 ${SOURCES})
+    else()
+        add_executable(${PROJECT_NAME} ${SOURCES})
+    endif()
 endif()
 
 
