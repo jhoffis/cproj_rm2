@@ -43,76 +43,55 @@ mesh3d* load_model(const char *name) {
         return NULL;
     }
 
-    mesh->num_vertices = attrib.num_face_num_verts;
-    mesh->num_indices =attrib.num_face_num_verts * 3; 
+    mesh->num_vertices = attrib.num_face_num_verts * 3;
+    mesh->num_indices = attrib.num_face_num_verts * 3;
 
-    u32 index = 0;
     mesh->vertices = xmalloc(sizeof(f32_v3) * mesh->num_vertices);
     mesh->indices = xmalloc(sizeof(u32) * mesh->num_indices);
-    mesh->normals = xmalloc(sizeof(f32_v3) * attrib.num_normals);
-    mesh->uvs = xmalloc(sizeof(f32_v2) * attrib.num_texcoords);
-    for (auto i = 0; i < num_shapes; i++) {
-        auto shape = shapes[i];
-        for (int n = 0; n < shape.length; n++) {
-            auto f0 = attrib.faces[shape.face_offset + 3*n + 0];
-            auto f1 = attrib.faces[shape.face_offset + 3*n + 1];
-            auto f2 = attrib.faces[shape.face_offset + 3*n + 2];
+    mesh->normals = xmalloc(sizeof(f32_v3) * mesh->num_vertices);
+    mesh->uvs = xmalloc(sizeof(f32_v2) * mesh->num_vertices);
 
-            f32_v3 vertex0 = {
-                attrib.vertices[3 * (size_t)f0.v_idx + 0],
-                attrib.vertices[3 * (size_t)f0.v_idx + 1],
-                attrib.vertices[3 * (size_t)f0.v_idx + 2]
-            };
-            f32_v3 vertex1 = {
-                attrib.vertices[3 * (size_t)f1.v_idx + 0],
-                attrib.vertices[3 * (size_t)f1.v_idx + 1],
-                attrib.vertices[3 * (size_t)f1.v_idx + 2]
-            };
-            f32_v3 vertex2 = {
-                attrib.vertices[3 * (size_t)f2.v_idx + 0],
-                attrib.vertices[3 * (size_t)f2.v_idx + 1],
-                attrib.vertices[3 * (size_t)f2.v_idx + 2]
-            };
+    size_t vertex_index = 0;
 
-            // f32_v3 normal0 = {
-            //     attrib.normals[3 * (size_t)f0.vn_idx + 0],
-            //     attrib.normals[3 * (size_t)f0.vn_idx + 1],
-            //     attrib.normals[3 * (size_t)f0.vn_idx + 2]
-            // };
-            // f32_v3 normal1 = {
-            //     attrib.normals[3 * (size_t)f1.vn_idx + 0],
-            //     attrib.normals[3 * (size_t)f1.vn_idx + 1],
-            //     attrib.normals[3 * (size_t)f1.vn_idx + 2]
-            // };
-            // f32_v3 normal2 = {
-            //     attrib.normals[3 * (size_t)f2.vn_idx + 0],
-            //     attrib.normals[3 * (size_t)f2.vn_idx + 1],
-            //     attrib.normals[3 * (size_t)f2.vn_idx + 2]
-            // };
+    // Process all faces
+    for (size_t face = 0; face < attrib.num_face_num_verts; face++) {
+        // Get the three vertices for this face (triangulated)
+        for (size_t v = 0; v < 3; v++) {
+            tinyobj_vertex_index_t idx = attrib.faces[face * 3 + v];
+            
+            // Vertex positions
+            if (idx.v_idx >= 0) {
+                mesh->vertices[vertex_index] = (f32_v3){
+                    attrib.vertices[3 * idx.v_idx + 0],
+                    attrib.vertices[3 * idx.v_idx + 1],
+                    attrib.vertices[3 * idx.v_idx + 2]
+                };
+            }
 
-            f32_v2 tex0 = {
-                attrib.texcoords[2 * (size_t)f0.vt_idx + 0],
-                attrib.texcoords[2 * (size_t)f0.vt_idx + 1],
-            };
-            f32_v2 tex1 = {
-                attrib.texcoords[2 * (size_t)f1.vt_idx + 0],
-                attrib.texcoords[2 * (size_t)f1.vt_idx + 1],
-            };
-            f32_v2 tex2 = {
-                attrib.texcoords[2 * (size_t)f2.vt_idx + 0],
-                attrib.texcoords[2 * (size_t)f2.vt_idx + 1],
-            };
+            // Normals
+            if (idx.vn_idx >= 0) {
+                mesh->normals[vertex_index] = (f32_v3){
+                    attrib.normals[3 * idx.vn_idx + 0],
+                    attrib.normals[3 * idx.vn_idx + 1],
+                    attrib.normals[3 * idx.vn_idx + 2]
+                };
+            }
 
-            mesh->vertices[index]     = vertex0;
-            mesh->vertices[index + 1] = vertex1;
-            mesh->vertices[index + 2] = vertex2;
-            mesh->uvs[index]     = tex0;
-            mesh->uvs[index + 1] = tex1;
-            mesh->uvs[index + 2] = tex2;
-            mesh->indices[index]     = index;
-            mesh->indices[index + 1] = index + 1;
-            mesh->indices[index + 2] = index + 2;
-            index += 3;
+            // Texture coordinates
+            if (idx.vt_idx >= 0) {
+                // Flip the Y coordinate since OBJ and OpenGL use different coordinate systems
+                mesh->uvs[vertex_index] = (f32_v2){
+                    attrib.texcoords[2 * idx.vt_idx + 0],
+                    1.0f - attrib.texcoords[2 * idx.vt_idx + 1]  // Flip Y coordinate
+                };
+            } else {
+                // Provide default UV coordinates if none exist
+                mesh->uvs[vertex_index] = (f32_v2){0.0f, 0.0f};
+            }
+
+            // Set index
+            mesh->indices[vertex_index] = vertex_index;
+            vertex_index++;
         }
     }
 

@@ -13,9 +13,14 @@ void gfx_init_graphics(void) {
     }    
     
     gfx_update_viewport();
-    // glEnable(GL_CULL_FACE);  
-    // glCullFace(GL_BACK);
-    // glFrontFace(GL_CCW);  
+    
+    // Enable depth testing
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);  // Smaller depth values are drawn in front
+    
+    glEnable(GL_CULL_FACE);  
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);  
 
     if (game_state.render_method == 0) {
         game_state.render_method = GFX_TRIANGLES;
@@ -28,7 +33,7 @@ void gfx_update_viewport(void) {
 
 void gfx_clear_color(f32 r, f32 g, f32 b, f32 a) {
     glClearColor(r, g, b, a);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // Clear both color and depth buffers
 }
 
 void gfx_swap(void) {
