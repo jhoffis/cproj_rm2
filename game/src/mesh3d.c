@@ -51,6 +51,8 @@ mesh3d* load_model(const char *name) {
     mesh->normals = xmalloc(sizeof(f32_v3) * mesh->num_vertices);
     mesh->uvs = xmalloc(sizeof(f32_v2) * mesh->num_vertices);
 
+    mesh->groups = xmalloc(sizeof(mesh_group_offset) * num_shapes);
+    mesh->num_groups = num_shapes;
     size_t vertex_index = 0;
 
     // Process all faces
