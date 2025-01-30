@@ -76,7 +76,7 @@ int main(void) {
     sprite2D_camera_pos((f32_v2){0.7, 0.3});
 
     // Load model
-    auto model_mesh = load_model("teapot");
+    auto model_mesh = load_model("decentra");
     if (!model_mesh) {
         printf("Failed to load model\n");
         exit(1);
@@ -89,15 +89,22 @@ int main(void) {
     gfx_set_shader(shader_mesh3d);
     bind_model(model_mesh);
 
-    f32_m4x4 mvp = {0};
-    mat4x4_unit(mvp);
-    mat4x4_translate(mvp, mvp, (f32_v4) {-50,0.5,-150.0,0}); 
-
-    f32_m4x4 persp = {0};
-    mat4x4_perspective(persp, 60, window_aspect_ratio(), 1, 10000);
-    mat4x4_multiply(mvp, mvp, persp);
+    f32 pos = 100;
 
     while (!window_should_close()) {
+        f32_m4x4 mvp = {0};
+        mat4x4_unit(mvp);
+        mat4x4_translate(mvp, mvp, (f32_v4) {pos,0.5,-15.0,0}); 
+        pos -= 0.1;
+
+        f32_m4x4 view = {0};
+        create_world_view(view, (f32_v4) {0,0,0,0}, (f32_v4) {0,0,0,0});
+
+        f32_m4x4 persp = {0};
+        mat4x4_perspective(persp, 70, window_aspect_ratio(), 1, 10000);
+        // printf("%f\n", rot);
+        mat4x4_multiply(mvp, mvp, view);
+        mat4x4_multiply(mvp, mvp, persp);
         gfx_clear_color(0.2f, 0.3f, 0.3f, 1.0f);
         window_poll_events();
 

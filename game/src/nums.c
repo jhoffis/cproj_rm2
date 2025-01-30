@@ -66,8 +66,58 @@ void mat4x4_translate(f32_m4x4 output, f32_m4x4 input0, f32_v4 input1) {
     mat4x4_multiply(output, input0, work);
 }
 
-void mat4x4_perspective(f32_m4x4 mat, f32 fov_radians, f32 aspect, f32 near, f32 far) {
+void mat4x4_rotate(f32_m4x4 output, f32_m4x4 input0, f32_v4 input1) {
+    f32_m4x4 work;
+
+    // Apply the z-axis rotation.
+    mat4x4_unit(work);
+    work[_11] =  cosf(input1.z);
+    work[_12] =  sinf(input1.z);
+    work[_21] = -sinf(input1.z);
+    work[_22] =  cosf(input1.z);
+    mat4x4_multiply(output, input0, work);
+    
+    // Apply the y-axis rotation.
+    mat4x4_unit(work);
+    work[_11] =  cosf(input1.y);
+    work[_13] = -sinf(input1.y);
+    work[_31] =  sinf(input1.y);
+    work[_33] =  cosf(input1.y);
+    mat4x4_multiply(output, output, work);
+
+    // Apply the x-axis rotation.
+    mat4x4_unit(work);
+    work[_22] =  cosf(input1.x);
+    work[_23] =  sinf(input1.x);
+    work[_32] = -sinf(input1.x);
+    work[_33] =  cosf(input1.x);
+    mat4x4_multiply(output, output, work);
+}
+
+void create_world_view(f32_m4x4 world_view, f32_v4 translation, f32_v4 rotation) {
+    f32_v4 work0, work1;
+
+    // Reverse the translation.
+    work0.x = -translation.x;
+    work0.y = -translation.y;
+    work0.z = -translation.z;
+    work0.w =  translation.w;
+
+    // Reverse the rotation.
+    work1.x = -rotation.x;
+    work1.y = -rotation.y;
+    work1.z = -rotation.z;
+    work1.w =  rotation.w;
+
+    // Create the world_view matrix.
+    mat4x4_unit(world_view);
+    mat4x4_translate(world_view, world_view, work0);
+    mat4x4_rotate(world_view, world_view, work1);
+}
+
+void mat4x4_perspective(f32_m4x4 mat, f32 fov_degrees, f32 aspect, f32 near, f32 far) {
     memset(mat, 0, sizeof(f32_m4x4));
+    auto fov_radians = fov_degrees * (M_PI / 180.0f);
     f32 tan_half_fov = tanf(fov_radians / 2.0f);
     mat[_11] = aspect / ( tan_half_fov);
     mat[_22] = 1.0f / tan_half_fov;
