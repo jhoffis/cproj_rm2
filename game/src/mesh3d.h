@@ -2,7 +2,8 @@
 #include "nums.h"
 
 typedef struct {
-    u32 start_index;  // Starting index in the main index buffer
+    u32 start_vertex_index;
+    u32 start_group_index;
     u32 *offsetted_indices;
     u32 num_vertices;
     u32 num_indices;
