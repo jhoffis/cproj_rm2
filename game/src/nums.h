@@ -11,6 +11,7 @@
 // https://learn.microsoft.com/en-us/windows/win32/memory/memory-protection-constants
 #define MAX_MEM_64 0x3ffb000
 #define U16_MAX 65535
+#define UINT32_MAX 4294967295
 
 #include <stdbool.h>
 
