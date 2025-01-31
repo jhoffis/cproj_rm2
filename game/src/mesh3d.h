@@ -9,6 +9,7 @@ typedef struct {
     u32 *offsetted_indices;
     u32 num_vertices;
     u32 num_indices;
+    u32 num_indices_actual_size;
 } mesh_group_offset;
 
 typedef struct {
@@ -27,3 +28,6 @@ typedef struct {
 mesh3d *load_model(const char *name);
 void destroy_model(mesh3d *mesh);
 void bind_model(mesh3d *mesh);
+void bind_model_group(mesh3d *mesh, u32 group_index);
+void bind_model_from_group(mesh3d *mesh, u32 group_index);
+

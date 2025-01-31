@@ -207,3 +207,26 @@ void bind_model(mesh3d *mesh) {
         mesh->uvs, 
         mesh->num_vertices);
 }
+
+void bind_model_group(mesh3d *mesh, u32 group_index) {
+    gfx_bind_vertices(shader_mesh3d, 
+        mesh->groups[group_index].offsetted_vertices, 
+        mesh->groups[group_index].num_vertices, 
+        mesh->groups[group_index].offsetted_indices,
+        mesh->groups[group_index].num_indices);
+    gfx_bind_texture(shader_mesh3d, 
+        mesh->groups[group_index].offsetted_uvs, 
+        mesh->groups[group_index].num_vertices);
+}
+
+void bind_model_from_group(mesh3d *mesh, u32 group_index) {
+    gfx_bind_vertices(shader_mesh3d, 
+        mesh->groups[group_index].offsetted_vertices, 
+        mesh->num_vertices - mesh->groups[group_index].num_vertices, 
+        mesh->groups[group_index].offsetted_indices,
+        mesh->num_indices - mesh->groups[group_index].num_indices);
+    gfx_bind_texture(shader_mesh3d, 
+        mesh->groups[group_index].offsetted_uvs, 
+        mesh->num_vertices - mesh->groups[group_index].num_vertices);
+}
+
