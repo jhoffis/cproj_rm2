@@ -52,129 +52,78 @@ mesh3d* load_model(const char *name) {
 
     mesh->groups = xmalloc(sizeof(mesh_group_offset) * num_shapes);
     mesh->num_groups = num_shapes;
+    mesh->num_indices = attrib.num_face_num_verts * 3;
+    mesh->indices = xmalloc(sizeof(u32) * mesh->num_indices);
+    mesh->vertices = xmalloc(sizeof(f32_v3) * mesh->num_indices);
+    mesh->normals = xmalloc(sizeof(f32_v3) * mesh->num_indices);
+    mesh->uvs = xmalloc(sizeof(f32_v2) * mesh->num_indices);
 
     // First pass: count unique vertices per group to allocate properly
     size_t total_vertices = 0;
+    auto indices_index = 0;
     for (size_t i = 0; i < num_shapes; i++) {
         size_t group_start = shapes[i].face_offset * 3;
         size_t group_end = group_start + (shapes[i].length * 3);
         size_t unique_verts = 0;
+        if (i == 0) {
+            mesh->groups[i].start_index = 0;
+            mesh->groups[i].num_indices = mesh->num_indices;
+            mesh->groups[i].offsetted_indices = mesh->indices;
+        } else {
+            mesh->groups[i].start_index = group_start;
+            mesh->groups[i].num_indices = mesh->num_indices - group_start;
+            mesh->groups[i].offsetted_indices = xmalloc(sizeof(u32) * mesh->groups[i].num_indices);
+        }
+        mesh->groups[i].num_indices_actual_size = shapes[i].length;
         
-        // Track which vertices we've seen
-        bool *seen = xmalloc(sizeof(bool) * (shapes[i].length * 3));
-        memset(seen, 0, sizeof(bool) * (shapes[i].length * 3));
-
         for (size_t f = group_start; f < group_end; f++) {
             tinyobj_vertex_index_t idx = attrib.faces[f];
-            bool found = false;
             
-            // Check if we've seen this vertex before
+            // Is this vertex before in this group?
             for (size_t prev = group_start; prev < f; prev++) {
                 tinyobj_vertex_index_t prev_idx = attrib.faces[prev];
                 if (idx.v_idx == prev_idx.v_idx && 
                     idx.vn_idx == prev_idx.vn_idx && 
                     idx.vt_idx == prev_idx.vt_idx) {
-                    found = true;
-                    break;
+                    mesh->indices[f] = prev;
+                    goto break_search_loop;
                 }
             }
             
-            if (!found) {
-                unique_verts++;
+            assert(idx.v_idx >= 0);
+            assert(idx.vn_idx >= 0);
+            assert(idx.vt_idx >= 0);
+            mesh->vertices[unique_verts] = (f32_v3){
+                attrib.vertices[3 * idx.v_idx + 0],
+                attrib.vertices[3 * idx.v_idx + 1],
+                attrib.vertices[3 * idx.v_idx + 2]
+            };
+            mesh->normals[unique_verts] = (f32_v3){
+                attrib.normals[3 * idx.vn_idx + 0],
+                attrib.normals[3 * idx.vn_idx + 1],
+                attrib.normals[3 * idx.vn_idx + 2]
+            };
+            mesh->uvs[unique_verts] = (f32_v2){
+                attrib.texcoords[2 * idx.vt_idx + 0],
+                1.0f - attrib.texcoords[2 * idx.vt_idx + 1]
+            };
+            mesh->indices[f] = f;
+            unique_verts++;
+break_search_loop:
+            for (int g = 1; g <= i; g++) {
+                mesh->groups[g].offsetted_indices[f - mesh->groups[g].start_index] = mesh->indices[indices_index] - mesh->groups[g].start_index;
             }
         }
-        xfree(seen);
-        
-        mesh->groups[i].start_index = total_vertices;
+
         mesh->groups[i].num_vertices = unique_verts;
-        mesh->groups[i].num_indices = shapes[i].length * 3;
-        mesh->groups[i].offsetted_indices = xmalloc(sizeof(u32) * mesh->groups[i].num_indices);
         total_vertices += unique_verts;
     }
 
     // Allocate main arrays
     mesh->num_vertices = total_vertices;
-    mesh->num_indices = attrib.num_face_num_verts * 3;
-    mesh->vertices = xmalloc(sizeof(f32_v3) * mesh->num_vertices);
-    mesh->indices = xmalloc(sizeof(u32) * mesh->num_indices);
-    mesh->normals = xmalloc(sizeof(f32_v3) * mesh->num_vertices);
-    mesh->uvs = xmalloc(sizeof(f32_v2) * mesh->num_vertices);
-
-    // Set up group views into the main arrays
-    for (size_t i = 0; i < num_shapes; i++) {
-        mesh->groups[i].offsetted_vertices = &mesh->vertices[mesh->groups[i].start_index];
-        mesh->groups[i].offsetted_normals = &mesh->normals[mesh->groups[i].start_index];
-        mesh->groups[i].offsetted_uvs = &mesh->uvs[mesh->groups[i].start_index];
-    }
-
-    // Second pass: fill vertices and indices
-    size_t vertex_index = 0;
-    size_t index_index = 0;
-
-    for (size_t i = 0; i < num_shapes; i++) {
-        size_t group_start = shapes[i].face_offset * 3;
-        size_t group_end = group_start + (shapes[i].length * 3);
-        size_t group_vertex_start = mesh->groups[i].start_index;
-        size_t group_vertex_index = 0;  // Start from 0 for each group's local indices
-        
-        // Map from face index to vertex index for this group
-        u32 *vert_map = xmalloc(sizeof(u32) * (shapes[i].length * 3));
-        
-        for (size_t f = group_start; f < group_end; f++) {
-            tinyobj_vertex_index_t idx = attrib.faces[f];
-            u32 vert_idx = UINT32_MAX;
-            
-            // Check if we've seen this vertex before in this group
-            for (size_t prev = group_start; prev < f; prev++) {
-                tinyobj_vertex_index_t prev_idx = attrib.faces[prev];
-                if (idx.v_idx == prev_idx.v_idx && 
-                    idx.vn_idx == prev_idx.vn_idx && 
-                    idx.vt_idx == prev_idx.vt_idx) {
-                    vert_idx = vert_map[prev - group_start];
-                    break;
-                }
-            }
-            
-            if (vert_idx == UINT32_MAX) {
-                // New vertex
-                vert_idx = group_vertex_index;
-                vert_map[f - group_start] = vert_idx;
-                
-                // Add vertex data to main arrays
-                if (idx.v_idx >= 0) {
-                    mesh->vertices[group_vertex_start + group_vertex_index] = (f32_v3){
-                        attrib.vertices[3 * idx.v_idx + 0],
-                        attrib.vertices[3 * idx.v_idx + 1],
-                        attrib.vertices[3 * idx.v_idx + 2]
-                    };
-                }
-                if (idx.vn_idx >= 0) {
-                    mesh->normals[group_vertex_start + group_vertex_index] = (f32_v3){
-                        attrib.normals[3 * idx.vn_idx + 0],
-                        attrib.normals[3 * idx.vn_idx + 1],
-                        attrib.normals[3 * idx.vn_idx + 2]
-                    };
-                }
-                if (idx.vt_idx >= 0) {
-                    mesh->uvs[group_vertex_start + group_vertex_index] = (f32_v2){
-                        attrib.texcoords[2 * idx.vt_idx + 0],
-                        1.0f - attrib.texcoords[2 * idx.vt_idx + 1]
-                    };
-                } else {
-                    mesh->uvs[group_vertex_start + group_vertex_index] = (f32_v2){0.0f, 0.0f};
-                }
-                
-                group_vertex_index++;
-            }
-            
-            // Set indices - global uses absolute index, group uses local index
-            mesh->indices[index_index] = group_vertex_start + vert_idx;
-            mesh->groups[i].offsetted_indices[f - group_start] = vert_idx;  // Local index starting from 0
-            index_index++;
-        }
-        
-        xfree(vert_map);
-    }
+    mesh->vertices = xrealloc(mesh->vertices, sizeof(f32_v3) * mesh->num_vertices);
+    mesh->normals = xrealloc(mesh->normals, sizeof(f32_v3) * mesh->num_vertices);
+    mesh->uvs = xrealloc(mesh->uvs, sizeof(f32_v2) * mesh->num_vertices);
 
     tinyobj_attrib_free(&attrib);
     tinyobj_shapes_free(shapes, num_shapes);
@@ -198,35 +147,35 @@ void destroy_model(mesh3d *mesh) {
 }
 
 void bind_model(mesh3d *mesh) {
-    gfx_bind_vertices(shader_mesh3d, 
+    gfx_bind_vertices(shader_current, 
         mesh->vertices, 
         mesh->num_vertices, 
         mesh->indices,
         mesh->num_indices);
-    gfx_bind_texture(shader_mesh3d, 
+    gfx_bind_texture(shader_current, 
         mesh->uvs, 
         mesh->num_vertices);
 }
 
 void bind_model_group(mesh3d *mesh, u32 group_index) {
-    gfx_bind_vertices(shader_mesh3d, 
-        mesh->groups[group_index].offsetted_vertices, 
+    gfx_bind_vertices(shader_current, 
+        mesh->vertices + mesh->groups[group_index].start_index, 
         mesh->groups[group_index].num_vertices, 
         mesh->groups[group_index].offsetted_indices,
         mesh->groups[group_index].num_indices);
-    gfx_bind_texture(shader_mesh3d, 
-        mesh->groups[group_index].offsetted_uvs, 
+    gfx_bind_texture(shader_current, 
+        mesh->uvs + mesh->groups[group_index].start_index, 
         mesh->groups[group_index].num_vertices);
 }
 
 void bind_model_from_group(mesh3d *mesh, u32 group_index) {
-    gfx_bind_vertices(shader_mesh3d, 
-        mesh->groups[group_index].offsetted_vertices, 
+    gfx_bind_vertices(shader_current, 
+        mesh->vertices + mesh->groups[group_index].start_index, 
         mesh->num_vertices - mesh->groups[group_index].num_vertices, 
         mesh->groups[group_index].offsetted_indices,
         mesh->num_indices - mesh->groups[group_index].num_indices);
-    gfx_bind_texture(shader_mesh3d, 
-        mesh->groups[group_index].offsetted_uvs, 
+    gfx_bind_texture(shader_current, 
+        mesh->uvs + mesh->groups[group_index].start_index, 
         mesh->num_vertices - mesh->groups[group_index].num_vertices);
 }
 

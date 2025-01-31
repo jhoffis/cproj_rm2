@@ -3,9 +3,6 @@
 
 typedef struct {
     u32 start_index;  // Starting index in the main index buffer
-    f32_v3 *offsetted_vertices;
-    f32_v3 *offsetted_normals;
-    f32_v2 *offsetted_uvs;
     u32 *offsetted_indices;
     u32 num_vertices;
     u32 num_indices;

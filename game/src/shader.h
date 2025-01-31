@@ -7,8 +7,10 @@
 typedef enum {
     shader_sprite2D,
     shader_mesh3d,
+    shader_tire_mesh3d,
     shader_len 
 } shader_types;
+extern shader_types shader_current;
 
 void gfx_init_shaders(void);
 void gfx_reload_shaders(void);

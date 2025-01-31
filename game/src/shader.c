@@ -28,7 +28,7 @@ typedef struct {
 } shader_data;
 
 shader_data shaders[shader_len];
-shader_types curr;
+shader_types shader_current;
 
 static void compile_shader(shader_types type) {
     int  success;
@@ -40,6 +40,7 @@ static void compile_shader(shader_types type) {
             shader.name = "sprite2D";
             break;
         case shader_mesh3d:
+        case shader_tire_mesh3d:
             shader.name = "mesh3D";
             break;
         default:
@@ -127,7 +128,7 @@ void gfx_cleanup_shaders(void) {
 }
 
 void gfx_set_shader(shader_types type) {
-    curr = type;
+    shader_current = type;
     glUseProgram(shaders[type].program);
     glBindVertexArray(shaders[type].vertex_attr_buffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, shaders[type].index_buffer);
@@ -228,5 +229,5 @@ void gfx_uniform_i8(u32 location, i8 num) {
 }
 
 void gfx_draw(void) {
-    glDrawElements(game_state.render_method, shaders[curr].indices_amount, GL_UNSIGNED_INT, 0);
+    glDrawElements(game_state.render_method, shaders[shader_current].indices_amount, GL_UNSIGNED_INT, 0);
 }
