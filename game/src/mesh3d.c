@@ -183,13 +183,29 @@ void bind_model_group(mesh3d *mesh, u32 group_index) {
 }
 
 void bind_model_from_group(mesh3d *mesh, u32 group_index) {
+    auto vertex_count = mesh->num_vertices - mesh->groups[group_index].start_vertex_index;
     gfx_bind_vertices(shader_current, 
         mesh->vertices + mesh->groups[group_index].start_vertex_index, 
-        mesh->num_vertices - mesh->groups[group_index].start_vertex_index, 
+        vertex_count, 
         mesh->groups[group_index].offsetted_indices,
         mesh->groups[group_index].num_indices);
     gfx_bind_texture(shader_current, 
         mesh->uvs + mesh->groups[group_index].start_vertex_index, 
-        mesh->num_vertices - mesh->groups[group_index].start_vertex_index);
+        vertex_count);
+}
+
+/*
+ *  From is inclusive, to is exclusive.
+ */
+void bind_model_from_to_group(mesh3d *mesh, u32 group_from, u32 group_to) {
+    auto vertex_count = (mesh->num_vertices - mesh->groups[group_from].start_vertex_index) - (mesh->num_vertices - mesh->groups[group_to].start_vertex_index);
+    gfx_bind_vertices(shader_current, 
+        mesh->vertices + mesh->groups[group_from].start_vertex_index, 
+        vertex_count, 
+        mesh->groups[group_from].offsetted_indices,
+        mesh->groups[group_to].start_group_index - mesh->groups[group_from].start_group_index);
+    gfx_bind_texture(shader_current, 
+        mesh->uvs + mesh->groups[group_from].start_vertex_index, 
+        vertex_count);
 }
 

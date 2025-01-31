@@ -28,4 +28,4 @@ void destroy_model(mesh3d *mesh);
 void bind_model(mesh3d *mesh);
 void bind_model_group(mesh3d *mesh, u32 group_index);
 void bind_model_from_group(mesh3d *mesh, u32 group_index);
-
+void bind_model_from_to_group(mesh3d *mesh, u32 group_from, u32 group_to);

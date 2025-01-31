@@ -172,7 +172,8 @@ int main(void) {
     gfx_set_shader(shader_mesh3d);
     // bind_model(model_mesh);
     // gfx_set_shader(shader_tire_mesh3d);
-    bind_model_from_group(model_mesh, 2);
+    bind_model_from_to_group(model_mesh, 0, 1);
+    // bind_model_from_group(model_mesh, 2);
     // bind_model_group(model_mesh, 1);
 
     f32 pos = 0;
