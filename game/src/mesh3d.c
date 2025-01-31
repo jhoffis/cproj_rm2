@@ -9,9 +9,9 @@ static void tobj_file_reader_cb(void *ctx, const char *filename, int is_mtl, con
     (void)ctx;
     char *fixed_name;
     if (obj_filename != filename) {
-        fixed_name = path_name("../models/", filename, "");
+        fixed_name = path_name("../res/models/", filename, "");
     } else {
-        fixed_name = path_name("../models/", obj_filename, ".obj");
+        fixed_name = path_name("../res/models/", obj_filename, ".obj");
     }
     FILE *file = plt_fopen(fixed_name, "rb");
     xfree(fixed_name);
@@ -42,6 +42,13 @@ mesh3d* load_model(const char *name) {
         xfree(mesh);
         return NULL;
     }
+
+    // Checker for if you forgot to triangulate your model at export!
+    u32 shape_faces_num = 0;
+    for (auto i = 0; i < num_shapes; i++) {
+        shape_faces_num += shapes[i].length;
+    }
+    assert(shape_faces_num == attrib.num_face_num_verts);
 
     mesh->num_vertices = attrib.num_face_num_verts * 3;
     mesh->num_indices = attrib.num_face_num_verts * 3;

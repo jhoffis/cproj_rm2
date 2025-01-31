@@ -67,6 +67,8 @@ endif()
 
 if (RUN_TESTS)
     add_compile_definitions(TEST_MODE=1)
+elseif(WIN32)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE MODULE_EXPORTS)
 endif()
 
 # Link libraries
@@ -81,8 +83,4 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/src
 )
-
-if(WIN32 AND NOT RUN_TESTS)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE MODULE_EXPORTS)
-endif()
 

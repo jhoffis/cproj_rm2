@@ -24,7 +24,7 @@ static void free_wav_file(wav_file *file) {
 static wav_file* load_wav(const char* filename, u32 start_index, u32 max_alloc_size) {
     if (!filename) return NULL;
     
-    char *fixed_name = path_name("../audio/", filename, ".wav");
+    char *fixed_name = path_name("../res/audio/", filename, ".wav");
     if (!fixed_name) return NULL;
 
     FILE* file = plt_fopen(fixed_name, "rb");
