@@ -31,19 +31,21 @@ static f32_v2 last_mouse_pos;
 static f32 move_forward, move_back, move_left, move_right, move_up, move_down;
 
 static void key_cb(i32 key, i32 scancode, i32 action, i32 mods) {
-    if (action == GLFW_RELEASE) {
 #ifdef DEBUG
-        if (key == GLFW_KEY_F5) {
+    if (action == GLFW_RELEASE) {
+        if (key == GLFW_KEY_F1) {
+            // console
+        } else if (key == GLFW_KEY_G) {
+            mouse_reset = true;
+            game_state.free_cam = !game_state.free_cam;
+            window_set_cursor_visible(!game_state.free_cam);
+        } else if (key == GLFW_KEY_F5) {
             printf("Hot-reloading shaders...\n");
             gfx_reload_shaders();
         } else if (key == GLFW_KEY_F6) {
             printf("Hot-reloading program...\n");
             exit_hotreload = true;
             window_close();
-        } else if (key == GLFW_KEY_F) {
-            mouse_reset = true;
-            game_state.free_cam = !game_state.free_cam;
-            window_set_cursor_visible(!game_state.free_cam);
         } else if (key == GLFW_KEY_X) {
             if (game_state.render_method != GFX_TRIANGLES) {
                 game_state.render_method = GFX_TRIANGLES;
@@ -51,21 +53,20 @@ static void key_cb(i32 key, i32 scancode, i32 action, i32 mods) {
                 game_state.render_method = GFX_WIRE;
             }
         }
-#endif
         switch (key) {
-            case GLFW_KEY_W:
+            case GLFW_KEY_E:
                 move_forward += movement_speed;
                 break;
-            case GLFW_KEY_S:
+            case GLFW_KEY_D:
                 move_back -= movement_speed;
                 break;
-            case GLFW_KEY_A:
+            case GLFW_KEY_S:
                 move_left += movement_speed;
                 break;
-            case GLFW_KEY_D:
+            case GLFW_KEY_F:
                 move_right -= movement_speed;
                 break;
-            case GLFW_KEY_SPACE:
+            case GLFW_KEY_A:
                 move_up -= movement_speed;
                 break;
             case GLFW_KEY_B:
@@ -74,19 +75,19 @@ static void key_cb(i32 key, i32 scancode, i32 action, i32 mods) {
         }
     } else if (action == GLFW_PRESS) { 
         switch (key) {
-            case GLFW_KEY_W:
+            case GLFW_KEY_E:
                 move_forward -= movement_speed;
                 break;
-            case GLFW_KEY_S:
+            case GLFW_KEY_D:
                 move_back += movement_speed;
                 break;
-            case GLFW_KEY_A:
+            case GLFW_KEY_S:
                 move_left -= movement_speed;
                 break;
-            case GLFW_KEY_D:
+            case GLFW_KEY_F:
                 move_right += movement_speed;
                 break;
-            case GLFW_KEY_SPACE:
+            case GLFW_KEY_A:
                 move_up += movement_speed;
                 break;
             case GLFW_KEY_B:
@@ -94,6 +95,7 @@ static void key_cb(i32 key, i32 scancode, i32 action, i32 mods) {
                 break;
         }
     }
+#endif
 }
 
 static void mouse_cb(f64 xpos, f64 ypos, i32 button, i32 action, i32 mods) {
@@ -167,17 +169,20 @@ int main(void) {
 
     image_data img = load_image("DecentraPaint");
     gfx_finalize_image(&img);
+    image_data img_tire = load_image("Tires");
+    gfx_finalize_image(&img_tire);
 
     // Set up 3D mesh shader
     gfx_set_shader(shader_mesh3d);
-    // bind_model(model_mesh);
-    // gfx_set_shader(shader_tire_mesh3d);
-    bind_model_from_to_group(model_mesh, 0, 1);
-    // bind_model_from_group(model_mesh, 2);
+    bind_model_group(model_mesh, 0);
+    gfx_set_shader(shader_tire_mesh3d);
+    // bind_model_from_to_group(model_mesh, 0, 1);
+    bind_model_from_group(model_mesh, 1);
     // bind_model_group(model_mesh, 1);
 
     f32 pos = 0;
 
+    destroy_model(model_mesh);
     while (!window_should_close()) {
 
         f32 x = sin(game_state.cam_rot.y);
@@ -212,12 +217,16 @@ int main(void) {
         gfx_uniform_f32_mat4x4(1, mvp);
         gfx_draw();
 
+        gfx_set_shader(shader_tire_mesh3d);
+        gfx_activate_texture(0, img_tire.texture); 
+        gfx_uniform_f32_mat4x4(1, mvp);
+        gfx_draw();
+
         // sprite2D_draw();
         gfx_swap();
     }
 
     // Cleanup
-    destroy_model(model_mesh);
     
     sprite2D_cleanup();
     gfx_cleanup_shaders();

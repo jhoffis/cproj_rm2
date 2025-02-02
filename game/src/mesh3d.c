@@ -149,14 +149,13 @@ mesh3d* load_model(const char *name) {
 void destroy_model(mesh3d *mesh) {
     if (mesh->groups) {
         for (u32 i = 0; i < mesh->num_groups; i++) {
-            xfree(mesh->groups[i].offsetted_indices);
+            xfree(mesh->groups[i].offsetted_indices); // destroys main indices as well
         }
         xfree(mesh->groups);
     }
     xfree(mesh->vertices);
     xfree(mesh->normals);
     xfree(mesh->uvs);
-    xfree(mesh->indices);
     xfree(mesh);
 }
 
