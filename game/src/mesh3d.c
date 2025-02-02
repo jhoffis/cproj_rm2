@@ -5,8 +5,13 @@
 #define TINYOBJ_LOADER_C_IMPLEMENTATION
 #include "tinyobj_loader_c.h"
 
+typedef struct {
+    char *obj_file;
+    char *mtl_file;
+} obj_ctx;
+
 static void tobj_file_reader_cb(void *ctx, const char *filename, int is_mtl, const char *obj_filename, char **buf, size_t *len) {
-    (void)ctx;
+    obj_ctx *ctx_ = (obj_ctx *)ctx;
     char *fixed_name;
     if (obj_filename != filename) {
         fixed_name = path_name("../res/models/", filename, "");
@@ -19,9 +24,15 @@ static void tobj_file_reader_cb(void *ctx, const char *filename, int is_mtl, con
         printf("Could not find model \"%s\"\n", filename);
         exit(1);
     }
-
     *buf = load_file_as_str(file, len); // TODO delete this? Unless it's already deleted, then manually untrack it.
+    if (is_mtl) {
+        ctx_->mtl_file = *buf;
+    } else {
+        ctx_->obj_file = *buf;
+    }
+
 }
+
 
 
 mesh3d* load_model(const char *name) {
@@ -34,14 +45,19 @@ mesh3d* load_model(const char *name) {
     mesh3d* mesh = xmalloc(sizeof(mesh3d));
     *mesh = (mesh3d){0};
 
+    obj_ctx ctx = {0};
     u32 flags = TINYOBJ_FLAG_TRIANGULATE;
     i32 ret = tinyobj_parse_obj(&attrib, &shapes, &num_shapes, &materials,
-                &num_materials, name, tobj_file_reader_cb, NULL, flags);
+                &num_materials, name, tobj_file_reader_cb, &ctx, flags);
     if (ret != TINYOBJ_SUCCESS) {
         printf("Failed to load OBJ file: %s\n", name);
         xfree(mesh);
-        return NULL;
+        exit(1);
     }
+    assert(ctx.obj_file != NULL); 
+    assert(ctx.mtl_file != NULL);
+    xfree(ctx.obj_file);
+    xfree(ctx.mtl_file);
 
     // Checker for if you forgot to triangulate your model at export!
     u32 shape_faces_num = 0;
