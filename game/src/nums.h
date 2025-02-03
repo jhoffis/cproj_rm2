@@ -10,8 +10,9 @@
 // 0, 0x3ffb000 means anywhere in the memory that is less than 64 mb.
 // https://learn.microsoft.com/en-us/windows/win32/memory/memory-protection-constants
 #define MAX_MEM_64 0x3ffb000
+
 #define U16_MAX 65535
-#define UINT32_MAX 4294967295
+#define U32_MAX 4294967295
 
 #include <stdbool.h>
 

@@ -19,7 +19,7 @@ extern i32 mouse_mods;
 extern f64 mouse_xpos;
 extern f64 mouse_ypos;
 
-void window_init(window_key_cb kcb, window_mouse_cb mcb, window_resize_cb wrcb);
+void window_init(void);
 void window_cleanup(void);
 void window_close(void);
 bool window_should_close(void);
