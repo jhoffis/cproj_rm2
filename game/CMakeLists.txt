@@ -49,6 +49,10 @@ else()
     endif()
 endif()
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON) # Ensures -fPIC for all targets
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/freetype)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libs/freetype/include)
+target_link_libraries(${PROJECT_NAME} PRIVATE freetype)
 
 # Include directories (for GLFW and OpenGL)
 # (Optional if GLFW3_INCLUDE_DIRS and OPENGL_INCLUDE_DIRS are set by the find_package)

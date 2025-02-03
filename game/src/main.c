@@ -1,3 +1,4 @@
+#include "text.h"
 #ifndef TEST_MODE
 #include "game_state.h"
 #include "sprite2d.h"
@@ -135,10 +136,12 @@ int main(void) {
 #endif
     if (state != NULL) {
         memcpy(&game_state, state, sizeof(game_state_t));
+    } else {
+        game_state.initialize = true;
     }
-    game_state.test++;
-    printf("gamestate test %d\n", game_state.test);
     mem_tracker_init();
+
+    init_text();
 
     init_player();
     sprite2D_init();
@@ -183,6 +186,7 @@ int main(void) {
     f32 pos = 0;
 
     destroy_model(model_mesh);
+    game_state.initialize = false;
     while (!window_should_close()) {
 
         f32 x = sin(game_state.cam_rot.y);

@@ -28,7 +28,7 @@ void gfx_init_graphics(void) {
 }
 
 void gfx_update_viewport(void) {
-    glViewport(0, 0, window_width, window_height);
+    glViewport(0, 0, game_state.window.width, game_state.window.height);
 }
 
 void gfx_clear_color(f32 r, f32 g, f32 b, f32 a) {
