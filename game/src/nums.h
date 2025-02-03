@@ -35,6 +35,16 @@ typedef struct {
 } u128;
 #pragma pack()
 
+typedef struct {
+    u32 x;
+    u32 y;
+} u32_v2;
+
+typedef struct {
+    i32 x;
+    i32 y;
+} i32_v2;
+
 typedef union {
     u16 u;
     struct {

@@ -22,6 +22,9 @@ void gfx_init_graphics(void) {
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);  
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
+
     if (game_state.render_method == 0) {
         game_state.render_method = GFX_TRIANGLES;
     }
