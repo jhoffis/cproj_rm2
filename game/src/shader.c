@@ -43,6 +43,9 @@ static void compile_shader(shader_types type) {
         case shader_tire_mesh3d:
             shader.name = "mesh3D";
             break;
+        case shader_text:
+            shader.name = "text";
+            break;
         default:
             printf("Error: Unknown shader type %d\n", type);
             exit(1);
@@ -197,6 +200,14 @@ void gfx_finalize_image(image_data* img) {
 
     // Unbind the vertex array (if applicable in your context)
     glBindVertexArray(0);
+}
+
+void gfx_bind_texture2(u32 texture) {
+    glBindTexture(GL_TEXTURE_2D, texture);
+}
+
+void gfx_activate_texture_pipe(u32 texture_pipe) {
+    glActiveTexture(GL_TEXTURE0 + texture_pipe);
 }
 
 void gfx_activate_texture(u32 texture_pipe, u32 texture) {

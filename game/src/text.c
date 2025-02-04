@@ -1,7 +1,8 @@
 #include "text.h"
 #include "allocator.h"
+#include "shader.h"
 #include "str_util.h"
-#include <GL/gl.h>
+#include <glad/glad.h> // TODO move this to renderer/shader
 #include <ft2build.h>
 #include FT_FREETYPE_H  
 
@@ -11,7 +12,7 @@ typedef struct {
 } character_t;
 
 static character_t chars[128];
-
+static unsigned int vao, vbo;
 
 void init_text(void) {
 
@@ -73,5 +74,56 @@ void init_text(void) {
     } 
     FT_Done_Face(face);
     FT_Done_FreeType(ft);
+
+    glGenVertexArrays(1, &vao);
+    glGenBuffers(1, &vbo);
+    glBindVertexArray(vao);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);      
+
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4); // disable byte-alignment restriction
+}
+
+void render_text(const char *text, f32 x, f32 y, f32 scale, f32_v3 color) {
+    gfx_set_shader(shader_text);
+    glBindVertexArray(0);
+    f32_m4x4 projection;
+    mat4x4_ortho(projection, 0.0f, 800.0f, 0.0f, 600.0f);
+    gfx_uniform_f32_mat4x4(0, projection);
+    gfx_uniform_f32_v3(1, color);
+    gfx_activate_texture_pipe(0);
+    glBindVertexArray(vao);
+    for (int i = 0; text[i] != '\0'; i++) {
+        auto ch = chars[text[i]];
+
+        f32 xpos = x + ch.bearing.x * scale;
+        f32 ypos = y - (ch.size.y - ch.bearing.y) * scale;
+
+        f32 w = ch.size.x * scale;
+        f32 h = ch.size.y * scale;
+
+        f32 vertices[6][4] = {
+            {xpos,     ypos + h, 0, 0},
+            {xpos,     ypos,     0, 1},
+            {xpos + w, ypos,     1, 1},
+
+            {xpos,     ypos + h, 0, 0},
+            {xpos + w, ypos,     1, 1},
+            {xpos + w, ypos + h, 1, 0},
+        };
+        gfx_bind_texture2(ch.textureId);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); 
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        // render quad
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
+        x += (ch.advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
+    }
+    glBindVertexArray(0);
+    gfx_bind_texture2(0);
 }

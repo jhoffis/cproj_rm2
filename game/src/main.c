@@ -38,7 +38,6 @@ int main(void) {
     }
     mem_tracker_init();
 
-    init_text();
 
     init_player();
     sprite2D_init();
@@ -52,6 +51,7 @@ int main(void) {
     window_init();
     gfx_init_graphics();
     gfx_init_shaders();
+    init_text();
 
     auto sky = sprite2D_create("sky", 0, anchor_bottom_left);
     auto yinyang = sprite2D_create("yinyang", 0, anchor_bottom_left);
@@ -84,6 +84,8 @@ int main(void) {
     destroy_model(model_mesh);
     game_state.initialize = false;
     while (!window_should_close()) {
+        gfx_clear_color(0.2f, 0.3f, 0.3f, 1.0f);
+        window_poll_events();
 
         f32 x = sin(game_state.cam_rot.y);
         f32 z = cos(game_state.cam_rot.y);
@@ -108,9 +110,8 @@ int main(void) {
         // printf("%f\n", rot);
         mat4x4_multiply(mvp, mvp, view);
         mat4x4_multiply(mvp, mvp, persp);
-        gfx_clear_color(0.2f, 0.3f, 0.3f, 1.0f);
-        window_poll_events();
 
+        glEnable(GL_DEPTH_TEST);
         // Draw 3D model
         gfx_set_shader(shader_mesh3d);
         gfx_activate_texture(0, img.texture); 
@@ -122,7 +123,11 @@ int main(void) {
         gfx_uniform_f32_mat4x4(1, mvp);
         gfx_draw();
 
-        // sprite2D_draw();
+
+        glDisable(GL_DEPTH_TEST);
+
+        sprite2D_draw();
+        render_text("Hello world!", 100, 100, 1, (f32_v3) {.2, 0, 0.5});
         gfx_swap();
     }
 

@@ -98,7 +98,7 @@ void mat4x4_translate(f32_m4x4 output, f32_m4x4 input0, f32_v4 input1);
 void mat4x4_rotate(f32_m4x4 output, f32_m4x4 input0, f32_v4 input1);
 void create_world_view(f32_m4x4 world_view, f32_v4 translation, f32_v4 rotation);
 void mat4x4_perspective(f32_m4x4 mat, f32 fov_degrees, f32 aspect, f32 near, f32 far);
-
+void mat4x4_ortho(f32_m4x4 output, f32 left, f32 right, f32 bottom, f32 top);
 
 static inline u8 fast_log2(u16 x) {
     if (x == 0) {

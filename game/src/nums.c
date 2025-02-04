@@ -125,3 +125,17 @@ void mat4x4_perspective(f32_m4x4 mat, f32 fov_degrees, f32 aspect, f32 near, f32
     mat[_34] = -1.0f;
     mat[_43] = -(2.0f * far * near) / (far - near);
 }
+
+void mat4x4_ortho(f32_m4x4 output, f32 left, f32 right, f32 bottom, f32 top) {
+    // Start with identity matrix
+    mat4x4_unit(output);
+    
+    // Scale
+    output[0] = 2.0f / (right - left);
+    output[5] = 2.0f / (top - bottom);
+    output[10] = -1.0f;  // For standard OpenGL depth range [-1,1]
+    
+    // Translation
+    output[12] = -(right + left) / (right - left);
+    output[13] = -(top + bottom) / (top - bottom);
+}
