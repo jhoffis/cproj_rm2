@@ -12,7 +12,6 @@ typedef struct {
 } character_t;
 
 static character_t chars[128];
-static unsigned int vao, vbo;
 
 void init_text(void) {
 
@@ -75,8 +74,8 @@ void init_text(void) {
     FT_Done_Face(face);
     FT_Done_FreeType(ft);
 
-    glGenVertexArrays(1, &vao);
-    glGenBuffers(1, &vbo);
+    auto vao = shaders[shader_text].vertex_attr_buffer;
+    auto vbo = shaders[shader_text].vertex_buffer;
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
@@ -90,13 +89,11 @@ void init_text(void) {
 
 void render_text(const char *text, f32 x, f32 y, f32 scale, f32_v3 color) {
     gfx_set_shader(shader_text);
-    glBindVertexArray(0);
     f32_m4x4 projection;
     mat4x4_ortho(projection, 0.0f, 800.0f, 0.0f, 600.0f);
     gfx_uniform_f32_mat4x4(0, projection);
     gfx_uniform_f32_v3(1, color);
     gfx_activate_texture_pipe(0);
-    glBindVertexArray(vao);
     for (int i = 0; text[i] != '\0'; i++) {
         auto ch = chars[text[i]];
 
@@ -116,7 +113,7 @@ void render_text(const char *text, f32 x, f32 y, f32 scale, f32_v3 color) {
             {xpos + w, ypos + h, 1, 0},
         };
         gfx_bind_texture2(ch.textureId);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, shaders[shader_text].vertex_buffer);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         // render quad

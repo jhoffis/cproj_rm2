@@ -13,6 +13,24 @@ typedef enum {
 } shader_types;
 extern shader_types shader_current;
 
+typedef struct {
+    const char *name;
+    u32 program;
+
+    u32 vertex_buffer; // vbo
+    u32 index_buffer; // ebo
+    u32 vertex_attr_buffer; // vao
+    u32 texture_coord_buffer;
+
+    f32_v3 *vertices;
+    u32 vertices_amount;
+    u32 *indices;
+    u32 indices_amount;
+    f32_v2 *texture_coordinates;
+    u32 texture_coordinates_amount;
+} shader_data;
+extern shader_data shaders[shader_len];
+
 void gfx_init_shaders(void);
 void gfx_reload_shaders(void);
 void gfx_cleanup_shaders(void);

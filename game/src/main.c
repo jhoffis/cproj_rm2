@@ -111,7 +111,7 @@ int main(void) {
         mat4x4_multiply(mvp, mvp, view);
         mat4x4_multiply(mvp, mvp, persp);
 
-        glEnable(GL_DEPTH_TEST);
+        gfx_set_depth(true);
         // Draw 3D model
         gfx_set_shader(shader_mesh3d);
         gfx_activate_texture(0, img.texture); 
@@ -123,11 +123,11 @@ int main(void) {
         gfx_uniform_f32_mat4x4(1, mvp);
         gfx_draw();
 
-
-        glDisable(GL_DEPTH_TEST);
+        gfx_set_depth(false);
 
         sprite2D_draw();
         render_text("Hello world!", 100, 100, 1, (f32_v3) {.2, 0, 0.5});
+        render_text("yoyoyo!", 200, 400, 1, (f32_v3) {.2, 0, 0.5});
         gfx_swap();
     }
 

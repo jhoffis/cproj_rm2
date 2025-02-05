@@ -30,6 +30,11 @@ void gfx_init_graphics(void) {
     }
 }
 
+void gfx_set_depth(bool depth) {
+    if (depth) glEnable(GL_DEPTH_TEST);
+    else glDisable(GL_DEPTH_TEST);
+}
+
 void gfx_update_viewport(void) {
     glViewport(0, 0, game_state.window.width, game_state.window.height);
 }
