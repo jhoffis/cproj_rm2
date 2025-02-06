@@ -19,7 +19,7 @@ void render_btn(char *text, f32_v2 pos) {
 
     auto scale = 0.25;
     bool above = false;
-    u32 realposX = pos.x * game_state.window.width;
+    u32 realposX = pos.x * game_state.window.height;
     u32 realposY = pos.y * game_state.window.height;
     u32 sizeposX = realposX + ((f32) game_state.window.height / 2.0 * sprites[sprite_id].img->ratio * scale);
     u32 sizeposY = realposY + ((f32) game_state.window.height / 2.0 * scale);
