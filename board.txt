@@ -10,6 +10,7 @@ TODO:
 - Fiks til fullscreen typer og tracking av window state minimized etc i gamestate.
 - Lagre window settings på disk
 - Fiks hotreloading til shaders og gjør det systemet bedre designet og mer robust!
+- color scheme: https://lectern.teachable.com/p/rti
 
 CURRENT:
 - Tekst rendering

@@ -32,7 +32,7 @@ void init_text(void) {
         exit(1);
     }
 
-    FT_Set_Pixel_Sizes(face, 0, 48);  
+    FT_Set_Pixel_Sizes(face, 0, 32);  
 
     printf("finished initializing text\n");
 
@@ -92,10 +92,12 @@ void init_text(void) {
 void render_text(const char *text, f32_v2 pos, f32 scale, f32_v3 color) {
     gfx_set_shader(shader_text);
     f32_m4x4 projection;
-    mat4x4_ortho(projection, 0.0f, 600 / window_aspect_ratio(), 0.0f, 600);
+    mat4x4_ortho(projection, 0.0f, 1 / window_aspect_ratio(), 0.0f, 1);
     gfx_uniform_f32_v3(0, color);
     gfx_uniform_f32_mat4x4(1, projection);
     gfx_activate_texture_pipe(0);
+    // scale = window_aspect_ratio();
+    scale /= 600;
     for (int i = 0; text[i] != '\0'; i++) {
         auto ch = chars[text[i]];
 

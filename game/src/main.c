@@ -129,7 +129,7 @@ int main(void) {
         gfx_set_depth(false);
         sprite2D_draw(yinyang);
         f32_v2 pos = (f32_v2){0.0, 0.5};
-        render_btn("halla", pos);
+        render_btn("Button", pos);
         // render_text("Hello world!", 100, 100, 1, (f32_v3) {.2, 0, 0.5});
         // render_text("yoyoyo!", 200, 400, 1, (f32_v3) {.2, 0, 0.5});
         gfx_swap();
