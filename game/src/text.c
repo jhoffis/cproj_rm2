@@ -1,8 +1,10 @@
 #include "text.h"
 #include "allocator.h"
+#include "game_state.h"
 #include "shader.h"
 #include "str_util.h"
 #include <glad/glad.h> // TODO move this to renderer/shader
+#include "window.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H  
 
@@ -90,9 +92,10 @@ void init_text(void) {
 void render_text(const char *text, f32 x, f32 y, f32 scale, f32_v3 color) {
     gfx_set_shader(shader_text);
     f32_m4x4 projection;
-    mat4x4_ortho(projection, 0.0f, 800.0f, 0.0f, 600.0f);
-    gfx_uniform_f32_mat4x4(0, projection);
-    gfx_uniform_f32_v3(1, color);
+    mat4x4_ortho(projection, 0.0f, 600 / window_aspect_ratio(), 0.0f, 600);
+    gfx_uniform_f32_v3(0, color);
+    gfx_uniform_f32_mat4x4(1, projection);
+    gfx_uniform_f32(2, window_aspect_ratio());
     gfx_activate_texture_pipe(0);
     for (int i = 0; text[i] != '\0'; i++) {
         auto ch = chars[text[i]];
