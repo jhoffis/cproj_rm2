@@ -1,4 +1,5 @@
 #include "input_handler.h"
+#include "btn.h"
 #include "game_state.h"
 #include "renderer.h"
 #include "shader.h"
@@ -86,24 +87,29 @@ void key_cb(i32 key, i32 scancode, i32 action, i32 mods) {
 
 void mouse_cb(f64 xpos, f64 ypos, i32 button, i32 action, i32 mods) {
     // printf("asdfff\n");
-    if (!game_state.free_cam) return;
-    
-    new_mouse_pos.x = xpos;
-    new_mouse_pos.y = ypos;
+    if (game_state.free_cam) {
+        new_mouse_pos.x = xpos;
+        new_mouse_pos.y = ypos;
 
-    f32 dx = 0, dy = 0;
-    if (mouse_reset) {
-        mouse_reset = false;
-    } else {
-        dx = (float) (new_mouse_pos.x - last_mouse_pos.x) * mouse_sensitivity * window_aspect_ratio();
-        dy = (float) (new_mouse_pos.y - last_mouse_pos.y) * mouse_sensitivity;
+        f32 dx = 0, dy = 0;
+        if (mouse_reset) {
+            mouse_reset = false;
+        } else {
+            dx = (float) (new_mouse_pos.x - last_mouse_pos.x) * mouse_sensitivity * window_aspect_ratio();
+            dy = (float) (new_mouse_pos.y - last_mouse_pos.y) * mouse_sensitivity;
+        }
+
+        last_mouse_pos.x = new_mouse_pos.x;
+        last_mouse_pos.y = new_mouse_pos.y;
+
+        game_state.cam_rot.x -= dy;
+        game_state.cam_rot.y = fmodf(game_state.cam_rot.y - dx, 360.f);
+
+        return;
     }
-
-    last_mouse_pos.x = new_mouse_pos.x;
-    last_mouse_pos.y = new_mouse_pos.y;
-
-    game_state.cam_rot.x -= dy;
-    game_state.cam_rot.y = fmodf(game_state.cam_rot.y - dx, 360.f);
+    if (action == GLFW_RELEASE) {
+        click_btn();
+    }
 }
 
 void resize_cb(u32 width, u32 height) {

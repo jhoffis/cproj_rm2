@@ -22,6 +22,9 @@
 #define MODULE_API
 #endif
 
+static void test_btn(void) {
+    printf("click\n");
+}
 
 #ifdef DEBUG
 MODULE_API void *module_main(void *state) {
@@ -129,9 +132,11 @@ int main(void) {
         gfx_set_depth(false);
         sprite2D_draw(yinyang);
         f32_v2 pos = (f32_v2){0.1, 0.5};
-        render_btn("Button", pos);
+        render_btn("Button", pos, test_btn);
         // render_text("Hello world!", 100, 100, 1, (f32_v3) {.2, 0, 0.5});
         // render_text("yoyoyo!", 200, 400, 1, (f32_v3) {.2, 0, 0.5});
+
+        clear_hovered_btns();
         gfx_swap();
     }
 

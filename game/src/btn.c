@@ -6,17 +6,16 @@
 #include "window.h"
 
 u32 sprite_id;
+bool next_hovered = false;
+bool something_hovered = false;
+void (*hovered_func)(void);
+
 
 void init_btns(void) {
     sprite_id = sprite2D_create("button", 0, anchor_bottom_left);
 }
 
-void render_btn_func(char *text, void (*func)(void)) {
-
-}
-
-void render_btn(char *text, f32_v2 pos) {
-
+void render_btn(char *text, f32_v2 pos, void (*func)(void)) {
     auto scale = 0.25;
     bool above = false;
     u32 realposX = pos.x * game_state.window.height;
@@ -29,6 +28,8 @@ void render_btn(char *text, f32_v2 pos) {
         mouse_ypos < sizeposY) {
         // printf("above %f %f \n", mouse_xpos, mouse_ypos);
         sprites[sprite_id].hovered = true;
+        next_hovered = true;
+        hovered_func = func;
     } else {
         sprites[sprite_id].hovered = false;
     }
@@ -39,4 +40,17 @@ void render_btn(char *text, f32_v2 pos) {
     pos.y += 0.04;
     pos.x += 0.04;
     render_text(text, pos, 1, (f32_v3) {1, 1, 1});
+}
+
+void clear_hovered_btns(void) {
+    if (something_hovered != next_hovered) {
+        something_hovered = next_hovered;
+    }
+    next_hovered = false;
+}
+
+void click_btn(void) {
+    if (something_hovered) {
+        hovered_func();
+    }
 }

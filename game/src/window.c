@@ -44,7 +44,7 @@ static void mouse_btn_cb(GLFWwindow *window, i32 button, i32 action, i32 mods) {
 static void mouse_pos_cb(GLFWwindow *window, f64 xpos, f64 ypos) {
     mouse_xpos = xpos;
     mouse_ypos = game_state.window.height - ypos;
-    mouse_cb(xpos, mouse_ypos, mouse_button, mouse_action, mouse_mods);
+    mouse_cb(xpos, mouse_ypos, mouse_button, -1, mouse_mods);
 }
 
 static void window_pos_cb(GLFWwindow *window, i32 xpos, i32 ypos) {
