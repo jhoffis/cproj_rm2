@@ -27,7 +27,7 @@ void render_btn(char *text, f32_v2 pos, void (*func)(void)) {
         mouse_xpos < sizeposX &&
         mouse_ypos < sizeposY) {
         // printf("above %f %f \n", mouse_xpos, mouse_ypos);
-        sprites[sprite_id].hovered = true;
+        sprites[sprite_id].hovered = mouse_down ? 2 : 1;
         next_hovered = true;
         hovered_func = func;
     } else {

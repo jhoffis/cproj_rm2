@@ -10,8 +10,8 @@ typedef enum {
 typedef struct {
     f32_v2 position;
     f32 scale;
+    i32 hovered;
     bool visible;
-    bool hovered;
     sprite2D_anchor anchor;
     image_data *img;
 } sprite2D_t;

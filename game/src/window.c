@@ -13,6 +13,7 @@ i32 key_scancode = 0;
 i32 key_action = 0;
 i32 key_mods = 0;
 
+bool mouse_down = false;
 i32 mouse_button = 0;
 i32 mouse_action = 0;
 i32 mouse_mods = 0;
@@ -38,6 +39,7 @@ static void mouse_btn_cb(GLFWwindow *window, i32 button, i32 action, i32 mods) {
     mouse_button = button;
     mouse_action = action;
     mouse_mods = mods;
+    mouse_down = action != GLFW_RELEASE;
     mouse_cb(mouse_xpos, mouse_ypos, button, action, mods);
 }
 

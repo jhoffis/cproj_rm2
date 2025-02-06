@@ -13,6 +13,7 @@ extern i32 key_scancode;
 extern i32 key_action;
 extern i32 key_mods;
 
+extern bool mouse_down;
 extern i32 mouse_button;
 extern i32 mouse_action;
 extern i32 mouse_mods;

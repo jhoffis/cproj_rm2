@@ -13,5 +13,7 @@ void main() {
     FragColor = texture(ourTexture, TexCoord);
     if (applyColor == 1) {
         FragColor = mix(FragColor, ourColor, 0.2);
+    } else if (applyColor == 2) {
+        FragColor = mix(FragColor, vec4(0,0,0,1), 0.5);
     }
 } 
