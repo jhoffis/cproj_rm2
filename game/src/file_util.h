@@ -6,6 +6,7 @@ typedef struct {
     u16 w;
     u16 h;
     u16 pitch;
+    f32 ratio;
     i32 comp;
     u32 texture;
     u8 *image;

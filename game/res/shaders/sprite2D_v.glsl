@@ -17,7 +17,7 @@ void main() {
     gl_Position.y *= scale;
     gl_Position.x *= aspect;
     gl_Position.x *= img_ratio;
-    gl_Position.x += 2*pos.x - 1; // So that origo is at the bottom left and that it goes from 0 -> 1
+    gl_Position.x += 2*pos.x*aspect - 1; // So that origo is at the bottom left and that it goes from 0 -> 1
     gl_Position.y += 2*pos.y - 1;
 
     ourColor2 = vec3(1);

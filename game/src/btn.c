@@ -5,7 +5,6 @@
 #include "text.h"
 #include "window.h"
 
-image_data btn_img;
 u32 sprite_id;
 
 void init_btns(void) {
@@ -18,14 +17,24 @@ void render_btn_func(char *text, void (*func)(void)) {
 
 void render_btn(char *text, f32_v2 pos) {
 
+    auto scale = 0.25;
     bool above = false;
-    if (mouse_xpos > pos.x * game_state.window.width &&
-        mouse_ypos > pos.y * game_state.window.height) {
-        printf("above %f %f \n", mouse_xpos, mouse_ypos);
+    u32 realposX = pos.x * game_state.window.width;
+    u32 realposY = pos.y * game_state.window.height;
+    u32 sizeposX = realposX + ((f32) game_state.window.height / 2.0 * sprites[sprite_id].img->ratio * scale);
+    u32 sizeposY = realposY + ((f32) game_state.window.height / 2.0 * scale);
+    if (mouse_xpos > realposX &&
+        mouse_ypos > realposY && 
+        mouse_xpos < sizeposX &&
+        mouse_ypos < sizeposY) {
+        // printf("above %f %f \n", mouse_xpos, mouse_ypos);
+        sprites[sprite_id].hovered = true;
+    } else {
+        sprites[sprite_id].hovered = false;
     }
 
     sprite2D_pos(sprite_id, pos);
-    sprite2D_scale(sprite_id, 0.25);
+    sprite2D_scale(sprite_id, scale);
     sprite2D_draw(sprite_id);
     pos.y += 0.04;
     pos.x += 0.04;

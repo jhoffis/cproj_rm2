@@ -98,6 +98,7 @@ void render_text(const char *text, f32_v2 pos, f32 scale, f32_v3 color) {
     gfx_activate_texture_pipe(0);
     // scale = window_aspect_ratio();
     scale /= 600;
+    // pos.x /= window_aspect_ratio();
     for (int i = 0; text[i] != '\0'; i++) {
         auto ch = chars[text[i]];
 

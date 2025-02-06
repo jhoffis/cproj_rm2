@@ -1,10 +1,21 @@
 #pragma once
+#include "file_util.h"
 #include "nums.h"
 
 typedef enum {
     anchor_bottom_left, anchor_bottom_right,
     anchor_top_left, anchor_top_right,
 } sprite2D_anchor;
+
+typedef struct {
+    f32_v2 position;
+    f32 scale;
+    bool visible;
+    bool hovered;
+    sprite2D_anchor anchor;
+    image_data *img;
+} sprite2D_t;
+extern sprite2D_t *sprites;
 
 void sprite2D_init(void);
 void sprite2D_cleanup(void);

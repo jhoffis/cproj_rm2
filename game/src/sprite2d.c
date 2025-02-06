@@ -5,15 +5,7 @@
 
 static f32_v2 camera = {0};
 
-typedef struct {
-    f32_v2 position;
-    f32 scale;
-    bool visible;
-    sprite2D_anchor anchor;
-    image_data *img;
-} sprite2D_t;
-
-static sprite2D_t *sprites;
+sprite2D_t *sprites;
 static image_data *imgs;
 static u32 max_size = 8;
 static u32 actual_size = 0;
@@ -93,9 +85,10 @@ void sprite2D_draw(u32 i) {
     auto img = sprites[i].img;
     gfx_uniform_f32_v2(1, pos);
     gfx_uniform_f32(2, window_aspect_ratio());
-    gfx_uniform_f32(3, (f32) img->w / (f32) img->h);
+    gfx_uniform_f32(3, img->ratio);
     gfx_uniform_f32(4, sprites[i].scale);
     gfx_uniform_i8(5, sprites[i].anchor);
+    gfx_uniform_i8(6, sprites[i].hovered);
     gfx_activate_texture(0, img->texture);
     gfx_draw();
 }
