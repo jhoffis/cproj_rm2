@@ -1,3 +1,4 @@
+#include "btn.h"
 #include "input_handler.h"
 #include "text.h"
 #ifndef TEST_MODE
@@ -52,12 +53,14 @@ int main(void) {
     gfx_init_graphics();
     gfx_init_shaders();
     init_text();
+    init_btns();
 
     auto sky = sprite2D_create("sky", 0, anchor_bottom_left);
     auto yinyang = sprite2D_create("yinyang", 0, anchor_bottom_left);
 
     sprite2D_pos(sky, (f32_v2){0.7, 0.3});
-    sprite2D_camera_pos((f32_v2){0.7, 0.3});
+    sprite2D_pos(yinyang, (f32_v2){0, 0});
+    // sprite2D_camera_pos((f32_v2){0.7, 0.3});
 
     // Load model
     auto model_mesh = load_model("decentra");
@@ -124,10 +127,11 @@ int main(void) {
         gfx_draw();
 
         gfx_set_depth(false);
-
-        sprite2D_draw();
-        render_text("Hello world!", 100, 100, 1, (f32_v3) {.2, 0, 0.5});
-        render_text("yoyoyo!", 200, 400, 1, (f32_v3) {.2, 0, 0.5});
+        sprite2D_draw(yinyang);
+        f32_v2 pos = (f32_v2){0.0, 0.5};
+        render_btn("halla", pos);
+        // render_text("Hello world!", 100, 100, 1, (f32_v3) {.2, 0, 0.5});
+        // render_text("yoyoyo!", 200, 400, 1, (f32_v3) {.2, 0, 0.5});
         gfx_swap();
     }
 

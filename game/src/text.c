@@ -89,19 +89,18 @@ void init_text(void) {
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4); // disable byte-alignment restriction
 }
 
-void render_text(const char *text, f32 x, f32 y, f32 scale, f32_v3 color) {
+void render_text(const char *text, f32_v2 pos, f32 scale, f32_v3 color) {
     gfx_set_shader(shader_text);
     f32_m4x4 projection;
     mat4x4_ortho(projection, 0.0f, 600 / window_aspect_ratio(), 0.0f, 600);
     gfx_uniform_f32_v3(0, color);
     gfx_uniform_f32_mat4x4(1, projection);
-    gfx_uniform_f32(2, window_aspect_ratio());
     gfx_activate_texture_pipe(0);
     for (int i = 0; text[i] != '\0'; i++) {
         auto ch = chars[text[i]];
 
-        f32 xpos = x + ch.bearing.x * scale;
-        f32 ypos = y - (ch.size.y - ch.bearing.y) * scale;
+        f32 xpos = pos.x + ch.bearing.x * scale;
+        f32 ypos = pos.y - (ch.size.y - ch.bearing.y) * scale;
 
         f32 w = ch.size.x * scale;
         f32 h = ch.size.y * scale;
@@ -122,7 +121,7 @@ void render_text(const char *text, f32 x, f32 y, f32 scale, f32_v3 color) {
         // render quad
         glDrawArrays(GL_TRIANGLES, 0, 6);
         // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-        x += (ch.advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
+        pos.x += (ch.advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
     }
     glBindVertexArray(0);
     gfx_bind_texture2(0);
