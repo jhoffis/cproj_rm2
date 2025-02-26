@@ -7,18 +7,23 @@
 #include "scenes.h"
 #include "shader.h"
 #include "sprite2d.h"
-#include "timer_util.h"
 #include "window.h"
 
-static void test_btn(void) {
-    printf("click\n");
-    // change_scene(scene_options, false);
+static void play_sp_btn(void) {
+    change_scene(scene_lobby, false);
+}
+
+static void options_btn(void) {
+    change_scene(scene_options, false);
+}
+
+static void exit_btn(void) {
+    window_close();
 }
 
 static image_data img;
 static image_data img_tire;
 static u32 yinyang;
-static f32_v2 pos;
 
 void main_scene_init(void) {
     yinyang = sprite2D_create("yinyang", 0);
@@ -68,16 +73,11 @@ void main_scene_render(void) {
 
         gfx_set_depth(false);
         // sprite2D_draw(yinyang);
-        pos.x = 0.2;
-        pos.y = 0.2;
-        // pos.y += timer_delta();
-        // if (pos.y > 10) {
-        //     pos.y = 0;
-        // }
-        render_btn("Button", pos, test_btn, anchor_left);
-        render_btn("Play", (f32_v2){0}, test_btn, anchor_mid);
-        render_btn("asdflasd", (f32_v2){-.3, 0.2}, test_btn, anchor_right);
-        // render_text("Hello world!", 100, 100, 1, (f32_v3) {.2, 0, 0.5});
-        // render_text("yoyoyo!", 200, 400, 1, (f32_v3) {.2, 0, 0.5});
+
+        render_btn("Play", (f32_v2){0, .0}, play_sp_btn, anchor_left);
+        render_btn("Options", (f32_v2){0}, options_btn, anchor_right);
+        render_btn("Exit", (f32_v2){0}, exit_btn, anchor_mid);
+        render_btn("Exit", (f32_v2){0}, exit_btn, anchor_top_left);
+        render_btn("Exit", (f32_v2){0}, exit_btn, anchor_top_right);
 
 }

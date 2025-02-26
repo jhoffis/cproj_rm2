@@ -34,8 +34,16 @@ void render_btn(char *text, f32_v2 pos, void (*func)(void), sprite2D_anchor anch
             realposY = pos.y * game_state.window.height;
             break;
         case anchor_mid:
-            realposX = (u32) ((f32) game_state.window.width / 2) + pos.x * game_state.window.height;
-            realposY = (u32) ((f32) game_state.window.height / 2) + pos.y * game_state.window.height;
+            realposX = (u32) ((f32) game_state.window.width / 2) + pos.x * game_state.window.height / 2;
+            realposY = (u32) ((f32) game_state.window.height / 2) + pos.y * game_state.window.height / 2;
+            break;
+        case anchor_top_left:
+            realposX = (u32) ((f32) game_state.window.width / 2) + pos.x * game_state.window.height / 2;
+            realposY = (u32) ((f32) game_state.window.height / 2) + pos.y * game_state.window.height / 2;
+            break;        
+        case anchor_top_right:
+            realposX = (u32) ((f32) game_state.window.width / 2) + pos.x * game_state.window.height / 2;
+            realposY = (u32) ((f32) game_state.window.height / 2) + pos.y * game_state.window.height / 2;
             break;
     }
     sizeposX = realposX + ((f32) game_state.window.height / 2.0 * sprites[sprite_id].img->ratio * scale);
@@ -58,7 +66,11 @@ void render_btn(char *text, f32_v2 pos, void (*func)(void), sprite2D_anchor anch
     sprite2D_draw(sprite_id);
     // pos.y += 0.04;
     // pos.x += 0.04;
-    render_text(text, pos, scale / 200, (f32_v3) {1, 1, 1}, anchor);
+    render_text(text, pos, scale / 200, 
+                (f32_v3) {1, 1, 1}, 
+                (f32_v2) {sprites[sprite_id].img->ratio  * scale,
+                          scale}, 
+                anchor);
 }
 
 void clear_hovered_btns(void) {
