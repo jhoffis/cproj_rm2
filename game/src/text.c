@@ -89,20 +89,19 @@ void init_text(void) {
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4); // disable byte-alignment restriction
 }
 
-void render_text(const char *text, 
+static void _render_text(const char *text, 
                  f32_v2 pos, 
                  f32 scale, 
+                 f32 offset,
                  f32_v3 color, 
                  f32_v2 img_sizes, 
                  sprite2D_anchor anchor) {
     gfx_set_shader(shader_text);
-    f32_m4x4 projection;
-    mat4x4_ortho(projection, 0.0f, 1 / window_aspect_ratio(), 0.0f, 1);
     gfx_uniform_f32_v3(0, color);
     gfx_uniform_i8(1, anchor);
     gfx_uniform_f32(2, window_aspect_ratio());
     gfx_uniform_f32_v2(3, pos);
-    gfx_uniform_f32(5, scale * 80);
+    gfx_uniform_f32(5, offset);
     gfx_uniform_f32_v2(6, img_sizes);
     gfx_activate_texture_pipe(0);
     // scale = window_aspect_ratio();
@@ -140,3 +139,36 @@ void render_text(const char *text,
     glBindVertexArray(0);
     gfx_bind_texture2(0);
 }
+
+
+void render_text(const char *text, 
+                 f32_v2 pos, 
+                 f32 scale, 
+                 f32_v3 color, 
+                 f32_v2 img_sizes, 
+                 sprite2D_anchor anchor) {
+    _render_text(text, pos, scale, scale * 80, color, img_sizes, anchor);
+}
+
+void render_text2(const char *text, 
+                 f32_v2 pos, 
+                 sprite2D_anchor anchor) {
+    f32 scale = .1 / 80;
+    f32_v2 text_sizes = {0};
+    character_t ch;
+    for (int i = 0; text[i] != '\0'; i++) {
+        ch = chars[text[i]];
+        f32 h = ch.size.y * scale;
+        if (h > text_sizes.y) {
+            text_sizes.y = h;
+        }
+        text_sizes.x += (ch.advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
+    }
+    text_sizes.x += ch.size.x * scale;
+
+    _render_text(text, pos, scale, 0, (f32_v3) {1, 1, 1}, text_sizes, anchor);
+}
+
+
+
+

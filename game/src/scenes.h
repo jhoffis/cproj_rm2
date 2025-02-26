@@ -13,4 +13,5 @@ typedef enum {
 extern scene_t current_scene;
 
 void change_scene(scene_t s, bool remember);
+void change_scene_back(void);
 void scenes_render(void);

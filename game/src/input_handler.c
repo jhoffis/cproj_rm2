@@ -102,7 +102,7 @@ void mouse_cb(f64 xpos, f64 ypos, i32 button, i32 action, i32 mods) {
         last_mouse_pos.x = new_mouse_pos.x;
         last_mouse_pos.y = new_mouse_pos.y;
 
-        game_state.cam_rot.x -= dy;
+        game_state.cam_rot.x += dy;
         game_state.cam_rot.y = fmodf(game_state.cam_rot.y - dx, 360.f);
 
         return;

@@ -10,11 +10,11 @@
 #include "window.h"
 
 static void play_sp_btn(void) {
-    change_scene(scene_lobby, false);
+    change_scene(scene_lobby, true);
 }
 
 static void options_btn(void) {
-    change_scene(scene_options, false);
+    change_scene(scene_options, true);
 }
 
 static void exit_btn(void) {
@@ -34,50 +34,47 @@ void main_scene_init(void) {
 }
 
 void main_scene_render(void) {
+    f32 x = sin(game_state.cam_rot.y);
+    f32 z = cos(game_state.cam_rot.y);
+    f32 moveX = move_left + move_right;
+    f32 moveY = move_up + move_down;
+    f32 moveZ = move_forward + move_back;
+    // Forward and backwards + side to side
+    game_state.cam_pos.x += (x * moveZ) + (z * moveX);
+    game_state.cam_pos.z += (z * moveZ) - (x * moveX); 
+    game_state.cam_pos.y += moveY; 
 
-        f32 x = sin(game_state.cam_rot.y);
-        f32 z = cos(game_state.cam_rot.y);
-        f32 moveX = move_left + move_right;
-        f32 moveY = move_up + move_down;
-        f32 moveZ = move_forward + move_back;
-        // Forward and backwards + side to side
-        game_state.cam_pos.x += (x * moveZ) + (z * moveX);
-        game_state.cam_pos.z += (z * moveZ) - (x * moveX); 
-        game_state.cam_pos.y += moveY; 
+    f32_m4x4 mvp = {0};
+    mat4x4_unit(mvp);
+    mat4x4_translate(mvp, mvp, (f32_v4) {0,0.5,-15.0,0}); 
+    // pos -= 0.1;
 
-        f32_m4x4 mvp = {0};
-        mat4x4_unit(mvp);
-        mat4x4_translate(mvp, mvp, (f32_v4) {0,0.5,-15.0,0}); 
-        // pos -= 0.1;
+    f32_m4x4 view = {0};
+    create_world_view(view, game_state.cam_pos, game_state.cam_rot);
 
-        f32_m4x4 view = {0};
-        create_world_view(view, game_state.cam_pos, game_state.cam_rot);
+    f32_m4x4 persp = {0};
+    mat4x4_perspective(persp, 70, window_aspect_ratio(), 1, 10000);
+    // printf("%f\n", rot);
+    mat4x4_multiply(mvp, mvp, view);
+    mat4x4_multiply(mvp, mvp, persp);
 
-        f32_m4x4 persp = {0};
-        mat4x4_perspective(persp, 70, window_aspect_ratio(), 1, 10000);
-        // printf("%f\n", rot);
-        mat4x4_multiply(mvp, mvp, view);
-        mat4x4_multiply(mvp, mvp, persp);
+    gfx_set_depth(true);
+    // Draw 3D model
+    gfx_set_shader(shader_mesh3d);
+    gfx_activate_texture(0, img.texture); 
+    gfx_uniform_f32_mat4x4(1, mvp);
+    gfx_draw();
 
-        gfx_set_depth(true);
-        // Draw 3D model
-        gfx_set_shader(shader_mesh3d);
-        gfx_activate_texture(0, img.texture); 
-        gfx_uniform_f32_mat4x4(1, mvp);
-        gfx_draw();
+    gfx_set_shader(shader_tire_mesh3d);
+    gfx_activate_texture(0, img_tire.texture); 
+    gfx_uniform_f32_mat4x4(1, mvp);
+    gfx_draw();
 
-        gfx_set_shader(shader_tire_mesh3d);
-        gfx_activate_texture(0, img_tire.texture); 
-        gfx_uniform_f32_mat4x4(1, mvp);
-        gfx_draw();
+    gfx_set_depth(false);
+    sprites[yinyang].anchor = anchor_top_right;
+    sprite2D_draw(yinyang);
 
-        gfx_set_depth(false);
-        // sprite2D_draw(yinyang);
-
-        render_btn("Play", (f32_v2){0, .0}, play_sp_btn, anchor_left);
-        render_btn("Options", (f32_v2){0}, options_btn, anchor_right);
-        render_btn("Exit", (f32_v2){0}, exit_btn, anchor_mid);
-        render_btn("Exit", (f32_v2){0}, exit_btn, anchor_top_left);
-        render_btn("Exit", (f32_v2){0}, exit_btn, anchor_top_right);
-
+    render_btn("Play", (f32_v2){0, .25}, play_sp_btn, anchor_mid);
+    render_btn("Options", (f32_v2){0}, options_btn, anchor_mid);
+    render_btn("Exit", (f32_v2){0, -.25}, exit_btn, anchor_mid);
 }

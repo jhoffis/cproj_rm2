@@ -9,8 +9,15 @@
 #include "scenes/store_scene.h"
 #include "scenes/win_scene.h"
 
+static scene_t history_previous_scene;
+
 void change_scene(scene_t s, bool remember) {
+    if (remember) history_previous_scene = game_state.current_scene;
     game_state.current_scene = s;
+}
+
+void change_scene_back(void) {
+    game_state.current_scene = history_previous_scene;
 }
 
 void scenes_render(void) {
