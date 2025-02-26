@@ -1,4 +1,5 @@
 #include "scenes.h"
+#include "game_state.h"
 #include "scenes/finish_scene.h"
 #include "scenes/lobby_scene.h"
 #include "scenes/main_scene.h"
@@ -8,10 +9,12 @@
 #include "scenes/store_scene.h"
 #include "scenes/win_scene.h"
 
-scene_t current_scene = scene_main;
+void change_scene(scene_t s, bool remember) {
+    game_state.current_scene = s;
+}
 
 void scenes_render(void) {
-    switch (current_scene) {
+    switch (game_state.current_scene) {
         case scene_main:
             main_scene_render();
             break;

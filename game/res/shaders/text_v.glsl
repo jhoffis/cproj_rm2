@@ -2,9 +2,44 @@
 layout (location = 0) in vec4 vertex; // <vec2 pos, vec2 tex>
 out vec2 TexCoords;
 
-layout (location = 1) uniform mat4 projection;
+layout(location = 1) uniform int anchor;
+layout(location = 2) uniform float aspect;
+layout(location = 3) uniform vec2 og_pos;
+layout(location = 4) uniform vec2 pos;
+layout(location = 5) uniform float offset;
+
+#define ANCHOR_LEFT 0
+#define ANCHOR_RIGHT 1
+#define ANCHOR_MID 2
 
 void main() {
-    gl_Position = projection * vec4(vertex.xy, 0.0, 1.0);
+    gl_Position = vec4(vertex.xy, 0.0, 1.0);
+    gl_Position.x += pos.x;
+    gl_Position.y += pos.y;
+    gl_Position.x += offset;
+    gl_Position.y += offset;
+    if (anchor == ANCHOR_LEFT) {
+        gl_Position.x += 2 * og_pos.x;
+        gl_Position.y += 2 * og_pos.y;
+        gl_Position.x *= aspect;
+        gl_Position.x +=  - 1; // So that origo is at the bottom left and that it goes from 0 -> 1
+        gl_Position.y +=  - 1;
+    } else if (anchor == ANCHOR_RIGHT) {
+        // gl_Position.x += vertex.x*aspect + 1; // So that origo is at the bottom left and that it goes from 0 -> 1
+        // gl_Position.y += vertex.y + .5;
+        gl_Position.x += 2 * og_pos.x;
+        gl_Position.y += 2 * og_pos.y;
+        gl_Position.x *= aspect;
+        gl_Position.x += 1;
+        gl_Position.y -= 1;
+        // gl_Position.x += 2*vertex.x*aspect + 1; // So that origo is at the bottom left and that it goes from 0 -> 1
+        // gl_Position.y += 2*pos.y + 1;
+    } else if (anchor == ANCHOR_MID) {
+        gl_Position.x += og_pos.x;
+        gl_Position.y += og_pos.y;
+        gl_Position.x *= aspect;
+        // gl_Position.x += vertex.x*aspect; // So that origo is at the bottom left and that it goes from 0 -> 1
+        // gl_Position.y += vertex.y;
+    }
     TexCoords = vertex.zw;
 }

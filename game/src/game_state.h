@@ -1,6 +1,7 @@
 #pragma once
 
 #include "nums.h"
+#include "scenes.h"
 
 typedef enum {
     minimized, windowed, maximized, fullscreen_no_border, fullscreen_true,
@@ -18,6 +19,7 @@ typedef struct {
     f32_v4 cam_pos;
     u32 render_method;
     window_state_t window;
+    scene_t current_scene;
 } game_state_t;
 
 extern game_state_t game_state;

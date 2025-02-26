@@ -4,20 +4,24 @@
 #include "input_handler.h"
 #include "nums.h"
 #include "renderer.h"
+#include "scenes.h"
 #include "shader.h"
 #include "sprite2d.h"
+#include "timer_util.h"
 #include "window.h"
 
 static void test_btn(void) {
     printf("click\n");
+    // change_scene(scene_options, false);
 }
 
 static image_data img;
 static image_data img_tire;
 static u32 yinyang;
+static f32_v2 pos;
 
 void main_scene_init(void) {
-    yinyang = sprite2D_create("yinyang", 0, anchor_bottom_left);
+    yinyang = sprite2D_create("yinyang", 0);
     img = load_image("DecentraPaint");
     gfx_finalize_image(&img);
     img_tire = load_image("Tires");
@@ -63,9 +67,16 @@ void main_scene_render(void) {
         gfx_draw();
 
         gfx_set_depth(false);
-        sprite2D_draw(yinyang);
-        f32_v2 pos = (f32_v2){0.1, 0.5};
-        render_btn("Button", pos, test_btn);
+        // sprite2D_draw(yinyang);
+        pos.x = 0.2;
+        pos.y = 0.2;
+        // pos.y += timer_delta();
+        // if (pos.y > 10) {
+        //     pos.y = 0;
+        // }
+        render_btn("Button", pos, test_btn, anchor_left);
+        render_btn("Play", (f32_v2){0}, test_btn, anchor_mid);
+        render_btn("asdflasd", (f32_v2){-.3, 0.2}, test_btn, anchor_right);
         // render_text("Hello world!", 100, 100, 1, (f32_v3) {.2, 0, 0.5});
         // render_text("yoyoyo!", 200, 400, 1, (f32_v3) {.2, 0, 0.5});
 

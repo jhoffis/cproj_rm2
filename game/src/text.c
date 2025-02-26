@@ -32,7 +32,7 @@ void init_text(void) {
         exit(1);
     }
 
-    FT_Set_Pixel_Sizes(face, 0, 32);  
+    FT_Set_Pixel_Sizes(face, 0, 56);  
 
     printf("finished initializing text\n");
 
@@ -89,16 +89,20 @@ void init_text(void) {
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4); // disable byte-alignment restriction
 }
 
-void render_text(const char *text, f32_v2 pos, f32 scale, f32_v3 color) {
+void render_text(const char *text, f32_v2 pos, f32 scale, f32_v3 color, sprite2D_anchor anchor) {
     gfx_set_shader(shader_text);
     f32_m4x4 projection;
     mat4x4_ortho(projection, 0.0f, 1 / window_aspect_ratio(), 0.0f, 1);
     gfx_uniform_f32_v3(0, color);
-    gfx_uniform_f32_mat4x4(1, projection);
+    gfx_uniform_i8(1, anchor);
+    gfx_uniform_f32(2, window_aspect_ratio());
+    gfx_uniform_f32_v2(3, pos);
+    gfx_uniform_f32(5, scale * 80);
     gfx_activate_texture_pipe(0);
     // scale = window_aspect_ratio();
-    scale /= 600;
+    // scale /= 600;
     // pos.x /= window_aspect_ratio();
+    pos = (f32_v2){0};
     for (int i = 0; text[i] != '\0'; i++) {
         auto ch = chars[text[i]];
 
@@ -109,19 +113,20 @@ void render_text(const char *text, f32_v2 pos, f32 scale, f32_v3 color) {
         f32 h = ch.size.y * scale;
 
         f32 vertices[6][4] = {
-            {xpos,     ypos + h, 0, 0},
-            {xpos,     ypos,     0, 1},
-            {xpos + w, ypos,     1, 1},
+            {0,     0 + h, 0, 0},
+            {0,     0,     0, 1},
+            {0 + w, 0,     1, 1},
 
-            {xpos,     ypos + h, 0, 0},
-            {xpos + w, ypos,     1, 1},
-            {xpos + w, ypos + h, 1, 0},
+            {0,     0 + h, 0, 0},
+            {0 + w, 0,     1, 1},
+            {0 + w, 0 + h, 1, 0},
         };
         gfx_bind_texture2(ch.textureId);
         glBindBuffer(GL_ARRAY_BUFFER, shaders[shader_text].vertex_buffer);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         // render quad
+        gfx_uniform_f32_v2(4, (f32_v2){xpos, ypos});
         glDrawArrays(GL_TRIANGLES, 0, 6);
         // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
         pos.x += (ch.advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)

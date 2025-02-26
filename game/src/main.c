@@ -57,7 +57,7 @@ int main(void) {
     init_text();
     init_btns();
 
-    auto sky = sprite2D_create("sky", 0, anchor_bottom_left);
+    auto sky = sprite2D_create("sky", 0);
 
     // sprite2D_camera_pos((f32_v2){0.7, 0.3});
 

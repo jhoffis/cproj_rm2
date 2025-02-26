@@ -24,14 +24,14 @@ void sprite2D_update_window_aspect(f32 aspect) {
 
 }
 
-u32 sprite2D_create(const char *name, u32 scene_id, sprite2D_anchor anchor) {
+u32 sprite2D_create(const char *name, u32 scene_id) {
     u32 id = actual_size;
     actual_size++;
     sprites[id].position = (f32_v2) {0,0};
     sprites[id].visible = true;
     imgs[id] = load_image(name);
     sprites[id].img = &imgs[id];
-    sprites[id].anchor = anchor;
+    sprites[id].anchor = anchor_left;
     sprites[id].scale = 1;
 
     f32_v3 vertices[] = {
