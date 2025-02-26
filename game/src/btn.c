@@ -20,34 +20,34 @@ void render_btn(char *text, f32_v2 pos, void (*func)(void), sprite2D_anchor anch
     auto scale = 0.20;
     bool above = false;
 
+    f32 sizeX = ((f32) game_state.window.height / 2.0 * sprites[sprite_id].img->ratio * scale);
+    f32 sizeY = ((f32) game_state.window.height / 2.0 * scale);
     u32 realposX = 0;
     u32 realposY = 0;
-    u32 sizeposX = 0;
-    u32 sizeposY = 0;
     switch (anchor) {
         case anchor_left:
             realposX = pos.x * game_state.window.height;
             realposY = pos.y * game_state.window.height;
             break;
         case anchor_right:
-            realposX = game_state.window.width + pos.x * game_state.window.height;
+            realposX = game_state.window.width + pos.x * game_state.window.height - sizeX;
             realposY = pos.y * game_state.window.height;
             break;
         case anchor_mid:
-            realposX = (u32) ((f32) game_state.window.width / 2) + pos.x * game_state.window.height / 2;
-            realposY = (u32) ((f32) game_state.window.height / 2) + pos.y * game_state.window.height / 2;
+            realposX = (u32) ((f32) game_state.window.width / 2) + pos.x * game_state.window.height / 2 - sizeX / 2;
+            realposY = (u32) ((f32) game_state.window.height / 2) + pos.y * game_state.window.height / 2 - sizeY / 2;
             break;
         case anchor_top_left:
-            realposX = (u32) ((f32) game_state.window.width / 2) + pos.x * game_state.window.height / 2;
-            realposY = (u32) ((f32) game_state.window.height / 2) + pos.y * game_state.window.height / 2;
+            realposX = pos.x * game_state.window.height;
+            realposY = game_state.window.height + pos.y * game_state.window.height - sizeY;
             break;        
         case anchor_top_right:
-            realposX = (u32) ((f32) game_state.window.width / 2) + pos.x * game_state.window.height / 2;
-            realposY = (u32) ((f32) game_state.window.height / 2) + pos.y * game_state.window.height / 2;
+            realposX = game_state.window.width + pos.x * game_state.window.height - sizeX;
+            realposY = game_state.window.height + pos.y * game_state.window.height - sizeY;
             break;
     }
-    sizeposX = realposX + ((f32) game_state.window.height / 2.0 * sprites[sprite_id].img->ratio * scale);
-    sizeposY = realposY + ((f32) game_state.window.height / 2.0 * scale);
+    u32 sizeposX = realposX + sizeX;
+    u32 sizeposY = realposY + sizeY;
     if     (mouse_xpos > realposX &&
             mouse_ypos > realposY && 
             mouse_xpos < sizeposX &&
