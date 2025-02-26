@@ -13,7 +13,7 @@
 #include "window.h"
 #include "file_util.h"
 #include "allocator.h"
-#include "player.h"
+#include "play/player.h"
 #include "nums.h"
 #include <stdio.h>
 #include "wav_loader.h"
@@ -86,8 +86,12 @@ int main(void) {
         gfx_clear_color(0.2f, 0.3f, 0.3f, 1.0f);
         window_poll_events();
 
+        render_print("delta %f", timer_delta());
+        timer_update_delta();
+
         scenes_render();
         clear_hovered_btns();
+        reset_debug_pos();
         gfx_swap();
     }
 

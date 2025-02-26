@@ -1,5 +1,5 @@
 #include "race_scene.h"
-#include "car.h"
+#include "play/car.h"
 #include "game_state.h"
 #include "mesh3d.h"
 #include "nums.h"
@@ -7,6 +7,7 @@
 #include "shader.h"
 #include "sprite2d.h"
 #include "text.h"
+#include "timer_util.h"
 #include "window.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,6 +15,7 @@
 static image_data img;
 static image_data img_tire;
 static u32 tachometer;
+static bool throttle;
 
 void race_init(u32 my_car) {
     // Load model
@@ -40,11 +42,17 @@ void race_init(u32 my_car) {
 
 void race_scene_render(void) {
 
-    game_state.cam_pos.x = 0.5;
-    game_state.cam_pos.y = .7;
-    game_state.cam_pos.z = -.12;
-    game_state.cam_rot.y = M_PI / 2;
-    game_state.cam_rot.x = 0;
+    if (!game_state.free_cam) {
+        game_state.cam_pos.x = 0.5;
+        game_state.cam_pos.y = .7;
+        game_state.cam_pos.z = -.12;
+        game_state.cam_rot.y = M_PI / 2;
+        game_state.cam_rot.x = 0;
+    }
+
+    if (throttle) {
+        my_car.speed += 100 * timer_delta();
+    }
 
     f32_m4x4 mvp = {0};
     mat4x4_unit(mvp);
@@ -79,8 +87,14 @@ void race_scene_render(void) {
     sprite2D_draw(tachometer);
 
 
-    char speed_str[50];
-    sprintf(speed_str, "%d%s", (i32) my_car.speed, " km/h");
-
-    render_text(speed_str, (f32_v2) {-.1, .1}, anchor_right);
+    render_text((f32_v2) {-.1, .1}, anchor_right, "%d%s", (i32) my_car.speed, " km/h");
+    render_print("RPM: %d", (i32) my_car.rpm);
+    render_print("Distance: %dm", 123);
 }
+
+void race_key_cb(i32 key, i32 scancode, i32 action, i32 mods) {
+    if (action != GLFW_RELEASE) {
+        throttle = true;
+    }
+}
+

@@ -14,6 +14,7 @@ typedef struct {
 } character_t;
 
 static character_t chars[128];
+static f32_v2 debug_pos;
 
 void init_text(void) {
 
@@ -89,6 +90,10 @@ void init_text(void) {
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4); // disable byte-alignment restriction
 }
 
+void reset_debug_pos(void) {
+    debug_pos = (f32_v2) {0};
+}
+
 static void _render_text(const char *text, 
                  f32_v2 pos, 
                  f32 scale, 
@@ -150,9 +155,17 @@ void render_btn_text(const char *text,
     _render_text(text, pos, scale, scale * 80, color, img_sizes, anchor);
 }
 
-void render_text(const char *text, 
-                 f32_v2 pos, 
-                 sprite2D_anchor anchor) {
+static void _render_text2(f32_v2 pos, 
+                 sprite2D_anchor anchor, 
+                 const char *input_text, va_list args) {
+    char text[256];
+    int written = vsnprintf(text, sizeof(text), input_text, args);
+    if (written >= sizeof(text)) {
+        // Text was truncated
+        printf("Warning: Text truncated at (%f, %f)\n", pos.x, pos.y);
+    }
+    va_end(args);
+
     f32 scale = .1 / 80;
     f32_v2 text_sizes = {0};
     character_t ch;
@@ -169,6 +182,19 @@ void render_text(const char *text,
     _render_text(text, pos, scale, 0, (f32_v3) {1, 1, 1}, text_sizes, anchor);
 }
 
+void render_text(f32_v2 pos, 
+                 sprite2D_anchor anchor, 
+                 const char *input_text, ...) {
+    va_list args;
+    va_start(args, input_text);
+    _render_text2(pos, anchor, input_text, args);
+}
 
+void render_print(const char *input_text, ...) {
+    va_list args;
+    va_start(args, input_text);
+    _render_text2(debug_pos, anchor_top_left, input_text, args);
+    debug_pos.y -= 0.04;
+}
 
 
