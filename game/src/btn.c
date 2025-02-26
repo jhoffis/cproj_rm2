@@ -65,7 +65,7 @@ void render_btn(char *text, f32_v2 pos, void (*func)(void), sprite2D_anchor anch
     sprite2D_scale(sprite_id, scale);
     sprite2D_draw(sprite_id);
 
-    render_text(text, pos, scale / 200, 
+    render_btn_text(text, pos, scale / 200, 
                 (f32_v3) {1, 1, 1}, 
                 (f32_v2) {sprites[sprite_id].img->ratio  * scale,
                           scale}, 

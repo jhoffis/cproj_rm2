@@ -141,7 +141,7 @@ static void _render_text(const char *text,
 }
 
 
-void render_text(const char *text, 
+void render_btn_text(const char *text, 
                  f32_v2 pos, 
                  f32 scale, 
                  f32_v3 color, 
@@ -150,7 +150,7 @@ void render_text(const char *text,
     _render_text(text, pos, scale, scale * 80, color, img_sizes, anchor);
 }
 
-void render_text2(const char *text, 
+void render_text(const char *text, 
                  f32_v2 pos, 
                  sprite2D_anchor anchor) {
     f32 scale = .1 / 80;

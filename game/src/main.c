@@ -2,6 +2,7 @@
 #include "input_handler.h"
 #include "scenes.h"
 #include "scenes/main_scene.h"
+#include "scenes/race_scene.h"
 #include "text.h"
 #ifndef TEST_MODE
 #include "game_state.h"
@@ -77,6 +78,7 @@ int main(void) {
     // bind_model_group(model_mesh, 1);
 
     main_scene_init();
+    race_init(0);
 
     destroy_model(model_mesh);
     game_state.initialize = false;

@@ -11,5 +11,5 @@ static void goback_btn(void) {
 
 void options_scene_render(void) {
     render_btn("Go back", (f32_v2){0, 0}, goback_btn, anchor_top_left);
-    render_text2("Here be options roaming... in the future", (f32_v2){0, 0}, anchor_mid);
+    render_text("Here be options roaming... in the future", (f32_v2){0, 0}, anchor_mid);
 }

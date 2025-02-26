@@ -7,7 +7,9 @@
 typedef enum {
     shader_sprite2D,
     shader_mesh3d,
+    shader_oldsroyal_mesh3d,
     shader_tire_mesh3d,
+    shader_oldsroyal_tire_mesh3d,
     shader_text,
     shader_len 
 } shader_types;

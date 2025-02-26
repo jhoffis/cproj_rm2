@@ -22,3 +22,4 @@ DONE:
 
 BACKLOG:
 - Send 3d modeller, bilder etc over internett slik at folk kan vise frem sine mods? Og for støtte av flere dlcer!
+- Yellow milestones saying how many kilometers you've driven.

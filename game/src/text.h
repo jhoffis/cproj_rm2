@@ -4,12 +4,12 @@
 #include "sprite2d.h"
 
 void init_text(void);
-void render_text(const char *text, 
+void render_btn_text(const char *text, 
                  f32_v2 pos, 
                  f32 scale, 
                  f32_v3 color, 
                  f32_v2 img_sizes, 
                  sprite2D_anchor anchor);
-void render_text2(const char *text, 
+void render_text(const char *text, 
                  f32_v2 pos, 
                  sprite2D_anchor anchor);

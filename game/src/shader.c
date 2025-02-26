@@ -24,6 +24,8 @@ static void compile_shader(shader_types type) {
             break;
         case shader_mesh3d:
         case shader_tire_mesh3d:
+        case shader_oldsroyal_mesh3d:
+        case shader_oldsroyal_tire_mesh3d:
             shader.name = "mesh3D";
             break;
         case shader_text:
