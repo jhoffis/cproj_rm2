@@ -3,6 +3,8 @@
 #include "game_state.h"
 #include "mesh3d.h"
 #include "nums.h"
+#include "play/carfuncs.h"
+#include "play/player.h"
 #include "renderer.h"
 #include "shader.h"
 #include "sprite2d.h"
@@ -15,7 +17,6 @@
 static image_data img;
 static image_data img_tire;
 static u32 tachometer;
-static bool throttle;
 
 void race_init(u32 my_car) {
     // Load model
@@ -40,6 +41,10 @@ void race_init(u32 my_car) {
     tachometer = sprite2D_create("tachometer", 0);
 }
 
+static void finish_race(void) {
+    change_scene(scene_finish, false);
+}
+
 void race_scene_render(void) {
 
     if (!game_state.free_cam) {
@@ -48,10 +53,6 @@ void race_scene_render(void) {
         game_state.cam_pos.z = -.12;
         game_state.cam_rot.y = M_PI / 2;
         game_state.cam_rot.x = 0;
-    }
-
-    if (throttle) {
-        my_car.speed += 100 * timer_delta();
     }
 
     f32_m4x4 mvp = {0};
@@ -87,14 +88,38 @@ void race_scene_render(void) {
     sprite2D_draw(tachometer);
 
 
+    update_speed(my_player.rep_id, TIMER_TICK * timer_delta(), timer_now_millis());
     render_text((f32_v2) {-.1, .1}, anchor_right, "%d%s", (i32) my_car.speed, " km/h");
     render_print("RPM: %d", (i32) my_car.rpm);
-    render_print("Distance: %dm", 123);
+    render_print("Gear: %d/%d", my_car.gear, (u8)my_car.stats[rep_gear_top]);
+    render_print("Spdinc: %d", (i32) my_car.spdinc);
+    render_print("Distance: %dm", (i32) my_car.distance);
 }
 
 void race_key_cb(i32 key, i32 scancode, i32 action, i32 mods) {
     if (action != GLFW_RELEASE) {
-        throttle = true;
+        switch (key) {
+            case GLFW_KEY_W:
+                my_car.throttle = true;
+                my_car.clutch_percent = 0;
+                break;
+            case GLFW_KEY_LEFT_SHIFT:
+                if (action == GLFW_PRESS) shift_seq(true);
+                break;
+            case GLFW_KEY_LEFT_CONTROL:
+                if (action == GLFW_PRESS) shift_seq(false);
+                break;
+            case GLFW_KEY_ESCAPE:
+                finish_race();
+                break;
+        }
+    } else {
+        switch (key) {
+            case GLFW_KEY_W:
+                my_car.clutch_percent = 1;
+                my_car.throttle = false;
+                break;
+        }
     }
 }
 

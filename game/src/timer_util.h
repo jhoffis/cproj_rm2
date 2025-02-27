@@ -1,5 +1,6 @@
 #pragma once
 #include "nums.h"
+#define TIMER_TICK 25
 
 void timer_init(void);
 u64 timer_now_millis(void);

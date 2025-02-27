@@ -1,5 +1,6 @@
 #include "lobby_scene.h"
 #include "btn.h"
+#include "renderer.h"
 #include "scenes.h"
 
 static void goback_btn(void) {
@@ -11,6 +12,7 @@ static void ready_btn(void) {
 }
 
 void lobby_scene_render(void) {
+    gfx_set_depth(false);
     render_btn("Go back", (f32_v2){0, 0}, goback_btn, anchor_top_left);
     render_btn("Ready", (f32_v2){-0.025, 0.025}, ready_btn, anchor_right);
 }
