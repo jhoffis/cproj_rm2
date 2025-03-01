@@ -1,9 +1,16 @@
 #include "car.h"
+#include "play/player.h"
 #define LEN_NOS 24
 
 car_stats_t my_car;
 
-void stats_reset(car_stats_t *stats, rep_t *r, f64 num_superchargers, f64 num_turbos) {
+
+void reset_my_car(void) {
+    reset_stats(&my_car, my_player->rep);
+}
+
+void reset_stats(car_stats_t *stats, rep_t *r) {
+    f64 num_superchargers = 0, num_turbos = 0;
     for (int i = 0; i < ASPECTS_COUNT; i++) {
         stats->stats[i] = r->stats[i];
     }

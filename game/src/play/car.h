@@ -43,7 +43,8 @@ typedef struct {
 } car_stats_t;
 extern car_stats_t my_car;
 
-void stats_reset(car_stats_t *stats, rep_t *r, f64 num_superchargers, f64 num_turbos);
+void reset_my_car(void);
+void reset_stats(car_stats_t *stats, rep_t *r);
 bool has_turbo(car_stats_t *stats);
 bool has_two_step(car_stats_t *stats);
 u64 get_nos_time_left(car_stats_t *s, size_t i);

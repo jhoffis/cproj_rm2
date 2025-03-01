@@ -11,10 +11,35 @@
 // https://learn.microsoft.com/en-us/windows/win32/memory/memory-protection-constants
 #define MAX_MEM_64 0x3ffb000
 
+// Unsigned integers
 #define U16_MAX 65535
 #define U32_MAX 4294967295
+#define U8_MAX 255               // 2^8 - 1
+#define U64_MAX 18446744073709551615ULL  // 2^64 - 1
 
-#include <stdbool.h>
+// Signed integers
+#define I8_MIN -128              // -2^7
+#define I8_MAX 127               // 2^7 - 1
+#define I16_MIN -32768           // -2^15
+#define I16_MAX 32767            // 2^15 - 1
+#define I32_MIN -2147483648      // -2^31
+#define I32_MAX 2147483647       // 2^31 - 1
+#define I64_MIN -9223372036854775808LL   // -2^63
+#define I64_MAX 9223372036854775807LL    // 2^63 - 1
+
+// Floating point
+#define F32_MIN 1.175494e-38F    // Minimum positive normalized value
+#define F32_MAX 3.402823e+38F    // Maximum value
+#define F64_MIN 2.225074e-308    // Minimum positive normalized value
+#define F64_MAX 1.797693e+308    // Maximum value
+
+// Epsilon values (smallest positive increment)
+#define F32_EPSILON 1.192093e-07F
+#define F64_EPSILON 2.220446e-16
+
+// Infinity values
+#define F32_INFINITY __builtin_inff()
+#define F64_INFINITY __builtin_inf()
 
 #define MY_BIT_MASK(n)  (1U << (n)) - 1
 

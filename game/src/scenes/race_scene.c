@@ -4,6 +4,7 @@
 #include "mesh3d.h"
 #include "nums.h"
 #include "play/carfuncs.h"
+#include "play/gm.h"
 #include "play/player.h"
 #include "renderer.h"
 #include "shader.h"
@@ -41,8 +42,15 @@ void race_init(u32 my_car) {
     tachometer = sprite2D_create("tachometer", 0);
 }
 
-static void finish_race(void) {
+void prepare_new_race(void) {
+    my_player->racing_round = gm_current_round.round;
+}
+
+static void finish_race(bool dnf) {
+    reset_my_car(); 
     change_scene(scene_finish, false);
+    my_player->finished_round = gm_current_round.round;
+    finish_control();
 }
 
 void race_scene_render(void) {
@@ -88,12 +96,17 @@ void race_scene_render(void) {
     sprite2D_draw(tachometer);
 
 
-    update_speed(my_player.rep_id, TIMER_TICK * timer_delta(), timer_now_millis());
+    update_speed(my_player->rep_id, TIMER_TICK * timer_delta(), timer_now_millis());
     render_text((f32_v2) {-.1, .1}, anchor_right, "%d%s", (i32) my_car.speed, " km/h");
     render_print("RPM: %d", (i32) my_car.rpm);
     render_print("Gear: %d/%d", my_car.gear, (u8)my_car.stats[rep_gear_top]);
     render_print("Spdinc: %d", (i32) my_car.spdinc);
     render_print("Distance: %dm", (i32) my_car.distance);
+    render_print("Tracklength: %dm", gm_current_round.tracklength);
+    render_print("Round: %d / %d", gm_current_round.round, gm_end_goal);
+    if (my_car.distance >= gm_current_round.tracklength) {
+        finish_race(false);
+    }
 }
 
 void race_key_cb(i32 key, i32 scancode, i32 action, i32 mods) {
@@ -110,7 +123,7 @@ void race_key_cb(i32 key, i32 scancode, i32 action, i32 mods) {
                 if (action == GLFW_PRESS) shift_seq(false);
                 break;
             case GLFW_KEY_ESCAPE:
-                finish_race();
+                finish_race(true);
                 break;
         }
     } else {

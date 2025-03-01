@@ -7,10 +7,17 @@
 #include "scenes.h"
 #include "shader.h"
 #include "sprite2d.h"
+#include "udp_remote.h"
 #include "window.h"
 
-static void play_sp_btn(void) {
-    change_scene(scene_lobby, true);
+static void host_mp_btn(void) {
+    change_scene(scene_lobby, false);
+    host_udp_server();
+}
+
+static void join_mp_btn(void) {
+    change_scene(scene_lobby, false);
+    join_udp_server();
 }
 
 static void options_btn(void) {
@@ -74,7 +81,8 @@ void main_scene_render(void) {
     sprites[yinyang].anchor = anchor_top_right;
     sprite2D_draw(yinyang);
 
-    render_btn("Play", (f32_v2){0, .25}, play_sp_btn, anchor_mid);
+    render_btn("Host", (f32_v2){0, .5}, host_mp_btn, anchor_mid);
+    render_btn("Join", (f32_v2){0, .25}, join_mp_btn, anchor_mid);
     render_btn("Options", (f32_v2){0}, options_btn, anchor_mid);
     render_btn("Exit", (f32_v2){0, -.25}, exit_btn, anchor_mid);
 }

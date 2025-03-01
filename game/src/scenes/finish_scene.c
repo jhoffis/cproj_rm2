@@ -9,8 +9,6 @@ static void enter_store_btn(void) {
 }
 
 void finish_scene_render(void) {
-    printf("main\n");
-
     gfx_set_depth(false);
     render_btn("Enter store", (f32_v2){0}, enter_store_btn, anchor_right);
 }
