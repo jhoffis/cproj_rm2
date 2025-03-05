@@ -64,9 +64,27 @@ if(WIN32)
     add_subdirectory(${CMAKE_SOURCE_DIR}/libs/glfw_win)
     include_directories(${CMAKE_SOURCE_DIR}/libs/glfw_win/include)
     add_compile_definitions(_CRT_ALIGNED_MALLOC=1)
+
+    # Link libraries
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+        OpenGL::GL
+        glfw
+        Ole32      # For COM initialization
+        Winmm      # Multimedia API
+        Avrt       # Advanced multimedia API
+    )
 else()
     message(STATUS "Configuring for Linux or other platforms")
     include_directories(${CMAKE_SOURCE_DIR}/libs/glfw_linux/include)
+
+    find_package(ALSA REQUIRED)
+    include_directories(${ALSA_INCLUDE_DIRS})
+    target_link_libraries(${PROJECT_NAME} PRIVATE 
+        OpenGL::GL
+        glfw
+        ${ALSA_LIBRARIES} 
+        pthread 
+        m)
 endif()
 
 if (RUN_TESTS)

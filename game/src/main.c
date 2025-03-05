@@ -1,3 +1,4 @@
+#include "audio.h"
 #include "btn.h"
 #include "input_handler.h"
 #include "scenes.h"
@@ -42,6 +43,10 @@ int main(void) {
     }
     mem_tracker_init();
 
+    if (!audio_init()) {
+        fprintf(stderr, "Failed to initialize audio\n");
+        exit(1);
+    }
 
     init_player();
     sprite2D_init();
@@ -100,7 +105,8 @@ int main(void) {
     sprite2D_cleanup();
     gfx_cleanup_shaders();
     window_cleanup();
-    mem_tracker_cleanup();
+    mem_tracker_cleanup();    
+    audio_close();
 #ifdef DEBUG
     if (exit_hotreload) {
         if (state != NULL) {
