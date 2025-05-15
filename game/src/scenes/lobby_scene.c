@@ -11,9 +11,9 @@
  * Character creation and initial settings
  ****/
 
-static u32 background;
-static u32 boy;
-static u32 girl;
+static s2D background;
+static s2D boy;
+static s2D girl;
 
 void lobby_init(void) {
     background = sprite2D_create("lobby_background", 0);

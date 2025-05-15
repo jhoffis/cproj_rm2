@@ -58,15 +58,15 @@ u32 sprite2D_create(const char *name, u32 scene_id) {
     return id;
 }
 
-void sprite2D_visible(u32 id, bool visible) {
+void sprite2D_visible(s2D id, bool visible) {
     sprites[id].visible = visible;
 }
 
-void sprite2D_pos(u32 id, f32_v2 pos) {
+void sprite2D_pos(s2D id, f32_v2 pos) {
     sprites[id].position = pos;
 }
 
-void sprite2D_scale(u32 id, f32 scale) {
+void sprite2D_scale(s2D id, f32 scale) {
     sprites[id].scale = scale;
 }
 
@@ -74,7 +74,7 @@ void sprite2D_camera_pos(f32_v2 pos) {
     camera = pos;
 }
 
-void sprite2D_draw(u32 i) {
+void sprite2D_draw(s2D i) {
     gfx_set_shader(shader_sprite2D);
     
     gfx_uniform_f32_v4(0, (f32_v4) {1, 0, 0.5, 1});
