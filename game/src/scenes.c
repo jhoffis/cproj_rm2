@@ -1,11 +1,13 @@
 #include "scenes.h"
 #include "game_state.h"
-#include "scenes/finish_scene.h"
+#include "scenes/conversation_scene.h"
+#include "scenes/in_world_scene.h"
 #include "scenes/lobby_scene.h"
 #include "scenes/main_scene.h"
 #include "scenes/map_creator_scene.h"
+#include "scenes/map_exploring_scene.h"
 #include "scenes/options_scene.h"
-#include "scenes/race_scene.h"
+#include "scenes/pause_menu_scene.h"
 #include "scenes/store_scene.h"
 #include "scenes/win_scene.h"
 
@@ -25,23 +27,29 @@ void scenes_render(void) {
         case scene_main:
             main_scene_render();
             break;
+        case scene_pause_menu:
+            pause_menu_scene_render();
+            break;
         case scene_options:
             options_scene_render();
-            break;
-        case scene_map_creator:
-            map_creator_scene_render();
             break;
         case scene_lobby:
             lobby_scene_render();
             break;
+        case scene_map_creator:
+            map_creator_scene_render();
+            break;
+        case scene_map_exploring:
+            map_exploring_scene_render();
+            break;
+        case scene_in_world:
+            in_world_scene_render();
+            break;
+        case scene_conversation:
+            conversation_scene_render();
+            break;
         case scene_store:
             store_scene_render();
-            break;
-        case scene_race:
-            race_scene_render();
-            break;
-        case scene_finish:
-            finish_scene_render();
             break;
         case scene_win:
             win_scene_render();

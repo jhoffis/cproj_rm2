@@ -97,18 +97,18 @@ void finish_control(void) {
     // first check
     for (size_t i = 0; i < num_players; i++) {
         auto player = &all_players[i];
-        if (player->racing_round < player->finished_round) {
-            fprintf(stderr, "Error: racing_round is less than finished_round for player %zu, %d vs. %d\n", 
-                    i, 
-                    player->racing_round,
-                    player->finished_round);
-            return;
-        }
-        
-        if (player->racing_round != player->finished_round) {
-            printf("player nr. %zu is still in the race\n", i);
-            return;
-        }
+        // if (player->racing_round < player->finished_round) {
+        //     fprintf(stderr, "Error: racing_round is less than finished_round for player %zu, %d vs. %d\n", 
+        //             i, 
+        //             player->racing_round,
+        //             player->finished_round);
+        //     return;
+        // }
+        // 
+        // if (player->racing_round != player->finished_round) {
+        //     printf("player nr. %zu is still in the race\n", i);
+        //     return;
+        // }
     }
     
     // all are finished

@@ -2,3 +2,4 @@
 
 void host_udp_server(void);
 void join_udp_server(void);
+void close_udp_server(void);

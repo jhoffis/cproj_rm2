@@ -12,8 +12,9 @@ layout(location = 6) uniform vec2 img_sizes;
 #define ANCHOR_LEFT 0
 #define ANCHOR_RIGHT 1
 #define ANCHOR_MID 2
-#define ANCHOR_TOP_LEFT 3
-#define ANCHOR_TOP_RIGHT 4
+#define ANCHOR_MID_BOTTOM 3
+#define ANCHOR_TOP_LEFT 4
+#define ANCHOR_TOP_RIGHT 5
 
 void main() {
     gl_Position = vec4(vertex.xy, 0.0, 1.0);
@@ -46,6 +47,12 @@ void main() {
         gl_Position.x *= aspect;
         // gl_Position.x += vertex.x*aspect; // So that origo is at the bottom left and that it goes from 0 -> 1
         // gl_Position.y += vertex.y;
+    } else if (anchor == ANCHOR_MID_BOTTOM) {
+        gl_Position.x -= .5*img_sizes.x;
+        gl_Position.y += 2 * og_pos.y;
+        gl_Position.x += og_pos.x;
+        gl_Position.y += -1;
+        gl_Position.x *= aspect;
     } else if (anchor == ANCHOR_TOP_LEFT) {
         gl_Position.y -= img_sizes.y;
         gl_Position.x += 2 * og_pos.x;

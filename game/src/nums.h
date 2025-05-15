@@ -43,6 +43,9 @@
 
 #define MY_BIT_MASK(n)  (1U << (n)) - 1
 
+#define SET_INT_VALUE(value, input, mask) (value) = ((value) & ~(mask)) | (((input & 0xF) << __builtin_ctz(mask)))
+#define GET_INT_VALUE(value, mask) ((value & mask) >> __builtin_ctz(mask))
+
 typedef float f32;
 typedef double f64;
 typedef unsigned char u8;

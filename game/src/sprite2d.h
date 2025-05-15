@@ -3,7 +3,9 @@
 #include "nums.h"
 
 typedef enum {
-    anchor_left, anchor_right, anchor_mid, anchor_top_left, anchor_top_right,
+    anchor_left, anchor_right, 
+    anchor_mid, anchor_mid_bottom,
+    anchor_top_left, anchor_top_right,
 } sprite2D_anchor;
 
 typedef struct {

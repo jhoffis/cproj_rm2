@@ -3,7 +3,6 @@
 #include "input_handler.h"
 #include "scenes.h"
 #include "scenes/main_scene.h"
-#include "scenes/race_scene.h"
 #include "text.h"
 #ifndef TEST_MODE
 #include "game_state.h"
@@ -83,7 +82,7 @@ int main(void) {
     // bind_model_group(model_mesh, 1);
 
     main_scene_init();
-    race_init(0);
+    // race_init(0);
 
     destroy_model(model_mesh);
     game_state.initialize = false;
@@ -101,12 +100,11 @@ int main(void) {
     }
 
     // Cleanup
-    
     sprite2D_cleanup();
     gfx_cleanup_shaders();
     window_cleanup();
-    mem_tracker_cleanup();    
     audio_close();
+    mem_tracker_cleanup();    
 #ifdef DEBUG
     if (exit_hotreload) {
         if (state != NULL) {

@@ -3,6 +3,10 @@
 #include "nums.h"
 #include "rep.h"
 
+typedef enum {
+    decentra, oldsroyal, fabulvania, thoroughbred, CAR_NAME_IDS_COUNT
+} car_name_ids;
+
 typedef struct {
     bool throttle;
     bool clutch;

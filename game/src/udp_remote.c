@@ -1,4 +1,5 @@
 #include "udp_remote.h"
+#include "nums.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -30,6 +31,9 @@
 #define UDP_PORT 8080
 #define BUFFER_SIZE 1024
 
+static thrd_t udp_thread;
+static bool running = false;
+
 /* 
  * UDP Server Functions
  */
@@ -55,6 +59,17 @@ static socket_t udp_server_init(int port) {
     #else
     setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
     #endif
+
+    // struct timeval timeout;
+    // 
+    // /* Set socket timeout to 10 seconds */
+    // timeout.tv_sec = 10;    /* 10 seconds */
+    // timeout.tv_usec = 0;    /* 0 microseconds */
+    //
+    // if (setsockopt(server_socket, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) < 0) {
+    //     perror("setsockopt failed");
+    //     return -1;
+    // }
     
     /* Set up server address */
     memset(&server_addr, 0, sizeof(server_addr));
@@ -74,8 +89,9 @@ static socket_t udp_server_init(int port) {
 }
 
 static int udp_server_receive(socket_t server_socket, char* buffer, int buffer_size, 
-                        struct sockaddr_in* client_addr, int* addr_size) {
+                        struct sockaddr_in* client_addr, socklen_t* addr_size) {
     int recv_len;
+    printf("receiving...\n");
     
     /* Receive message */
     recv_len = recvfrom(server_socket, buffer, buffer_size, 0,
@@ -93,7 +109,7 @@ static int udp_server_receive(socket_t server_socket, char* buffer, int buffer_s
 }
 
 static int udp_server_send(socket_t server_socket, const char* buffer, int buffer_size,
-                    struct sockaddr_in* client_addr, int addr_size) {
+                    struct sockaddr_in* client_addr, socklen_t addr_size) {
     int sent_len;
     
     /* Send message back to client */
@@ -176,7 +192,7 @@ static int udp_client_receive(socket_t client_socket, char* buffer, int buffer_s
 static int host_loop(void *arg) { 
     socket_t server_socket;
     struct sockaddr_in client_addr;
-    int addr_size = sizeof(client_addr);
+    socklen_t addr_size = sizeof(client_addr);
     char buffer[BUFFER_SIZE];
     int recv_len;
     
@@ -186,11 +202,13 @@ static int host_loop(void *arg) {
         printf("Failed to initialize server\n");
         exit(1);
     }
+
+    running = true;
     
     printf("UDP Echo Server running on port %d\n", UDP_PORT);
     printf("Press Ctrl+C to exit\n");
 
-    for (;;) {
+    while (running) {
         /* Receive data from client */
         recv_len = udp_server_receive(server_socket, buffer, BUFFER_SIZE, &client_addr, &addr_size);
         
@@ -261,13 +279,14 @@ static int joiner_loop(void *arg) {
 }
 
 void host_udp_server(void) {
-    thrd_t t;
-    thrd_create(&t, host_loop, (void *) NULL);
+    thrd_create(&udp_thread, host_loop, (void *) NULL);
 }
 
 void join_udp_server(void) {
-    thrd_t t;
-    thrd_create(&t, joiner_loop, (void *) NULL);
+    thrd_create(&udp_thread, joiner_loop, (void *) NULL);
+}
+
+void close_udp_server(void) {
 }
 
 

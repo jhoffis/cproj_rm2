@@ -25,6 +25,7 @@ static void options_btn(void) {
 }
 
 static void exit_btn(void) {
+    close_udp_server();
     window_close();
 }
 

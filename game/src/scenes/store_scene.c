@@ -3,12 +3,11 @@
 #include "play/player.h"
 #include "renderer.h"
 #include "scenes.h"
-#include "scenes/race_scene.h"
 #include "text.h"
 
 static void ready_btn(void) {
-    prepare_new_race();
-    change_scene(scene_race, false);
+    // prepare_new_race();
+    // change_scene(scene_race, false);
 }
 
 void store_scene_render(void) {

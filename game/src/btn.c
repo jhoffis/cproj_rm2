@@ -37,6 +37,10 @@ void render_btn(char *text, f32_v2 pos, void (*func)(void), sprite2D_anchor anch
             realposX = (u32) ((f32) game_state.window.width / 2) + pos.x * game_state.window.height / 2 - sizeX / 2;
             realposY = (u32) ((f32) game_state.window.height / 2) + pos.y * game_state.window.height / 2 - sizeY / 2;
             break;
+        case anchor_mid_bottom:
+            realposX = (u32) ((f32) game_state.window.width / 2) + pos.x * game_state.window.height / 2 - sizeX / 2;
+            realposY = pos.y * game_state.window.height;
+            break;
         case anchor_top_left:
             realposX = pos.x * game_state.window.height;
             realposY = game_state.window.height + pos.y * game_state.window.height - sizeY;

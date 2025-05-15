@@ -1,4 +1,5 @@
 #include "audio.h"
+#include "allocator.h"
 #include <math.h>
 
 #ifdef _WIN32
@@ -13,8 +14,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
-#include <stdint.h>
 #include <string.h>
 
 #define SAMPLE_RATE 48000
@@ -22,7 +21,7 @@
 #define BITS_PER_SAMPLE 16
 #define BUFFER_MS 50  // Buffer duration in milliseconds
 
-typedef void (*audio_callback)(int16_t* buffer, size_t buffer_size);
+typedef void (*audio_callback)(i16* buffer, size_t buffer_size);
 
 typedef struct {
     audio_callback user_callback;
@@ -70,7 +69,7 @@ DWORD WINAPI windows_audio_thread(LPVOID param) {
             BYTE* render_buffer;
             render_client->lpVtbl->GetBuffer(render_client, frames_to_render, &render_buffer);
 
-            context->user_callback((int16_t*)render_buffer, frames_to_render * CHANNELS);
+            context->user_callback((i16*)render_buffer, frames_to_render * CHANNELS);
 
             render_client->lpVtbl->ReleaseBuffer(render_client, frames_to_render, 0);
         }
@@ -84,7 +83,7 @@ void* linux_audio_thread(void* param) {
     LinuxAudioData* linux_data = (LinuxAudioData*)context->platform_specific;
 
     int buffer_size = SAMPLE_RATE * BUFFER_MS / 1000;
-    int16_t* buffer = malloc(buffer_size * CHANNELS * sizeof(int16_t));
+    i16* buffer = xmalloc(buffer_size * CHANNELS * sizeof(i16));
 
     while (context->is_running) {
         pthread_mutex_lock(&linux_data->mutex);
@@ -99,20 +98,20 @@ void* linux_audio_thread(void* param) {
         pthread_mutex_unlock(&linux_data->mutex);
     }
 
-    free(buffer);
+    xfree(buffer);
     return NULL;
 }
 #endif
 
 // Example test sound generation callback
-static void test_sound_callback(int16_t* buffer, size_t sample_count) {
+static void test_sound_callback(i16* buffer, size_t sample_count) {
     static float phase = 0.0f;
     const float frequency = 440.0f;  // A4 note
     const float sample_rate = 48000.0f;
-    const float amplitude = 32767.0f * 0.1f;  // 10% volume
+    const float amplitude = 32767.0f * 0.f; // volume
 
     for (size_t i = 0; i < sample_count; i += CHANNELS) {
-        int16_t sample = (int16_t)(amplitude * sinf(phase));
+        i16 sample = (i16)(amplitude * sinf(phase));
         for (int ch = 0; ch < CHANNELS; ch++) {
             buffer[i + ch] = sample;
         }
@@ -127,13 +126,13 @@ static void test_sound_callback(int16_t* buffer, size_t sample_count) {
 bool audio_init() {
     if (global_audio_context) return false;
 
-    global_audio_context = malloc(sizeof(AudioContext));
+    global_audio_context = xmalloc(sizeof(AudioContext));
     global_audio_context->user_callback = test_sound_callback;
     global_audio_context->is_running = true;
 
 #ifdef _WIN32
     {
-        WindowsAudioData* win_data = malloc(sizeof(WindowsAudioData));
+        WindowsAudioData* win_data = xmalloc(sizeof(WindowsAudioData));
         global_audio_context->platform_specific = win_data;
 
         HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
@@ -179,7 +178,7 @@ bool audio_init() {
     }
 #elif __linux__
     {
-        LinuxAudioData* linux_data = malloc(sizeof(LinuxAudioData));
+        LinuxAudioData* linux_data = xmalloc(sizeof(LinuxAudioData));
         global_audio_context->platform_specific = linux_data;
 
         int err;
@@ -236,7 +235,7 @@ void audio_close() {
         if (win_data->audio_client) win_data->audio_client->lpVtbl->Release(win_data->audio_client);
 
         CoUninitialize();
-        free(win_data);
+        xfree(win_data);
     }
 #elif __linux__
     {
@@ -246,11 +245,11 @@ void audio_close() {
         pthread_mutex_destroy(&linux_data->mutex);
 
         snd_pcm_close(linux_data->pcm_handle);
-        free(linux_data);
+        xfree(linux_data);
     }
 #endif
 
-    free(global_audio_context);
+    xfree(global_audio_context);
     global_audio_context = NULL;
 }
 
