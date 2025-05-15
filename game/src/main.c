@@ -2,6 +2,7 @@
 #include "btn.h"
 #include "input_handler.h"
 #include "scenes.h"
+#include "scenes/lobby_scene.h"
 #include "scenes/main_scene.h"
 #include "text.h"
 #ifndef TEST_MODE
@@ -81,13 +82,14 @@ int main(void) {
     bind_model_from_group(model_mesh, 1);
     // bind_model_group(model_mesh, 1);
 
+    lobby_init();
     main_scene_init();
     // race_init(0);
 
     destroy_model(model_mesh);
     game_state.initialize = false;
     while (!window_should_close()) {
-        gfx_clear_color(0.2f, 0.3f, 0.3f, 1.0f);
+        gfx_clear_color(0.f, 0.f, 0.f, 1.0f);
         window_poll_events();
 
         render_print("delta %f", timer_delta());
