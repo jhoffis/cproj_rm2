@@ -18,9 +18,7 @@ static f32_v2 last_mouse_pos;
 f32 move_forward, move_back, move_left, move_right, move_up, move_down;
 
 void key_cb(i32 key, i32 scancode, i32 action, i32 mods) {
-    // if (game_state.current_scene == scene_race) {
-    //     race_key_cb(key, scancode, action, mods);
-    // }
+    scenes_key_cb(key, scancode, action, mods);
 
 #ifdef DEBUG
     if (action == GLFW_RELEASE) {

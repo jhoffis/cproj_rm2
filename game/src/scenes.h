@@ -1,4 +1,5 @@
 #pragma once
+#include "nums.h"
 
 typedef enum {
     scene_main, 
@@ -11,6 +12,7 @@ typedef enum {
     scene_conversation,
     scene_inventory,
     scene_settlement,
+    scene_party,
     scene_store, 
     scene_win, 
 } scene_t;
@@ -20,3 +22,4 @@ void change_scene(scene_t s, bool remember);
 void change_scene_back(void);
 void change_scene_clear_stack(void);
 void scenes_render(void);
+void scenes_key_cb(i32 key, i32 scancode, i32 action, i32 mods);

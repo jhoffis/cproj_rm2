@@ -1,4 +1,5 @@
 #include "pause_menu_scene.h"
+#include "GLFW/glfw3.h"
 #include "btn.h"
 #include "renderer.h"
 #include "scenes.h"
@@ -22,4 +23,8 @@ void pause_menu_scene_render(void) {
     render_btn("Return to the map", (f32_v2){0}, return_to_whence_you_came, anchor_mid);
     render_btn("Options", (f32_v2){0, -.2}, go_to_options, anchor_mid);
     render_btn("Exit to main menu", (f32_v2){0, -.4}, exit_to_main_menu, anchor_mid);
+}
+
+void pause_menu_scene_key(i32 key, i32 scancode, i32 action, i32 mods) {
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) return_to_whence_you_came();
 }

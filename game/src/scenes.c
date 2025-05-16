@@ -8,6 +8,7 @@
 #include "scenes/map_creator_scene.h"
 #include "scenes/map_exploring_scene.h"
 #include "scenes/options_scene.h"
+#include "scenes/party_scene.h"
 #include "scenes/pause_menu_scene.h"
 #include "scenes/settlement_scene.h"
 #include "scenes/store_scene.h"
@@ -80,6 +81,53 @@ void scenes_render(void) {
             break;
         case scene_settlement:
             settlement_scene_render();
+            break;
+        case scene_party:
+            party_scene_render();
+            break;
+    }
+}
+
+void scenes_key_cb(i32 key, i32 scancode, i32 action, i32 mods) {
+    switch (game_state.current_scene) {
+        // case scene_main:
+        //     main_scene_render();
+        //     break;
+        case scene_pause_menu:
+            pause_menu_scene_key(key, scancode, action, mods);
+            break;
+        case scene_options:
+            options_scene_key(key, scancode, action, mods);
+            break;
+        // case scene_lobby:
+        //     lobby_scene_render();
+        //     break;
+        // case scene_map_creator:
+        //     map_creator_scene_render();
+        //     break;
+        case scene_map_exploring:
+            map_exploring_scene_key(key, scancode, action, mods);
+            break;
+        // case scene_in_world:
+        //     in_world_scene_render();
+        //     break;
+        // case scene_conversation:
+        //     conversation_scene_render();
+        //     break;
+        // case scene_store:
+        //     store_scene_render();
+        //     break;
+        // case scene_win:
+        //     win_scene_render();
+        //     break;
+        case scene_inventory:
+            inventory_scene_key(key, scancode, action, mods);
+            break;
+        // case scene_settlement:
+        //     settlement_scene_render();
+        //     break;
+        case scene_party:
+            party_scene_key(key, scancode, action, mods);
             break;
     }
 }
