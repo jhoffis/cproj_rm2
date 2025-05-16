@@ -5,7 +5,12 @@
 #include "text.h"
 #include <stdio.h>
 
+/*
+ * queue av ticks der nårenn ticken kommer så skal ting skje, i stedet for å inkrementere hver eneste pop.
+ */
+
 static s2D map_character;
+
 
 void map_init(void) {
     map_character = sprite2D_create("map_character", 0);
@@ -13,13 +18,22 @@ void map_init(void) {
     sprites[map_character].anchor = anchor_mid;
 }
 
-static void enter_store_btn(void) {
-    change_scene(scene_store, false);
+static void enter_settlement(void) {
+    change_scene(scene_settlement, false);
+}
+
+static void enter_inventory(void) {
+    change_scene(scene_inventory, true);
+}
+static void enter_menu(void) {
+    change_scene(scene_pause_menu, true);
 }
 
 void map_exploring_scene_render(void) {
     gfx_set_depth(false);
     sprite2D_draw(map_character);
-    render_btn("Enter store", (f32_v2){0}, enter_store_btn, anchor_right);
+    render_btn("Enter town (FIX)", (f32_v2){0}, enter_settlement, anchor_right);
+    render_btn("Inventory", (f32_v2){-.2, 0}, enter_inventory, anchor_right);
+    render_btn("Open menu", (f32_v2){-.4, 0}, enter_menu, anchor_right);
     render_print("mappp");
 }

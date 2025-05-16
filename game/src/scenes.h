@@ -9,7 +9,8 @@ typedef enum {
     scene_map_exploring, 
     scene_in_world, 
     scene_conversation,
-    // scene_inventory,
+    scene_inventory,
+    scene_settlement,
     scene_store, 
     scene_win, 
 } scene_t;
@@ -17,4 +18,5 @@ extern scene_t current_scene;
 
 void change_scene(scene_t s, bool remember);
 void change_scene_back(void);
+void change_scene_clear_stack(void);
 void scenes_render(void);
