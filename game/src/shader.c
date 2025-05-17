@@ -209,14 +209,14 @@ u32 gfx_create_buffer(void) {
     return buffer;
 }
 
-void gfx_uniform_void(shader_types type, u32 buffer, const char *name, u32 location, void *data, u32 size) {
+void gfx_uniform_void(shader_types type, u32 buffer, const char *name, u32 binding, void *data, u32 size) {
     auto program = shaders[type].program;
-    auto binding = glad_glGetUniformBlockIndex(program, name);
-    glUniformBlockBinding(program, location, binding);
+    auto blockIndex = glad_glGetUniformBlockIndex(program, name);
+    glUniformBlockBinding(program, blockIndex, binding);
 
     glBindBuffer(GL_UNIFORM_BUFFER, buffer);
     glBufferData(GL_UNIFORM_BUFFER, size, data, GL_DYNAMIC_DRAW);
-    glBindBufferBase(GL_UNIFORM_BUFFER, binding, buffer);
+    glBindBufferBase(GL_UNIFORM_BUFFER, blockIndex, buffer);
 }
 
 void gfx_uniform_f32_mat4x4(u32 location, f32_m4x4 mat) {

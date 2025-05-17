@@ -54,7 +54,7 @@ void gfx_activate_texture(u32 texture_pipe, u32 texture);
 
 u32 gfx_create_buffer(void);
 
-void gfx_uniform_void(shader_types type, u32 buffer, const char *name, u32 location, void *data, u32 size);
+void gfx_uniform_void(shader_types type, u32 buffer, const char *name, u32 binding, void *data, u32 size);
 void gfx_uniform_f32_mat4x4(u32 location, f32_m4x4 mat);
 void gfx_uniform_f32_v4(u32 location, f32_v4 vec4);
 void gfx_uniform_f32_v3(u32 location, f32_v3 vec4);

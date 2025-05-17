@@ -2,6 +2,7 @@
 #include "btn.h"
 #include "game_state.h"
 #include "renderer.h"
+#include "selection_box.h"
 #include "shader.h"
 #include "window.h"
 #include <stdio.h>
@@ -111,6 +112,11 @@ void mouse_cb(f64 xpos, f64 ypos, i32 button, i32 action, i32 mods) {
     }
     if (action == GLFW_RELEASE) {
         click_btn();
+    } else if (action == GLFW_PRESS) {
+        // TODO 
+        sel_box_start_dragging(0,0);
+    } else {
+        sel_box_drag(0,0);
     }
 }
 

@@ -44,6 +44,7 @@ void sel_box_render(void) {
             // SelectionBox::m_ubo.posCam.x = Camera::m_cam.pos.x;
             // SelectionBox::m_ubo.posCam.y = Camera::m_cam.pos.y;
     //         uboMem->uboStruct = &SelectionBox::m_ubo;
+    sb_ubo.pos_new.x = 0.5;
     gfx_set_shader(shader_selection_box);
     gfx_uniform_void(shader_selection_box, 
             buffer, "UniformBufferObject", 0, (void*) &sb_ubo, sizeof(sel_box_UBO_t));
