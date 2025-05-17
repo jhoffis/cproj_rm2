@@ -22,6 +22,9 @@ static void compile_shader(shader_types type) {
         case shader_sprite2D:
             shader.name = "sprite2D";
             break;
+        case shader_selection_box:
+            shader.name = "selectionbox";
+            break;
         case shader_mesh3d:
         case shader_tire_mesh3d:
         case shader_oldsroyal_mesh3d:
@@ -198,6 +201,22 @@ void gfx_activate_texture_pipe(u32 texture_pipe) {
 void gfx_activate_texture(u32 texture_pipe, u32 texture) {
     glActiveTexture(GL_TEXTURE0 + texture_pipe);
     glBindTexture(GL_TEXTURE_2D, texture); // TODO support more textures
+}
+
+u32 gfx_create_buffer(void) {
+    u32 buffer;
+    glGenBuffers(1, &buffer); 
+    return buffer;
+}
+
+void gfx_uniform_void(shader_types type, u32 buffer, const char *name, u32 location, void *data, u32 size) {
+    auto program = shaders[type].program;
+    auto binding = glad_glGetUniformBlockIndex(program, name);
+    glUniformBlockBinding(program, location, binding);
+
+    glBindBuffer(GL_UNIFORM_BUFFER, buffer);
+    glBufferData(GL_UNIFORM_BUFFER, size, data, GL_DYNAMIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, binding, buffer);
 }
 
 void gfx_uniform_f32_mat4x4(u32 location, f32_m4x4 mat) {

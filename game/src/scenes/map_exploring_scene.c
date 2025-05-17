@@ -49,7 +49,12 @@ void map_exploring_scene_render(void) {
     render_btn("Open menu", (f32_v2){-.8, 0}, enter_menu, anchor_right);
     render_print("mappp");
 }
-
+/**
+ * TODO           if (SceneData::dragging) {
+                Camera::m_cam.pos.x += SceneData::xWorldDragCam - SceneData::xWorld;
+                Camera::m_cam.pos.y += SceneData::yWorldDragCam - SceneData::yWorld;
+            }
+ */
 
 void map_exploring_scene_key(i32 key, i32 scancode, i32 action, i32 mods) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) enter_menu();

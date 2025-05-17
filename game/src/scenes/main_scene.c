@@ -5,6 +5,7 @@
 #include "nums.h"
 #include "renderer.h"
 #include "scenes.h"
+#include "selection_box.h"
 #include "shader.h"
 #include "sprite2d.h"
 #include "udp_remote.h"
@@ -86,4 +87,6 @@ void main_scene_render(void) {
     render_btn("Join", (f32_v2){0, .25}, join_mp_btn, anchor_mid);
     render_btn("Options", (f32_v2){0}, options_btn, anchor_mid);
     render_btn("Exit", (f32_v2){0, -.25}, exit_btn, anchor_mid);
+
+    sel_box_render();
 }

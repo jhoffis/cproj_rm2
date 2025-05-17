@@ -23,6 +23,7 @@ f64 mouse_ypos = 0;
 static void framebuffer_size_callback(GLFWwindow* window, int w, int h) {
     game_state.window.width = w;
     game_state.window.height = h;
+    game_state.window.aspect = (f32) w / (f32) h;
     gfx_update_viewport();
     resize_cb(w, h);
 }
@@ -66,8 +67,11 @@ void window_init(void) {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     if (game_state.initialize) {
-        game_state.window.width = 800;
-        game_state.window.height = 600;
+        auto w = 800;
+        auto h = 600;
+        game_state.window.width = w;
+        game_state.window.height = h;
+        game_state.window.aspect = (f32) w / (f32) h;
         game_state.window.state = windowed;
     }
 

@@ -5,6 +5,7 @@
 #include "scenes/lobby_scene.h"
 #include "scenes/main_scene.h"
 #include "scenes/map_exploring_scene.h"
+#include "selection_box.h"
 #include "text.h"
 #ifndef TEST_MODE
 #include "game_state.h"
@@ -83,6 +84,7 @@ int main(void) {
     bind_model_from_group(model_mesh, 1);
     // bind_model_group(model_mesh, 1);
 
+    sel_box_init();
     map_init();
     lobby_init();
     main_scene_init();

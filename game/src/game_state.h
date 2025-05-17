@@ -9,6 +9,7 @@ typedef enum {
 
 typedef struct {
     u32 width, height, x, y;
+    f32 aspect;
     window_state_enum state;
 } window_state_t;
 
