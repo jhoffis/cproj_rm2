@@ -119,7 +119,7 @@ char *load_vertex_shader(const char *name) {
     FILE *file = plt_fopen(fixed_name, "rb");
     xfree(fixed_name);
     if (!file) {
-        printf("Could not find shader \"%s\"\n", name);
+        printf("Could not find vertex shader \"%s\"\n", name);
         exit(1);
     }
     return load_file_as_str(file, NULL);
@@ -130,7 +130,18 @@ char *load_fragment_shader(const char *name) {
     FILE *file = plt_fopen(fixed_name, "rb");
     xfree(fixed_name);
     if (!file) {
-        printf("Could not find shader \"%s\"\n", name);
+        printf("Could not find fragment shader \"%s\"\n", name);
+        exit(1);
+    }
+    return load_file_as_str(file, NULL);
+}
+
+char *load_geometry_shader(const char *name) {
+    char *fixed_name = path_name("../res/shaders/", name, "_g.glsl");
+    FILE *file = plt_fopen(fixed_name, "rb");
+    xfree(fixed_name);
+    if (!file) {
+        printf("Could not find geometry shader \"%s\"\n", name);
         exit(1);
     }
     return load_file_as_str(file, NULL);

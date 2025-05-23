@@ -19,3 +19,4 @@ char *load_file_as_str(FILE *file, size_t *out_size);
 image_data load_image(const char *name);
 char *load_vertex_shader(const char *name);
 char *load_fragment_shader(const char *name);
+char *load_geometry_shader(const char *name);

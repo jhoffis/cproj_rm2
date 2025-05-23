@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+static bool is_culling = true;
+
 void gfx_init_graphics(void) {
     // glfwGetProcAddress is specifically for opengl
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -48,4 +50,12 @@ void gfx_swap(void) {
     glfwSwapBuffers(window);
 }
 
+void gfx_temp_disable_culling(void) {
+    glDisable(GL_CULL_FACE);  
+}
 
+void gfx_temp_reenable_culling(void) {
+    if (is_culling) {
+        glEnable(GL_CULL_FACE);
+    }
+}

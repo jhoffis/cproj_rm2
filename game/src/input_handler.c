@@ -16,6 +16,7 @@ static bool mouse_reset = true;
 static f32 movement_speed = 0.1f, mouse_sensitivity = 0.0025f;
 static f32_v2 new_mouse_pos;
 static f32_v2 last_mouse_pos;
+f32_v2 mouse_world_pos = {0};
 f32 move_forward, move_back, move_left, move_right, move_up, move_down;
 
 void key_cb(i32 key, i32 scancode, i32 action, i32 mods) {
@@ -105,18 +106,25 @@ void mouse_cb(f64 xpos, f64 ypos, i32 button, i32 action, i32 mods) {
         last_mouse_pos.x = new_mouse_pos.x;
         last_mouse_pos.y = new_mouse_pos.y;
 
-        game_state.cam_rot.x += dy;
-        game_state.cam_rot.y = fmodf(game_state.cam_rot.y - dx, 360.f);
+        game_state.cam3D.rot.x += dy;
+        game_state.cam3D.rot.y = fmodf(game_state.cam3D.rot.y - dx, 360.f);
 
         return;
     }
+
+    auto world_based = game_state.window.height; 
+    mouse_world_pos.x = (xpos / world_based) + game_state.cam2D.x;
+    mouse_world_pos.y = 1. - (ypos / world_based) + game_state.cam2D.y;
+    
     if (action == GLFW_RELEASE) {
         click_btn();
+        sel_box_stop_dragging(button == GLFW_MOUSE_BUTTON_LEFT);
     } else if (action == GLFW_PRESS) {
-        // TODO 
-        sel_box_start_dragging(0,0);
+        sel_box_start_dragging(mouse_world_pos);
     } else {
-        sel_box_drag(0,0);
+        if (sel_box_is_visible()) {
+            sel_box_drag(mouse_world_pos);
+        }
     }
 }
 

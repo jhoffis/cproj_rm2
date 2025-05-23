@@ -3,6 +3,7 @@
 layout(location = 0) in vec3 fragColor;
 layout(location = 1) in vec2 resolution;
 layout(location = 2) in vec2 size;
+layout(location = 3) in vec2 coord;
 
 layout(location = 0) out vec4 outColor;
 
@@ -14,8 +15,8 @@ void main() {
     float sizePixelY = size.y * resolution.y;
 
     vec2 pixelInBox = vec2(
-    sizePixelX,
-    sizePixelY
+    coord.x * sizePixelX,
+    coord.y * sizePixelY
     );
 
     if (pixelInBox.x <= borderSize
@@ -27,5 +28,5 @@ void main() {
     } else {
         outColor = vec4(1, 0.2, 0.6, 0.15);
     }
-    outColor = vec4(fragColor.rgb, 1.0);
+    // outColor = vec4(fragColor.rgb, 1.0);
 }

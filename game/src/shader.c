@@ -15,6 +15,7 @@ shader_types shader_current;
 
 static void compile_shader(shader_types type) {
     int  success;
+    bool has_geometry = false;
     char error_info[512];
 
     shader_data shader = shaders[type];
@@ -23,6 +24,7 @@ static void compile_shader(shader_types type) {
             shader.name = "sprite2D";
             break;
         case shader_selection_box:
+            has_geometry = true;
             shader.name = "selectionbox";
             break;
         case shader_mesh3d:
@@ -38,50 +40,68 @@ static void compile_shader(shader_types type) {
             printf("Error: Unknown shader type %d\n", type);
             exit(1);
     }
+    shader.program = glCreateProgram();
 
     const char *vertex_file = load_vertex_shader(shader.name);
     const char *fragment_file = load_fragment_shader(shader.name);
 
     // Vertex shader
-    u32 vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+    auto vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex_shader, 1, &vertex_file, NULL);
     glCompileShader(vertex_shader);
 
     glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
+    xfree((void*)vertex_file);
     if (!success) {
         glGetShaderInfoLog(vertex_shader, 512, NULL, error_info);
         printf("Error! Could not compile vertex shader %s: %s\n", shader.name, error_info);
-        goto fail;
+        return;
     }
+    glAttachShader(shader.program, vertex_shader);
+    glDeleteShader(vertex_shader);
 
     // Fragment shader
-    u32 fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+    auto fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragment_shader, 1, &fragment_file, NULL);
     glCompileShader(fragment_shader);
 
     glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
+    xfree((void*)fragment_file);
     if (!success) {
         glGetShaderInfoLog(fragment_shader, 512, NULL, error_info);
         printf("Error! Could not compile fragment shader %s: %s\n", shader.name, error_info);
-        goto fail;
+        return;
+    }
+    glAttachShader(shader.program, fragment_shader);
+    glDeleteShader(fragment_shader);
+
+    // Geometry shader
+    if (has_geometry) {
+        const char *geometry_file = load_geometry_shader(shader.name);
+        auto geometry_shader = glCreateShader(GL_GEOMETRY_SHADER);
+        glShaderSource(geometry_shader, 1, &geometry_file, NULL);
+        glCompileShader(geometry_shader);
+
+        glGetShaderiv(geometry_shader, GL_COMPILE_STATUS, &success);
+        xfree((void*)geometry_file);
+        if (!success) {
+            glGetShaderInfoLog(geometry_shader, 512, NULL, error_info);
+            printf("Error! Could not compile fragment shader %s: %s\n", shader.name, error_info);
+            return;
+        }
+        glAttachShader(shader.program, geometry_shader);
+        glDeleteShader(geometry_shader);
     }
 
     // Shader program
-    shader.program = glCreateProgram();
-    glAttachShader(shader.program, vertex_shader);
-    glAttachShader(shader.program, fragment_shader);
     glLinkProgram(shader.program);
 
     glGetProgramiv(shader.program, GL_LINK_STATUS, &success);
     if (!success) {
         glGetProgramInfoLog(shader.program, 512, NULL, error_info);
         printf("Error! Could not link shader program %s: %s\n", shader.name, error_info);
-        goto fail;
+        return;
     }
-
-    glDeleteShader(vertex_shader);
-    glDeleteShader(fragment_shader);
-
 
     // Buffer objects
     glGenBuffers(1, &shader.vertex_buffer);
@@ -90,10 +110,6 @@ static void compile_shader(shader_types type) {
     glGenBuffers(1, &shader.texture_coord_buffer);
 
     shaders[type] = shader;
-
-fail:
-    xfree((void*)vertex_file);
-    xfree((void*)fragment_file);
 }
 
 void gfx_init_shaders(void) {

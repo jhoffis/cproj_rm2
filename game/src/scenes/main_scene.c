@@ -43,15 +43,15 @@ void main_scene_init(void) {
 }
 
 void main_scene_render(void) {
-    f32 x = sin(game_state.cam_rot.y);
-    f32 z = cos(game_state.cam_rot.y);
+    f32 x = sin(game_state.cam3D.rot.y);
+    f32 z = cos(game_state.cam3D.rot.y);
     f32 moveX = move_left + move_right;
     f32 moveY = move_up + move_down;
     f32 moveZ = move_forward + move_back;
     // Forward and backwards + side to side
-    game_state.cam_pos.x += (x * moveZ) + (z * moveX);
-    game_state.cam_pos.z += (z * moveZ) - (x * moveX); 
-    game_state.cam_pos.y += moveY; 
+    game_state.cam3D.pos.x += (x * moveZ) + (z * moveX);
+    game_state.cam3D.pos.z += (z * moveZ) - (x * moveX); 
+    game_state.cam3D.pos.y += moveY; 
 
     f32_m4x4 mvp = {0};
     mat4x4_unit(mvp);
@@ -59,7 +59,7 @@ void main_scene_render(void) {
     // pos -= 0.1;
 
     f32_m4x4 view = {0};
-    create_world_view(view, game_state.cam_pos, game_state.cam_rot);
+    create_world_view(view, game_state.cam3D.pos, game_state.cam3D.rot);
 
     f32_m4x4 persp = {0};
     mat4x4_perspective(persp, 70, window_aspect_ratio(), 1, 10000);

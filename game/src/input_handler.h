@@ -5,6 +5,7 @@
 extern bool exit_hotreload;
 #endif
 
+extern f32_v2 mouse_world_pos;
 extern f32 move_forward, move_back, move_left, move_right, move_up, move_down;
 
 void key_cb(i32 key, i32 scancode, i32 action, i32 mods);

@@ -1,6 +1,7 @@
 #include "selection_box.h"
 #include "game_state.h"
 #include "shader.h"
+#include <GL/gl.h>
 // #include "camera.h"
 // #include "rendering/Model.h"
 // #include "Villager.h"
@@ -21,47 +22,46 @@ static u32 buffer;
 
 void sel_box_init(void) {
     f32_v3 vertices[] = {
-       { 1.0f, -0.0f, 0.0f},
+       // { 1.0f, -0.0f, 0.0f},
        {-0.0f, -0.0f, 0.0f},
-       { 1.0f,  1.0f, 0.0f},
-       {-0.0f,  1.0f, 0.0f},
+       // { 1.0f,  1.0f, 0.0f},
+       // {-0.0f,  1.0f, 0.0f},
     };    
 
     u32 indices[] = {  // note that we start from 0!
-        0, 3, 1,
-        0, 2, 3,
+        0
     };  
-    gfx_bind_vertices(shader_selection_box, vertices, 4, indices, 6);
+    gfx_bind_vertices(shader_selection_box, vertices, 1, indices, 1);
 
     buffer = gfx_create_buffer();
 }
 
 void sel_box_render(void) {
-            sb_ubo.aspect = game_state.window.aspect;
-            sb_ubo.resolution.x =
-                game_state.window.width; // kanskje monitor size istedet?
-            sb_ubo.resolution.y = game_state.window.height;
-            // SelectionBox::m_ubo.posCam.x = Camera::m_cam.pos.x;
-            // SelectionBox::m_ubo.posCam.y = Camera::m_cam.pos.y;
-    //         uboMem->uboStruct = &SelectionBox::m_ubo;
-    sb_ubo.pos_new.x = 0.5;
+    if (!visible) return;
+    gfx_temp_disable_culling();
+    sb_ubo.aspect = game_state.window.aspect;
+    sb_ubo.resolution.x = game_state.window.width; // kanskje monitor size istedet?
+    sb_ubo.resolution.y = game_state.window.height;
+    sb_ubo.pos_cam.x = game_state.cam2D.x;
+    sb_ubo.pos_cam.y = game_state.cam2D.y;
     gfx_set_shader(shader_selection_box);
     gfx_uniform_void(shader_selection_box, 
             buffer, "UniformBufferObject", 0, (void*) &sb_ubo, sizeof(sel_box_UBO_t));
-    gfx_draw();
+    glDrawArrays(GL_POINTS, 0, 1);        // count = 1  ← minimum;
+    gfx_temp_reenable_culling();
 }
 
-void sel_box_start_dragging(f32 x_world, f32 y_world) {
+void sel_box_start_dragging(const f32_v2 world_pos) {
     visible = true;
-    sb_ubo.pos_og.x = x_world;
-    sb_ubo.pos_og.y = y_world;
-    sb_ubo.pos_new.x = x_world;
-    sb_ubo.pos_new.y = y_world;
+    sb_ubo.pos_og.x  = world_pos.x;
+    sb_ubo.pos_og.y  = world_pos.y;
+    sb_ubo.pos_new.x = world_pos.x;
+    sb_ubo.pos_new.y = world_pos.y;
 }
 
-void sel_box_drag(f32 x_world, f32 y_world) {
-    sb_ubo.pos_new.x = x_world;
-    sb_ubo.pos_new.y = y_world;
+void sel_box_drag(const f32_v2 world_pos) {
+    sb_ubo.pos_new.x = world_pos.x; 
+    sb_ubo.pos_new.y = world_pos.y; 
 }
 
 void sel_box_stop_dragging(bool select) {
