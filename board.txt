@@ -1,16 +1,18 @@
 TODO:
-- Run mem check after each test
-- Ha mem tracker init til starten av test main
-- Legg til knapp ved å si add_button(func_ref, sceneid);
 - Kan flytte knapper ved å holde space og dra i debug mode.
 - Ha grid som bestemmer størrelse og plassering av knapper og andre ui elementer
-- Ha at på release så kommer det opp grafisk boks i stedet for printf. Lag en macro?
-- Lag til mods støtte ved å kalle på en header i mods/ mappen og skriv en readme som forklarer den. Render, tick, input etc.
-- Lag til støtte for forskjellige anchor points til 2d sprites.
-- Fiks til fullscreen typer og tracking av window state minimized etc i gamestate.
-- Lagre window settings på disk
 - Fiks hotreloading til shaders og gjør det systemet bedre designet og mer robust!
 - color scheme: https://lectern.teachable.com/p/rti
+- Fiks det å dra rundt på kamera ødelegger for selectionbox
+- Legg til en by man kan gå mot ved å høyreklikke
+- Ha som default locked-mode altså at kamera følger fyren din på mappet men om du drar vekk så er det av.
+- Lag til forskjellige knapper i byen
+- lag til inventory med masse temporary sprites man kan dra rundt.
+- Lag liste i party med temp sprites i midten
+- Lag liste over alle viktige folk der en kan se info om de og hva renown man har osv.
+- lag til samtale med temporary chat funksjon
+- lag kampscene der du basically for nå i alle fall har bare en 3d modell.
+- lag til "human body" der sult og tørste øker stadig.
 
 CURRENT:
 - Tekst rendering
@@ -19,7 +21,15 @@ DONE:
 - ha at shaders er recompila ved klikk av f5? Så slipper jeg kompleksiteten med watching.
 - Fiks til skikkelig Sprite2d
 - Bruk assert mer!
+- Run mem check after each test
+- Ha mem tracker init til starten av test main
+- Legg til knapp ved å si add_button(func_ref, sceneid);
+- Lag til støtte for forskjellige anchor points til 2d sprites.
+- Fiks til fullscreen typer og tracking av window state minimized etc i gamestate.
+- Lagre window settings på disk
 
 BACKLOG:
 - Send 3d modeller, bilder etc over internett slik at folk kan vise frem sine mods? Og for støtte av flere dlcer!
 - Yellow milestones saying how many kilometers you've driven.
+- Ha at på release så kommer det opp grafisk boks i stedet for printf. Lag en macro?
+- Lag til mods støtte ved å kalle på en header i mods/ mappen og skriv en readme som forklarer den. Render, tick, input etc.

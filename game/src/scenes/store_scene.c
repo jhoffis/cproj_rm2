@@ -5,14 +5,14 @@
 #include "scenes.h"
 #include "text.h"
 
-static void ready_btn(void) {
-    // prepare_new_race();
-    // change_scene(scene_race, false);
+static void goback_btn(void) {
+    printf("click\n");
+    change_scene_back();
 }
 
 void store_scene_render(void) {
     gfx_set_depth(false);
-    render_btn("Ready", (f32_v2){-0.025, 0.025}, ready_btn, anchor_right);
+    render_btn("Exit store", (f32_v2){0.2, 0}, goback_btn, anchor_top_left);
     render_print("My money: $%d", my_player->bank.money);
     render_print("My points: %dp", my_player->bank.points);
 

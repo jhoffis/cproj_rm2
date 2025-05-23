@@ -27,7 +27,7 @@ static void enter_settlement(void) {
 }
 
 static void enter_conversation(void) {
-    change_scene(scene_conversation, false);
+    change_scene(scene_conversation, true);
 }
 
 static void enter_inventory(void) {

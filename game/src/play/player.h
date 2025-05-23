@@ -1,16 +1,8 @@
 #pragma once
 #include "play/bank.h"
+#include "play/body.h"
 #include "play/rep.h"
 #define PLAYERS_MAX 8
-
-#define BODY_GENDER 0x00000001
-#define BODY_GENDER_MALE 0
-#define BODY_GENDER_FEMALE 1
-#define BODY_RACE   0x0000000E
-
-typedef struct {
-    u32 info;
-} body_t;
 
 typedef struct {
     u8 player_index;

@@ -13,8 +13,9 @@ void init_player(void) {
     rep_t *rep = &reps[p.rep_id];
     p.rep = rep;
 
-    SET_INT_VALUE(p.body.info, 1, BODY_GENDER);
-    SET_INT_VALUE(p.body.info, 0, BODY_RACE);
+    SET_INT_VALUE(p.body, 1, BODY_GENDER);
+    SET_INT_VALUE(p.body, 0, BODY_RACE);
+    SET_INT_VALUE(p.body, 0, BODY_HUNGER);
 
     num_players = 1;
     all_players[p.player_index] = p;
