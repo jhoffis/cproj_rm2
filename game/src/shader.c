@@ -86,7 +86,7 @@ static void compile_shader(shader_types type) {
         xfree((void*)geometry_file);
         if (!success) {
             glGetShaderInfoLog(geometry_shader, 512, NULL, error_info);
-            printf("Error! Could not compile fragment shader %s: %s\n", shader.name, error_info);
+            printf("Error! Could not compile geometry shader %s: %s\n", shader.name, error_info);
             return;
         }
         glAttachShader(shader.program, geometry_shader);

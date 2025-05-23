@@ -113,8 +113,8 @@ void mouse_cb(f64 xpos, f64 ypos, i32 button, i32 action, i32 mods) {
     }
 
     auto world_based = game_state.window.height; 
-    mouse_world_pos.x = (xpos / world_based) + game_state.cam2D.x;
-    mouse_world_pos.y = 1. - (ypos / world_based) + game_state.cam2D.y;
+    mouse_world_pos.x = (xpos / world_based) + game_state.cam2D.pos.x;
+    mouse_world_pos.y = 1. - (ypos / world_based) + game_state.cam2D.pos.y;
     
     if (action == GLFW_RELEASE) {
         click_btn();

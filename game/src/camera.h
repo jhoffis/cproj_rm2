@@ -2,7 +2,7 @@
 #include "nums.h"
 
 typedef struct {
-    f32 x, y;
+    f32_v2 pos;
 } camera2D_t;
 
 typedef struct {

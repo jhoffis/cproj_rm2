@@ -42,8 +42,7 @@ void sel_box_render(void) {
     sb_ubo.aspect = game_state.window.aspect;
     sb_ubo.resolution.x = game_state.window.width; // kanskje monitor size istedet?
     sb_ubo.resolution.y = game_state.window.height;
-    sb_ubo.pos_cam.x = game_state.cam2D.x;
-    sb_ubo.pos_cam.y = game_state.cam2D.y;
+    sb_ubo.pos_cam = game_state.cam2D.pos;
     gfx_set_shader(shader_selection_box);
     gfx_uniform_void(shader_selection_box, 
             buffer, "UniformBufferObject", 0, (void*) &sb_ubo, sizeof(sel_box_UBO_t));
